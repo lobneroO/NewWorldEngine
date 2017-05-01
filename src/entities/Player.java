@@ -16,7 +16,7 @@ import com.jogamp.newt.event.KeyListener;
 public class Player extends Entity implements KeyListener
 {
 	private static final float RUN_SPEED = 20;		//units per second
-	private static final float TURN_SPEED = 10;	//degrees per second
+	private static final float TURN_SPEED = 90;	//degrees per second
 	private static final float GRAVITY = -50;
 	private static final float JUMP_POWER = 30;
 	
@@ -40,26 +40,18 @@ public class Player extends Entity implements KeyListener
 	 */
 	public void move(float frameTime)
 	{
-		if(keys[KeyEvent.VK_D])
-		{
-			System.out.println("getYRotation = " + getYRotation());
-		}
 		checkInputs();	//checks, which keys are currently down 
 		
-		float thetaRad = (float) currentTurnSpeed * frameTime;
+		float thetaRad = (float) Math.toRadians(currentTurnSpeed * frameTime);
 		//rotation in turn speed is stored in deg, thus conversion is needed
 		rotate(new Vector3f(0, thetaRad, 0));
-		if(keys[KeyEvent.VK_D])
-		{
-			System.out.println("getYRotation = " + getYRotation());
-		}
 		
 		/* distance calculation can be understood with a top-down look onto the scene
 		 * it is basically just trigonometry
 		 * it is divided into turn (above), forwards/sidewards movement and later on the jumping
 		 */
 		float distance = currentSpeed * frameTime;
-		float dx = (float) (distance * Math.sin(getYRotation()));
+		float dx = (float) (distance * Math.sin(getYRotation()));	//getYRotation returns the angle in radians
 		float dz = (float) (distance * Math.cos(getYRotation()));
 		translate(new Vector3f(-dx, 0, -dz));
 		//following is for jumping, with the set gravity and speed variables

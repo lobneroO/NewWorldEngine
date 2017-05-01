@@ -17,6 +17,7 @@ public class Camera
 	//pitch: how high/low a camera is aimed
 	//yaw: how far to the left / right a camera is aimed
 	//roll: rotation about the looking direction
+	//all angles in radians
 	protected float pitch = 0, yaw = 0, roll = 0;
 	
 	Matrix4f viewMatrix = new Matrix4f();
@@ -38,19 +39,28 @@ public class Camera
 		return position;
 	}
 
-
+	/**
+	 * Euler Angle pitch (similar to a persons looking up- or downwards)
+	 * @return The pitch angle in radians
+	 */
 	public float getPitch() 
 	{
 		return pitch;
 	}
 
-
+	/**
+	 * Euler Angle yaw (similar to a persons looing right or left)
+	 * @return The yaw angle in radians
+	 */
 	public float getYaw() 
 	{
 		return yaw;
 	}
 
-
+	/**
+	 * Euler Anlge roll (similar to a person tilting his head to the side)
+	 * @return The roll angle in radians
+	 */
 	public float getRoll() 
 	{
 		return roll;

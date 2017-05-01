@@ -62,21 +62,6 @@ public abstract class ShaderProgram
 		return true;
 	}
 	
-	public ShaderProgram(String vertexShaderString,String fragmentShaderString)
-	{
-		GL3 gl = GLContext.getCurrentGL().getGL3();
-		
-        vertexShaderID = loadShader(vertexShaderString, GL3.GL_VERTEX_SHADER);
-        fragmentShaderID = loadShader(fragmentShaderString, GL3.GL_FRAGMENT_SHADER);
-        programID = gl.glCreateProgram();
-        gl.glAttachShader(programID, vertexShaderID);
-        gl.glAttachShader(programID, fragmentShaderID);
-        bindAttributes();
-        gl.glLinkProgram(programID);
-        gl.glValidateProgram(programID);
-        getAllUniformLocations();
-    }
-	
 	public void start()
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();

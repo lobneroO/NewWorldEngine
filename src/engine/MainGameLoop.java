@@ -14,10 +14,11 @@ import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 
 import entities.Entity;
+import entities.Light;
 import entities.Player;
 import entities.RawModel;
 import entities.TexturedModel;
-import shader.StaticTextureShader;
+import shader.BasicLightShader;
 import util.Program;
 
 /**
@@ -54,13 +55,20 @@ public class MainGameLoop extends Program
 	Player player;
 	Entity terrain;
 	
-	StaticTextureShader shader;
+	Light light;
+	
+	BasicLightShader shader;
 	@Override
 	public boolean init(GLAutoDrawable drawable) 
 	{
+		//------LOADERS
 		modelLoader = new ModelLoader();
 		shaderLoader = new ShaderLoader();
 		
+		//------LIGHTS
+		light = new Light(new Vector3f(-5f, 5, -5f), new Vector3f(1.0f, 1.0f, 1.0f));
+		
+		//------MDOELS, PLAYER and CAMERA
 		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
 		TexturedModel texCylinder = new TexturedModel(cylinder, "models/cylinder/texture.png", false);
 		player = new Player(texCylinder, new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
@@ -79,10 +87,13 @@ public class MainGameLoop extends Program
 		
 		RawModel ter = OBJLoader.loadObjModel("quad/model", modelLoader);
 		TexturedModel texTer = new TexturedModel(ter, "models/quad/texture.png", false);
-		terrain = new Entity(texTer, new Vector3f(0, 0, 0), new Vector3f((float) Math.toRadians(90), 0, 0), new Vector3f(10, 10, 10));
+		terrain = new Entity(texTer, new Vector3f(0, 0, 0), new Vector3f((float) Math.toRadians(-90), 0, 0), new Vector3f(10, 10, 10));
 		
-		shader = new StaticTextureShader();
+		shader = new BasicLightShader();
 		shaderLoader.loadShader(shader);
+		
+		shader.start();
+		shader.loadLightColor(light.getColor());
 		
 		return true;
 	}
@@ -108,6 +119,7 @@ public class MainGameLoop extends Program
 		player.move(backend.getFrameTime()/1000);
 		camera.move();
 		shader.start();
+		shader.loadLightPosition(light.getPosition());
 		renderer.prepare();
 		renderer.render(player, shader);
 		renderer.render(entity, shader);

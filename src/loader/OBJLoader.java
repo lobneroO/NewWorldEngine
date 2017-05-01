@@ -118,7 +118,7 @@ public class OBJLoader
 			indicesArray[i] = indices.get(i);
 		}
 		
-		return loader.loadToVAO(verticesArray, texCoordsArray, indicesArray);
+		return loader.loadToVAO(verticesArray, texCoordsArray, normalsArray, indicesArray);
 	}
 	
 	private static void processVertex(String[] data, List<Integer> indices, List<Vector2f> texCoords,

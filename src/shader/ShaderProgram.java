@@ -6,6 +6,7 @@ import javax.media.opengl.GL3;
 import javax.media.opengl.GLContext;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import toolbox.BufferConversion;
 
@@ -110,6 +111,13 @@ public abstract class ShaderProgram
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		gl.glUniform3fv(location, 1, vec, 0);
+	}
+	
+	protected void loadVec3(int location, Vector3f vec)
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		FloatBuffer fb = BufferConversion.getVector3AsFloatBuffer(vec);
+		gl.glUniform3fv(location, 1, fb);
 	}
 	
 	/**

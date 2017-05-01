@@ -42,12 +42,24 @@ public class ModelLoader
 		
 	}
 	
-	public RawModel loadToVAO(float[] positions, float[] texCoords, int[] indices)	//positions may be vertices, textures or normals 
-	{												//(or something else entirely)
+//	public RawModel loadToVAO(float[] positions, float[] texCoords, int[] indices)	//positions may be vertices, textures or normals 
+//	{												//(or something else entirely)
+//		int[] VAO = createVAO();
+//		bindIndicesBuffer(indices);
+//		storeDataInAttributeList(0, positions, 3);
+//		storeDataInAttributeList(1, texCoords, 2);
+//		unbindVAO();
+//		
+//		return new RawModel(VAO.clone(), indices.length);
+//	}
+	
+	public RawModel loadToVAO(float[] positions, float[] texCoords, float[] normals, int[] indices)
+	{
 		int[] VAO = createVAO();
 		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0, positions, 3);
 		storeDataInAttributeList(1, texCoords, 2);
+		storeDataInAttributeList(2, normals, 3);
 		unbindVAO();
 		
 		return new RawModel(VAO.clone(), indices.length);

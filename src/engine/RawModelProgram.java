@@ -47,9 +47,13 @@ public class RawModelProgram extends Program
 							0.0f, 0.0f,
 							1.0f, 0.0f,
 							1.0f, 1.0f};
+		float[] normals = { 0.0f, 0.0f, 1.0f,
+							0.0f, 0.0f, 1.0f,
+							0.0f, 0.0f, 1.0f,
+							0.0f, 0.0f, 1.0f};
 		int[] indices = {0, 1, 3,
 						3, 1, 2};
-		rawModel = loader.loadToVAO(vertices, texCoords, indices);
+		rawModel = loader.loadToVAO(vertices, texCoords, normals, indices);
 		TexturedModel texModel = new TexturedModel(rawModel, "textures/texObject.png", false);
 		modelList.add(texModel);
 		

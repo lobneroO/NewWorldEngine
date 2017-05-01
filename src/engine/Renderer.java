@@ -8,7 +8,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import cameras.ThirdPersonCamera;
-import shader.StaticTextureShader;
+import shader.BasicLightShader;
 import toolbox.Maths;
 import entities.Entity;
 import entities.RawModel;
@@ -55,7 +55,7 @@ public class Renderer
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT|GL.GL_DEPTH_BUFFER_BIT);
 	}
 	
-	public void render(Entity entity, StaticTextureShader shader)
+	public void render(Entity entity, BasicLightShader shader)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
@@ -63,8 +63,9 @@ public class Renderer
 		RawModel rawModel = model.getRawModel();
 		
 		gl.glBindVertexArray(rawModel.getVAO()[0]);
-		gl.glEnableVertexAttribArray(0);
-		gl.glEnableVertexAttribArray(1);
+		gl.glEnableVertexAttribArray(0);	//vertices
+		gl.glEnableVertexAttribArray(1);	//texCoords
+		gl.glEnableVertexAttribArray(2);	//normals
 		
 		Matrix4f modelMatrix = Maths.createModelMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		Matrix4f modelViewProjectionMatrix = new Matrix4f();
@@ -80,6 +81,7 @@ public class Renderer
 		gl.glDrawElements(GL.GL_TRIANGLES, rawModel.getNumVertices(), GL.GL_UNSIGNED_INT, 0);
 		gl.glDisableVertexAttribArray(0);
 		gl.glDisableVertexAttribArray(1);
+		gl.glDisableVertexAttribArray(2);
 		gl.glBindVertexArray(0);
 	}
 	

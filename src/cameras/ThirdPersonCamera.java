@@ -40,12 +40,12 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 	
 	private float calculateHorizontalDistance()
 	{
-		return (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));
+		return (float) (distanceFromPlayer * Math.cos(pitch));
 	}
 	
 	private float calculateVerticalDistance()
 	{
-		return (float) (distanceFromPlayer * Math.sin(Math.toRadians(pitch)));
+		return (float) (distanceFromPlayer * Math.sin(pitch));
 	}
 	
 	private void calculateCameraPosition(float horizontalDistance, float verticalDistance)

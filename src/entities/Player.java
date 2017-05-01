@@ -16,7 +16,7 @@ import com.jogamp.newt.event.KeyListener;
 public class Player extends Entity implements KeyListener
 {
 	private static final float RUN_SPEED = 20;		//units per second
-	private static final float TURN_SPEED = 160;	//degrees per second
+	private static final float TURN_SPEED = 10;	//degrees per second
 	private static final float GRAVITY = -50;
 	private static final float JUMP_POWER = 30;
 	
@@ -46,7 +46,7 @@ public class Player extends Entity implements KeyListener
 		}
 		checkInputs();	//checks, which keys are currently down 
 		
-		float thetaRad = (float) Math.toRadians(currentTurnSpeed * frameTime);
+		float thetaRad = (float) currentTurnSpeed * frameTime;
 		//rotation in turn speed is stored in deg, thus conversion is needed
 		rotate(new Vector3f(0, thetaRad, 0));
 		if(keys[KeyEvent.VK_D])

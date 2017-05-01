@@ -1,0 +1,15 @@
+#Compiled class file
+*.class
+
+#Log file
+*.log
+
+#Package Files
+*.jar
+*.zip
+*.7z
+*.tar.gz
+*.rar
+
+#old code that may be reused but is not necessary
+srcOld/*

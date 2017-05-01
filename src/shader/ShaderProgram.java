@@ -8,7 +8,6 @@ import javax.media.opengl.GLContext;
 import org.joml.Matrix4f;
 
 import toolbox.BufferConversion;
-import util.Util;
 
 /**
  * ShaderProgram takes care of loading (glsl) shaders for OpenGL.
@@ -23,12 +22,12 @@ public abstract class ShaderProgram
 	private int vertexShaderID;
 	private int fragmentShaderID;
 	
-	public ShaderProgram(String vertexFile,String fragmentFile)
+	public ShaderProgram(String vertexShaderString,String fragmentShaderString)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
-        vertexShaderID = loadShader(vertexFile, GL3.GL_VERTEX_SHADER);
-        fragmentShaderID = loadShader(fragmentFile, GL3.GL_FRAGMENT_SHADER);
+        vertexShaderID = loadShader(vertexShaderString, GL3.GL_VERTEX_SHADER);
+        fragmentShaderID = loadShader(fragmentShaderString, GL3.GL_FRAGMENT_SHADER);
         programID = gl.glCreateProgram();
         gl.glAttachShader(programID, vertexShaderID);
         gl.glAttachShader(programID, fragmentShaderID);
@@ -131,11 +130,11 @@ public abstract class ShaderProgram
 	 * @param shaderType		shader type
 	 * @return the shader object id
 	 */
-	private static int loadShader(String shaderFilePath, int shaderType)
+	private static int loadShader(String shaderText, int shaderType)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
-		String shaderText = Util.readShaderFile(shaderFilePath);
+//		String shaderText = Util.readShaderFile(shaderFilePath);
 		int[] shaderID = {gl.glCreateShader(shaderType)};
 		
 		if(shaderID[0] == 0)

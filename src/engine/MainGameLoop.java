@@ -32,7 +32,7 @@ public class MainGameLoop extends Program
 	int windowHeight = 768;
 	
 	//scene
-	ModelLoader loader;
+	ModelLoader modelLoader;
 	float[] vertices = {-0.5f, 0.5f, 0f,
 			-0.5f, -0.5f, 0f,
 			0.5f, -0.5f, 0f,
@@ -56,9 +56,9 @@ public class MainGameLoop extends Program
 	@Override
 	public boolean init(GLAutoDrawable drawable) 
 	{
-		loader = new ModelLoader();
+		modelLoader = new ModelLoader();
 		
-		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", loader);
+		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
 		TexturedModel texCylinder = new TexturedModel(cylinder, "models/cylinder/texture.png", false);
 		player = new Player(texCylinder, new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		backend.addKeyListener(player);
@@ -70,11 +70,11 @@ public class MainGameLoop extends Program
 		renderer.setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
 		
 //		model = loader.loadToVAO(vertices, texCoords, indices);
-		model = OBJLoader.loadObjModel("cube/model", loader);
+		model = OBJLoader.loadObjModel("cube/model", modelLoader);
 		staticModel = new TexturedModel(model, "textures/texObject.png", false);
 		entity = new Entity(staticModel, new Vector3f(3, 0, -3), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		
-		RawModel ter = OBJLoader.loadObjModel("quad/model", loader);
+		RawModel ter = OBJLoader.loadObjModel("quad/model", modelLoader);
 		TexturedModel texTer = new TexturedModel(ter, "models/quad/texture.png", false);
 		terrain = new Entity(texTer, new Vector3f(0, 0, 0), new Vector3f((float) Math.toRadians(90), 0, 0), new Vector3f(10, 10, 10));
 		
@@ -90,7 +90,7 @@ public class MainGameLoop extends Program
 		//is called. so if i want to close on a button, i need to be able to do from an own
 		//dispose method
 		System.out.println("Exiting program, cleaning up");
-		loader.cleanUp();
+		modelLoader.cleanUp();
 		System.out.println("loader - done");
 		shader.cleanUp();
 		System.out.println("shader - done");

@@ -20,6 +20,13 @@ public class ShaderLoader
 		
 	}
 	
+	public void loadShader(ShaderProgram shader)
+	{
+		String vShader = readShaderFile(shader.getVertexShaderFilePath());
+		String fShader = readShaderFile(shader.getFragmentShaderFilePath());
+		shader.initShader(vShader, fShader);
+	}
+	
 	public String readShaderFile(String filePath)
 	{
 		String shader = "";

@@ -18,9 +18,49 @@ import toolbox.BufferConversion;
  */
 public abstract class ShaderProgram 
 {
+	protected String vertexShaderFilePath;
+	protected  String fragmentShaderFilePath;
+	
 	private int programID;
 	private int vertexShaderID;
 	private int fragmentShaderID;
+	
+	public ShaderProgram()
+	{
+		setShaderPaths();
+	}
+	
+	/**
+	 * Ensure that every shader program object has its shader file paths correctly set
+	 */
+	protected abstract void setShaderPaths();
+	
+	public String getVertexShaderFilePath()
+	{
+		return vertexShaderFilePath;
+	}
+	
+	public String getFragmentShaderFilePath()
+	{
+		return fragmentShaderFilePath;
+	}
+	
+	public boolean initShader(String vertexShaderString, String fragmentShaderString)
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		
+		vertexShaderID = loadShader(vertexShaderString, GL3.GL_VERTEX_SHADER);
+        fragmentShaderID = loadShader(fragmentShaderString, GL3.GL_FRAGMENT_SHADER);
+        programID = gl.glCreateProgram();
+        gl.glAttachShader(programID, vertexShaderID);
+        gl.glAttachShader(programID, fragmentShaderID);
+        bindAttributes();
+        gl.glLinkProgram(programID);
+        gl.glValidateProgram(programID);
+        getAllUniformLocations();
+		
+		return true;
+	}
 	
 	public ShaderProgram(String vertexShaderString,String fragmentShaderString)
 	{

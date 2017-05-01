@@ -10,12 +10,10 @@ import shader.ShaderProgram;
  */
 public class StaticShader extends ShaderProgram 
 {
-	private static final String VERTEX_FILE = "shaders/vertex_shader/basicShader.glsl";
-	private static final String FRAGMENT_FILE = "shaders/fragment_shader/basicShader.glsl";
 	
 	public StaticShader() 
 	{
-		super(VERTEX_FILE, FRAGMENT_FILE);
+		super();
 	}
 
 	@Override
@@ -28,6 +26,13 @@ public class StaticShader extends ShaderProgram
 	protected void getAllUniformLocations() 
 	{
 		//no uniforms used
+	}
+
+	@Override
+	protected void setShaderPaths() 
+	{
+		vertexShaderFilePath = "shaders/vertex_shader/basicShader.glsl";
+		fragmentShaderFilePath = "shaders/fragment_shader/basicShader.glsl";
 	}
 
 }

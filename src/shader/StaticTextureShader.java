@@ -11,17 +11,20 @@ import shader.ShaderProgram;
  *
  */
 public class StaticTextureShader extends ShaderProgram 
-{
-	private static final String VERTEX_FILE = "shaders/vertex_shader/basicTextureShader.glsl";
-	private static final String FRAGMENT_FILE = "shaders/fragment_shader/basicTextureShader.glsl";
-	
+{	
 	//locations
 	private int location_modelMatrix;
 	private int location_modelViewProjectionMatrix;
 	
 	public StaticTextureShader() 
 	{
-		super(VERTEX_FILE, FRAGMENT_FILE);
+		super();
+	}
+	
+	protected void setShaderPaths()
+	{
+		vertexShaderFilePath = "shaders/vertex_shader/basicTextureShader.glsl";
+		fragmentShaderFilePath = "shaders/fragment_shader/basicTextureShader.glsl";
 	}
 
 	@Override

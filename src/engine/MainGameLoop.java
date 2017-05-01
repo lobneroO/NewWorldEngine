@@ -7,6 +7,7 @@ import org.joml.Vector4f;
 
 import loader.ModelLoader;
 import loader.OBJLoader;
+import loader.ShaderLoader;
 import cameras.ThirdPersonCamera;
 
 import com.jogamp.newt.event.KeyEvent;
@@ -33,6 +34,7 @@ public class MainGameLoop extends Program
 	
 	//scene
 	ModelLoader modelLoader;
+	ShaderLoader shaderLoader;
 	float[] vertices = {-0.5f, 0.5f, 0f,
 			-0.5f, -0.5f, 0f,
 			0.5f, -0.5f, 0f,
@@ -57,6 +59,7 @@ public class MainGameLoop extends Program
 	public boolean init(GLAutoDrawable drawable) 
 	{
 		modelLoader = new ModelLoader();
+		shaderLoader = new ShaderLoader();
 		
 		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
 		TexturedModel texCylinder = new TexturedModel(cylinder, "models/cylinder/texture.png", false);
@@ -79,6 +82,7 @@ public class MainGameLoop extends Program
 		terrain = new Entity(texTer, new Vector3f(0, 0, 0), new Vector3f((float) Math.toRadians(90), 0, 0), new Vector3f(10, 10, 10));
 		
 		shader = new StaticTextureShader();
+		shaderLoader.loadShader(shader);
 		
 		return true;
 	}
@@ -92,7 +96,7 @@ public class MainGameLoop extends Program
 		System.out.println("Exiting program, cleaning up");
 		modelLoader.cleanUp();
 		System.out.println("loader - done");
-		shader.cleanUp();
+		shaderLoader.cleanUp();
 		System.out.println("shader - done");
 				
 		System.exit(0);

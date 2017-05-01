@@ -40,19 +40,27 @@ public class Player extends Entity implements KeyListener
 	 */
 	public void move(float frameTime)
 	{
+		if(keys[KeyEvent.VK_D])
+		{
+			System.out.println("getYRotation = " + getYRotation());
+		}
 		checkInputs();	//checks, which keys are currently down 
 		
 		float thetaRad = (float) Math.toRadians(currentTurnSpeed * frameTime);
 		//rotation in turn speed is stored in deg, thus conversion is needed
 		rotate(new Vector3f(0, thetaRad, 0));
+		if(keys[KeyEvent.VK_D])
+		{
+			System.out.println("getYRotation = " + getYRotation());
+		}
 		
 		/* distance calculation can be understood with a top-down look onto the scene
 		 * it is basically just trigonometry
 		 * it is divided into turn (above), forwards/sidewards movement and later on the jumping
 		 */
 		float distance = currentSpeed * frameTime;
-		float dx = (float) (distance * Math.sin(Math.toRadians(getYRotation())));
-		float dz = (float) (distance * Math.cos(Math.toRadians(getYRotation())));
+		float dx = (float) (distance * Math.sin(getYRotation()));
+		float dz = (float) (distance * Math.cos(getYRotation()));
 		translate(new Vector3f(-dx, 0, -dz));
 		//following is for jumping, with the set gravity and speed variables
 		upwardsSpeed += GRAVITY * frameTime;

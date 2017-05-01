@@ -11,5 +11,16 @@
 *.tar.gz
 *.rar
 
+#directories that (probably?) should be ignored
+bin/
+debug_mode/
+.settings/
+
+#single files that (probably?) should be ignored
+.DS_Store
+.classpath
+.project
+Thumbs.db
+
 #old code that may be reused but is not necessary
 srcOld/*

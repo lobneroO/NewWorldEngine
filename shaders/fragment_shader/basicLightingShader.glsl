@@ -16,6 +16,8 @@ void main()
 	float brightness = max(nDotl, 0.0);
 	
 	vec3 diffuse = brightness * uLightColor;	//take into account the light color
+	
+	vec4 ambientLight = vec4(0.1, 0.1, 0.1, 1.0);	//a minor ambient light for better visibility in the scene
 
-	fragColor = vec4(diffuse, 1.0) * texture(diffuseMap, vTexCoords);
+	fragColor = vec4(diffuse, 1.0) * texture(diffuseMap, vTexCoords) + ambientLight;
 }

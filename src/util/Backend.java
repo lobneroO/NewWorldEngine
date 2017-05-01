@@ -14,6 +14,14 @@ import com.jogamp.opengl.util.Animator;
 
 import util.Program;
 
+/**
+ * The Backend takes care of the window creation and adjustment.
+ * It also tracks the frame time so as to give every class access, that needs the frame time.
+ * It manages the key and mouse listeners (although this may be outsourced to extra managing classes
+ * later on).
+ * @author Lobner
+ *
+ */
 public class Backend implements GLEventListener
 {
 	GLWindow glWindow;
@@ -70,7 +78,12 @@ public class Backend implements GLEventListener
         animator.start();
 	}
 
-
+	/**
+	 * Is called by JOGL when OpenGL is initialized for the program.
+	 * On top of the OpenGL functionality check it checks the program object on
+	 * whether everything is correctly initialized, then prints the help to the console
+	 * and finally startes the frame timer.
+	 */
 	@Override
 	public void init(GLAutoDrawable drawable) 
 	{
@@ -103,12 +116,22 @@ public class Backend implements GLEventListener
 		lastFrameTime = System.currentTimeMillis();
 	}
 
+	/**
+	 * Disposes of the OpenGL drawable (i.e. the canvas and interface).
+	 * All the other clean ups are taken care of elsewhere to not keep track of everything 
+	 * the Backend class.
+	 */
 	@Override
 	public void dispose(GLAutoDrawable drawable) 
 	{
 		m_program.dispose(drawable);
 	}
 
+	/**
+	 * While JOGl calls this display function, the backend will delegate it to the program.
+	 * This will enable several window displays independent of each other.
+	 * It also keeps track of the frame times.
+	 */
 	@Override
 	public void display(GLAutoDrawable drawable) 
 	{
@@ -118,6 +141,10 @@ public class Backend implements GLEventListener
 		lastFrameTime = System.currentTimeMillis();
 	}
 	
+	/**
+	 * Gives access to the time, the last frame needed for everything.
+	 * @return The last frame time.
+	 */
 	public float getFrameTime()
 	{
 		return delta;
@@ -130,11 +157,19 @@ public class Backend implements GLEventListener
 		m_program.reshape(drawable, x, y, width, height);
 	}
 	
+	/**
+	 * Manages the KeyListeners by adding them to the window.
+	 * @param listener The KeyListener to be added.
+	 */
 	public void addKeyListener(KeyListener listener)
 	{
 		glWindow.addKeyListener(listener);
 	}
 	
+	/**
+	 * Manages the MouseListeners by adding them to the window.
+	 * @param listener The MouseListener to be added.
+	 */
 	public void addMouseListener(MouseListener listener)
 	{
 		glWindow.addMouseListener(listener);

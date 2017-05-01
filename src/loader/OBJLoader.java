@@ -12,6 +12,13 @@ import org.joml.Vector3f;
 
 import entities.RawModel;
 
+/**
+ * OBJLoader can load obj files, but it does not yet support any possible variation
+ * Currently, it is not possible to use vertices with more than one texCoord or Normal variation.
+ * Also it does not yet load a mtl file
+ * @author Lobner
+ *
+ */
 public class OBJLoader 
 {
 	public static RawModel loadObjModel(String filePath, ModelLoader loader)

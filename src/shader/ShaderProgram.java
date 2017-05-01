@@ -10,6 +10,13 @@ import org.joml.Matrix4f;
 import toolbox.BufferConversion;
 import util.Util;
 
+/**
+ * ShaderProgram takes care of loading (glsl) shaders for OpenGL.
+ * Currently, only vertex and fragment shader are supported and they need to be loaded
+ * together.
+ * @author Lobner
+ *
+ */
 public abstract class ShaderProgram 
 {
 	private int programID;
@@ -48,6 +55,11 @@ public abstract class ShaderProgram
 		gl.glUseProgram(0);
 	}
 	
+	/**
+	 * At the initialization of a shader, all the uniform loactions need to be looked up
+	 * and stored so as to upload the values correctly. They differ from shader to shader,
+	 * thus this is abstract.
+	 */
 	protected abstract void getAllUniformLocations();
 	
 	protected int getUniformLocation(String uniformName)
@@ -99,6 +111,13 @@ public abstract class ShaderProgram
 		gl.glUniformMatrix4fv(location, 1, transpose, fb);
 	}
 	
+	/**
+	 * Loads an integer value to the shader, as glsl doesn't support booleans.
+	 * It can be accessed only via a boolean in the engine though, to assure 
+	 * correct values to be uploaded.
+	 * @param location The uniform location of the variable.
+	 * @param value The boolean value to uploaded to the shader.
+	 */
 	protected void loadBoolean(int location, boolean value)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
@@ -148,6 +167,9 @@ public abstract class ShaderProgram
 		return shaderID[0];
 	}
 	
+	/**
+	 * Takes care of the all the references and objects to free the graphics card.
+	 */
 	public void cleanUp()
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();

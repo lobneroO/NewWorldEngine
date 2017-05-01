@@ -10,6 +10,12 @@ import org.joml.Vector4f;
 
 import com.jogamp.common.nio.Buffers;
 
+/**
+ * BufferConversion is a quick access interface for the JOML library to turn
+ * vectors and matrices into java.nio.FloatBuffers
+ * @author Lobner
+ *
+ */
 public class BufferConversion 
 {
 	public static FloatBuffer getVector2AsFloatBuffer(Vector2f vector)

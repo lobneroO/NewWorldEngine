@@ -6,6 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * FileReader just gives quick access to read in obj files and return
+ * any line that has vertex or face data.
+ * @author Lobner
+ *
+ */
+@Deprecated
 public class FileReader 
 {
 	/**

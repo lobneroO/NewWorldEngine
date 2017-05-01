@@ -10,6 +10,14 @@ import com.jogamp.newt.event.MouseListener;
 import com.jogamp.opengl.util.texture.Texture;
 import com.sun.prism.ps.Shader;
 
+/**
+ * Provide common functionality for the render programs being used.
+ * The backend needs an object that is a program to start and manage everything.
+ * Currently, it keeps track of textures and shaders in a list, but that may be changed 
+ * (to an extra manager, somewhat like the ModelLoader class).
+ * @author Lobner
+ *
+ */
 public abstract class Program implements KeyListener, MouseListener
 {
 	//
@@ -24,7 +32,7 @@ public abstract class Program implements KeyListener, MouseListener
 	Shader shadert;
 	float m_scale = 0.05f;
 	
-	//The standard OpenGL functions, called by the backend but with the same parameters
+	//The standard OpenGL functions, called by the Backend but with the same parameters
 	
 	/**
 	 * initialize all the techniques, objects, lists and so forth
@@ -34,7 +42,8 @@ public abstract class Program implements KeyListener, MouseListener
 	public abstract boolean init(GLAutoDrawable drawable);
 
 	/**
-	 * clean up everything in openGL and further allocated memory
+	 * clean up everything in openGL and further allocated memory.
+	 * That includes cleaning up with the texture and shader lists!
 	 * @param drawable
 	 */
 	public abstract void dispose(GLAutoDrawable drawable);

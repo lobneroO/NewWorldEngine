@@ -5,6 +5,15 @@ import java.lang.Math;
 
 import util.Math3d;
 
+/**
+ * Gives quick access to commonly used mathematical functions.
+ * Encapsulates some of the Java.lang.Math functionality for float (rather than double)
+ * values.
+ * It also enables some 3d mathematics. That is obsolete since the use of JOML though.
+ * @author Lobner
+ *
+ */
+@Deprecated
 public class Math3d 
 {
 	public static float sinf(float angle)

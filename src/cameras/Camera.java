@@ -5,6 +5,12 @@ import org.joml.Vector3f;
 
 import toolbox.Maths;
 
+/**
+ * The Camera class encapsulates the basic functionality for cameras to come.
+ * It uses euler angles for the viewing direction and calculates the viewMatrix via the Maths class
+ * @author Lobner
+ *
+ */
 public class Camera
 {
 	protected Vector3f position = new Vector3f(0, 0, 0);

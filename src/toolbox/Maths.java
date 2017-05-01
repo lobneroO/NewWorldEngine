@@ -4,7 +4,12 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 
-
+/**
+ * The Maths class gives access to common mathematical instructions beyond JOML.
+ * It works mostly with float (rather than double) variables.
+ * @author Lobner
+ *
+ */
 public class Maths 
 {
 	public static final Vector3f X_AXIS = new Vector3f(1.0f, 0.0f, 0.0f);

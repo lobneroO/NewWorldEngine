@@ -19,6 +19,12 @@ import entities.TexturedModel;
 import shader.StaticTextureShader;
 import util.Program;
 
+/**
+ * Manages the game with its game loop, thus this concerns gaming functions 
+ * (rather than the backend setup)
+ * @author Lobner
+ *
+ */
 public class MainGameLoop extends Program 
 {
 	//preferences

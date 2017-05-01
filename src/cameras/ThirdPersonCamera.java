@@ -6,6 +6,11 @@ import com.jogamp.newt.event.MouseListener;
 import entities.Player;
 import toolbox.Maths;
 
+/**
+ * A special camera to follow a Player object around. It can be controlled via mouse inputs.
+ * @author Lobner
+ *
+ */
 public class ThirdPersonCamera extends Camera implements MouseListener
 {
 	private float mouseXPos = 0;
@@ -79,7 +84,7 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+		//This should not be used in-game as the buttons are checked on being down
 		init = false;
 	}
 
@@ -95,6 +100,10 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 		
 	}
 
+	/* Mouse buttons do not directly trigger an action but will be checked on whether 
+	 * they are down. Supports multiple buttons at the same time and prevents the break in the
+	 * beginning after they are pressed
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 		buttons[e.getButton()] = true;
@@ -110,6 +119,8 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 	@Override
 	public void mouseMoved(MouseEvent e) 
 	{		
+		//update the mouse position, otherwise the mouseDragged calculation will use
+		//wrong initial mouse positions
 		mouseXPos = e.getX();
 		mouseYPos = e.getY();
 	}
@@ -117,10 +128,13 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 	@Override
 	public void mouseDragged(MouseEvent e) 
 	{
+		//get the difference of the old and new position
 		float dx = mouseXPos - e.getX();
 		float dy = mouseYPos - e.getY();
+		//see, if they should actually be used (check for buttons in the respective functions)
 		calculateAngleAroundPlayer(dx);
 		calculatePitch(dy);
+		//update the current mouse position
 		mouseXPos = e.getX();
 		mouseYPos = e.getY();
 	}

@@ -7,6 +7,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+/**
+ * Enables some old functionality (e.g. reading shader files), but also some debugging functions,
+ * i.e. to print arrays very easily.
+ * @author Lobner
+ *
+ */
+@Deprecated
 public class Util 
 {
 	public static String readShaderFile(String filePath)

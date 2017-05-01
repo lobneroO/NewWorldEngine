@@ -14,6 +14,13 @@ import entities.Entity;
 import entities.RawModel;
 import entities.TexturedModel;
 
+/**
+ * The Renderer class takes care of the rendering tasks themselves.
+ * That is, it takes care of loading up the data to the grapics card, clear the frame buffer
+ * and setting up the projection matrix.
+ * @author Lobner
+ *
+ */
 public class Renderer 
 {
 	//controls

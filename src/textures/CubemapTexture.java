@@ -11,6 +11,12 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 
+/**
+ * Creates a texture to be used for OpenGL cube maps.
+ * JOGL does not automatically support it, thus this class is needed where a Texture class is not
+ * @author Lobner
+ *
+ */
 public class CubemapTexture 
 {
 	private String[] m_fileNames;
@@ -57,8 +63,6 @@ public class CubemapTexture
 			for(int i = 0; i < types.length; i++)
 			{
 				File texFile = new File(m_fileNames[i]);
-//				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(),
-//						texFile, false, fileSuffix);
 				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(), texFile, 
 						GL.GL_RGB, GL.GL_RGBA, false, fileSuffix);
 				

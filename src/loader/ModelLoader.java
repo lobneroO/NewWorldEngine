@@ -13,11 +13,26 @@ import com.jogamp.common.nio.Buffers;
 
 import entities.RawModel;
 
+/**
+ * ModelLoader must be instantiated to enable keeping track of loaded models and being able to
+ * clean everything up. It doesn't load the data itself, but is given what it needs
+ * (thus one can easily create an object, e.g. a terrain within the code).
+ * It creates a VAO to store VBOs and the IBO and returns a RawModel object
+ * (textures will then be loaded by the TexturedModel objects directly, as the JOGL interface
+ * for that is pretty neat and doesn't really need any work additionally than just calling a load
+ * and clean up function).
+ * @author Lobner
+ *
+ */
 public class ModelLoader 
 {
 	public final int SIZEOFFLOAT = 4;	//4 bytes for a float
 	public final int SIZEOFINT = 4;		//4 bytes for an int
 	
+	/*
+	 * VAOs and VBOs can in theory be stored in the same list, but this makes the code
+	 * easier to read and understand
+	 */
 	private List<int[]> vaoList = new ArrayList<int[]>();
 	private List<int[]> vboList = new ArrayList<int[]>();
 	private List<int[]> iboList = new ArrayList<int[]>();

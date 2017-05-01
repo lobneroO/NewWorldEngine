@@ -2,6 +2,14 @@ package entities;
 
 import org.joml.Vector3f;
 
+/**
+ * The entity class encapsulates a TexturedModel object, a position and rotation as well as a scale.
+ * The scale is not fully supported and may be taken out in later versions in order to be able to use
+ * the ModelMatrix for normals, too (saves some matrix load ups and calculations and thus decreases
+ * the bandwidth need towards the graphics card and increases performance)
+ * @author Lobner
+ *
+ */
 public class Entity 
 {
 	private TexturedModel model;
@@ -13,7 +21,8 @@ public class Entity
 	{
 		this.model = model;
 		this.position = position;
-		this.rotation = rotation;
+		this.rotation = rotation;	//rotation is about the x,y,z axes respectively
+									//thus a vec3 to store it
 		this.scale = scale;
 	}
 	

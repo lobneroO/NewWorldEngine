@@ -5,6 +5,14 @@ import org.joml.Vector3f;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 
+/**
+ * Player is the player controlled entity in the world.
+ * It sets its own speed and gravity but uses the given frame time.
+ * As long as the terrain has uniform height, it is set in the player to 0.
+ * It has to register itself with the backend as a key listener.
+ * @author Lobner
+ *
+ */
 public class Player extends Entity implements KeyListener
 {
 	private static final float RUN_SPEED = 20;		//units per second
@@ -32,17 +40,26 @@ public class Player extends Entity implements KeyListener
 	 */
 	public void move(float frameTime)
 	{
-		checkInputs();
+		checkInputs();	//checks, which keys are currently down 
+		
 		float thetaRad = (float) Math.toRadians(currentTurnSpeed * frameTime);
 		//rotation in turn speed is stored in deg, thus conversion is needed
 		rotate(new Vector3f(0, thetaRad, 0));
 		
+		/* distance calculation can be understood with a top-down look onto the scene
+		 * it is basically just trigonometry
+		 * it is divided into turn (above), forwards/sidewards movement and later on the jumping
+		 */
 		float distance = currentSpeed * frameTime;
 		float dx = (float) (distance * Math.sin(Math.toRadians(getYRotation())));
 		float dz = (float) (distance * Math.cos(Math.toRadians(getYRotation())));
 		translate(new Vector3f(-dx, 0, -dz));
+		//following is for jumping, with the set gravity and speed variables
 		upwardsSpeed += GRAVITY * frameTime;
 		translate(new Vector3f(0, upwardsSpeed*frameTime, 0));
+		/* For the time being, the player constantly moves downwards according to gravity
+		 * this must of course be checked to not go below the terrain
+		 */
 		if(getPosition().y < TERRAIN_HEIGHT)
 		{
 			upwardsSpeed = 0;
@@ -94,16 +111,17 @@ public class Player extends Entity implements KeyListener
 		}
 	}
 	
+	/* the key event doesn't trigger anything automatically 
+	 * to allow for several key inputs at the same time
+	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
 		keys[e.getKeyCode()] = true;
-		System.out.println(e.getKeyChar() + " is pressed");
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		keys[e.getKeyCode()] = false;
-		System.out.println(e.getKeyChar() + " is released");
 		
 	}
 

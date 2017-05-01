@@ -6,6 +6,7 @@ package util;
  * @author Lobner
  *
  */
+@Deprecated
 public class StringProcessor 
 {
 	/**

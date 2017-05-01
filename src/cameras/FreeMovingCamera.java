@@ -5,6 +5,11 @@ import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
 
+/**
+ * A camera that is not bound to an entity, allowing for free moving in the scene.
+ * @author Lobner
+ *
+ */
 public class FreeMovingCamera extends Camera  implements KeyListener, MouseListener
 {
 	boolean moved = false;

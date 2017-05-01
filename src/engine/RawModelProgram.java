@@ -17,6 +17,13 @@ import entities.TexturedModel;
 import shader.StaticTextureShader;
 import util.Program;
 
+/**
+ * RawModel program is a specific instance of a program used for debugging. 
+ * It should not be used as a main game program (although of course it basically
+ * does everything in that regard, it should be kept simple for fast testing ability).
+ * @author Lobner
+ *
+ */
 public class RawModelProgram extends Program 
 {
 	static int windowWidth = 1024;

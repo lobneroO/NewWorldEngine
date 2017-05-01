@@ -1,5 +1,10 @@
 package entities;
 
+/**
+ * stores object data in a VAO and keeps track of the number of vertices of the model.
+ * @author Lobner
+ *
+ */
 public class RawModel 
 {
 	private int[] VAO;

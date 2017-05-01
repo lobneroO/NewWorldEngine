@@ -4,6 +4,12 @@ import org.joml.Matrix4f;
 
 import shader.ShaderProgram;
 
+/**
+ * Allows for the textureing of models. It does not support any lighting calculations
+ * and thus also doesn't upload models.
+ * @author Lobner
+ *
+ */
 public class StaticTextureShader extends ShaderProgram 
 {
 	private static final String VERTEX_FILE = "shaders/vertex_shader/basicTextureShader.glsl";

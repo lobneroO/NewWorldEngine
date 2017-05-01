@@ -13,6 +13,12 @@ import com.jogamp.opengl.util.texture.TextureIO;
 
 import entities.RawModel;
 
+/**
+ * TexturedModel encapsulates the RawModel class plus a texture object.
+ * CleanUp should be called before exiting the program, which will take care of the texture.
+ * @author Lobner
+ *
+ */
 public class TexturedModel 
 {
 	RawModel model;

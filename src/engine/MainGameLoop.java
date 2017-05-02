@@ -66,10 +66,12 @@ public class MainGameLoop extends Program
 		shaderLoader = new ShaderLoader();
 		
 		//------LIGHTS
-		light = new Light(new Vector3f(-5f, 5, -5f), new Vector3f(1.0f, 1.0f, 1.0f), 1.0f, 32.0f);
+		light = new Light(new Vector3f(-5f, 5, -5f), new Vector3f(1.0f, 1.0f, 1.0f));
 		
 		//------MDOELS, PLAYER and CAMERA
 		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
+		cylinder.setSpecularIntensity(10);
+		cylinder.setSpecularPower(10);
 		TexturedModel texCylinder = new TexturedModel(cylinder, "models/cylinder/texture.png", false);
 		player = new Player(texCylinder, new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		backend.addKeyListener(player);
@@ -82,6 +84,8 @@ public class MainGameLoop extends Program
 		
 //		model = loader.loadToVAO(vertices, texCoords, indices);
 		model = OBJLoader.loadObjModel("cube/model", modelLoader);
+		model.setSpecularIntensity(1);
+		model.setSpecularPower(32);
 		staticModel = new TexturedModel(model, "textures/texObject.png", false);
 		entity = new Entity(staticModel, new Vector3f(3, 0, -3), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		
@@ -94,8 +98,6 @@ public class MainGameLoop extends Program
 		
 		shader.start();
 		shader.loadLightColor(light.getColor());
-		shader.loadLightSpecularIntensity(light.getSpecularIntensity());
-		shader.loadLightSpecularPower(light.getSpecularPower());
 		
 		return true;
 	}

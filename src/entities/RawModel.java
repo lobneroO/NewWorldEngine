@@ -7,8 +7,12 @@ package entities;
  */
 public class RawModel 
 {
+	//model structure properties
 	private int[] VAO;
 	private int numVertices;
+	//shader properties
+	private float specularIntensity = 0;
+	private float specularPower = 0; 
 	
 	public RawModel()
 	{
@@ -40,5 +44,21 @@ public class RawModel
 	public int getNumVertices()
 	{
 		return numVertices;
+	}
+
+	public float getSpecularIntensity() {
+		return specularIntensity;
+	}
+
+	public void setSpecularIntensity(float specularIntensity) {
+		this.specularIntensity = specularIntensity;
+	}
+
+	public float getSpecularPower() {
+		return specularPower;
+	}
+
+	public void setSpecularPower(float specularPower) {
+		this.specularPower = specularPower;
 	}
 }

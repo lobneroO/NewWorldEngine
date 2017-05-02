@@ -61,6 +61,8 @@ public class Renderer
 		
 		TexturedModel model = entity.getModel();
 		RawModel rawModel = model.getRawModel();
+		shader.loadMaterialSpecularIntensity(rawModel.getSpecularIntensity());
+		shader.loadMaterialSpecularPower(rawModel.getSpecularPower());
 		
 		gl.glBindVertexArray(rawModel.getVAO()[0]);
 		gl.glEnableVertexAttribArray(0);	//vertices

@@ -18,6 +18,9 @@ public class BasicLightShader extends ShaderProgram
 	private int location_modelViewProjectionMatrix;
 	private int location_lightPosition;
 	private int location_lightColor;
+	private int location_lightSpecularIntensity;
+	private int location_lightSpecularPower;
+	private int location_cameraPosition;
 	
 	public BasicLightShader() 
 	{
@@ -45,6 +48,9 @@ public class BasicLightShader extends ShaderProgram
 		location_modelViewProjectionMatrix = getUniformLocation("uModelViewProjectionMatrix");
 		location_lightPosition = getUniformLocation("uLightPosition");
 		location_lightColor = getUniformLocation("uLightColor");
+		location_lightSpecularIntensity = getUniformLocation("uIntensity");
+		location_lightSpecularPower = getUniformLocation("uPower");
+		location_cameraPosition = getUniformLocation("uCamPos");
 	}
 	
 	public void loadModelMatrix(Matrix4f matrix)
@@ -65,6 +71,21 @@ public class BasicLightShader extends ShaderProgram
 	public void loadLightColor(Vector3f color)
 	{
 		loadVec3(location_lightColor, color);
+	}
+	
+	public void loadLightSpecularIntensity(float intensity)
+	{
+		loadFloat(location_lightSpecularIntensity, intensity);
+	}
+	
+	public void loadLightSpecularPower(float power)
+	{
+		loadFloat(location_lightSpecularPower, power);
+	}
+	
+	public void loadCameraPosition(Vector3f position)
+	{
+		loadVec3(location_cameraPosition, position);
 	}
 	
 }

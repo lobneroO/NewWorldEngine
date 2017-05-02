@@ -66,7 +66,7 @@ public class MainGameLoop extends Program
 		shaderLoader = new ShaderLoader();
 		
 		//------LIGHTS
-		light = new Light(new Vector3f(-5f, 5, -5f), new Vector3f(1.0f, 1.0f, 1.0f));
+		light = new Light(new Vector3f(-5f, 5, -5f), new Vector3f(1.0f, 1.0f, 1.0f), 1.0f, 32.0f);
 		
 		//------MDOELS, PLAYER and CAMERA
 		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
@@ -94,6 +94,8 @@ public class MainGameLoop extends Program
 		
 		shader.start();
 		shader.loadLightColor(light.getColor());
+		shader.loadLightSpecularIntensity(light.getSpecularIntensity());
+		shader.loadLightSpecularPower(light.getSpecularPower());
 		
 		return true;
 	}

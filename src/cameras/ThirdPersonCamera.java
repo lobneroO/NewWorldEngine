@@ -20,8 +20,6 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 	
 	private Player player;
 	
-	boolean init = false;
-	
 	private boolean[] buttons = new boolean[MouseEvent.EVENT_MOUSE_PRESSED];
 	
 	public ThirdPersonCamera(Player player)
@@ -90,7 +88,6 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		//This should not be used in-game as the buttons are checked on being down
-		init = false;
 	}
 
 	@Override

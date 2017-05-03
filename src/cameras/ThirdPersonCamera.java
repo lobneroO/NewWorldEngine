@@ -27,7 +27,7 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 	public ThirdPersonCamera(Player player)
 	{
 		this.player = player;
-		pitch = (float) Math.toRadians(70);
+		pitch = (float) Math.toRadians(45);
 		viewMatrix = Maths.createViewMatrix(position, pitch, yaw);
 	}
 	
@@ -56,7 +56,7 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 		position.x = player.getPosition().x - offsetX;
 		position.z = player.getPosition().z - offsetZ;
 		position.y = player.getPosition().y + verticalDistance;
-		yaw = Maths.PIf - player.getYRotation() + angleAroundPlayer;	//angle in radians
+		yaw = Maths.PIf - theta;	//angle in radians
 	}
 
 	private void calculateZoom(float currentScroll)

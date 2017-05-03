@@ -29,7 +29,8 @@ void main()
 	float specIntensity = dot(vertexToCam, lightReflection);
 	specIntensity = max(0.0, specIntensity);
 	specIntensity = pow(specIntensity, uPower);
-	vec4 specularLight = vec4(uLightColor * uIntensity * specIntensity, 1.0);
+	vec4 specularLight = clamp(vec4(uLightColor * uIntensity * specIntensity, 1.0),
+		vec4(0), vec4(1));	//for some reason specular lighting can take negative values otherwise
 
 	fragColor = (vec4(diffuse, 1.0) + ambientLight + specularLight) * texture(diffuseMap, vTexCoords);
 }

@@ -61,7 +61,12 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 
 	private void calculateZoom(float currentScroll)
 	{
+		float tmp = distanceFromPlayer;
 		distanceFromPlayer -= currentScroll;
+		if(distanceFromPlayer < 1 || distanceFromPlayer > 50)
+		{
+			distanceFromPlayer = tmp;
+		}
 	}
 	
 	private void calculatePitch(float dy)

@@ -72,7 +72,7 @@ public class MainGameLoop extends Program
 		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
 		cylinder.setSpecularIntensity(10);
 		cylinder.setSpecularPower(10);
-		TexturedModel texCylinder = new TexturedModel(cylinder, "models/cylinder/texture.png", false);
+		TexturedModel texCylinder = new TexturedModel(cylinder, "textures/cylinder.png", false);
 		player = new Player(texCylinder, new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		backend.addKeyListener(player);
 		
@@ -90,7 +90,7 @@ public class MainGameLoop extends Program
 		entity = new Entity(staticModel, new Vector3f(3, 0, -3), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		
 		RawModel ter = OBJLoader.loadObjModel("quad/model", modelLoader);
-		TexturedModel texTer = new TexturedModel(ter, "models/quad/texture.png", false);
+		TexturedModel texTer = new TexturedModel(ter, "textures/cylinder.png", false);
 		terrain = new Entity(texTer, new Vector3f(0, 0, 0), new Vector3f((float) Math.toRadians(-90), 0, 0), new Vector3f(10, 10, 10));
 		
 		shader = new BasicLightShader();

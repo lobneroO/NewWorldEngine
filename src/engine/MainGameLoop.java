@@ -207,7 +207,14 @@ public class MainGameLoop extends Program
 	@Override
 	public void printHelp() 
 	{
-		System.out.println("Move around with WASD");		
+		System.out.println("W - Move the cylinder forwards");
+		System.out.println("S - Move the cylinder backwards");
+		System.out.println("A - Turn the cylinder left");
+		System.out.println("D - Turn the cylinder right");
+		System.out.println("SPACE - Let the cylinder jump");
+		System.out.println();
+		System.out.println("Use the left mouse button to move the camera");
+		System.out.println("Use the mouse wheel to zoom in and out");
 	}
 
 	@Override

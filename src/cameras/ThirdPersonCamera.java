@@ -69,10 +69,15 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 	
 	private void calculatePitch(float dy)
 	{
+		float tmp = pitch;
 		dy *= 0.01f;
 		if(buttons[MouseEvent.BUTTON1])
 		{
 			pitch -= dy;
+			if(pitch < 0 || pitch > Maths.PIf/2)
+			{
+				pitch = tmp;
+			}
 		}
 	}
 	

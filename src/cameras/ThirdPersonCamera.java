@@ -69,7 +69,7 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 		dy *= 0.01f;
 		if(buttons[MouseEvent.BUTTON3])
 		{
-			pitch += dy;
+			pitch -= dy;
 		}
 	}
 	

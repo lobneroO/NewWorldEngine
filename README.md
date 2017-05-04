@@ -11,11 +11,11 @@ This work is done next to my Master's Thesis, thus updates can't be as frequent 
 
 ### How do I get set up? ###
 
-* Set Up: Download the source code and set up the project in your IDE. Set up JOGL and JOML as libraries and you should be good to go. The JOGL and JOML dependencies have not been tested for other versions, so no guarantees outside of the mentioned versions.
+* Set Up: Download the source code and set up the project in your IDE. Set up JOGL (i.e. the jogl-all.jar, the gluegen-rt.jar and the two jars specified for your OS have to be added to the project) and JOML (i.e. the joml-1.9.2.jar has to be added to the project) as libraries and you should be good to go. The JOGL and JOML dependencies have not been tested for other versions, so no guarantees outside of the mentioned versions.
 * Configuration: -
 * Dependencies: 
-- JOGL v 1.1.1.
-- JOML v 1.9.2.
+- JOGL v 1.1.1. https://jogamp.org/wiki/index.php/Downloading_and_installing_JOGL
+- JOML v 1.9.2. http://joml-ci.github.io/JOML/
 * Database configuration: -
 * How to run tests: -
 * Deployment instructions: -

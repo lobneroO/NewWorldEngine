@@ -21,7 +21,7 @@ import entities.TexturedModel;
  * @author Lobner
  *
  */
-public class Renderer 
+public class EntityRenderer 
 {
 	//controls
 	ThirdPersonCamera camera;
@@ -36,7 +36,7 @@ public class Renderer
 	//
 	private Matrix4f projectionMatrix;
 	
-	public Renderer(int windowWidth, int windowHeight, ThirdPersonCamera camera)
+	public EntityRenderer(int windowWidth, int windowHeight, ThirdPersonCamera camera)
 	{
 		this.windowWidth = windowWidth;
 		this.windowHeight = windowHeight;

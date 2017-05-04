@@ -48,7 +48,7 @@ public class MainGameLoop extends Program
 		3, 1, 2};
 
 	ThirdPersonCamera camera;
-	Renderer renderer;
+	EntityRenderer renderer;
 	RawModel model;
 	TexturedModel staticModel;
 	Entity entity;
@@ -79,7 +79,7 @@ public class MainGameLoop extends Program
 		camera = new ThirdPersonCamera(player);
 		backend.addMouseListener(camera);
 		
-		renderer = new Renderer(windowWidth, windowHeight, camera);
+		renderer = new EntityRenderer(windowWidth, windowHeight, camera);
 		renderer.setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
 		
 //		model = loader.loadToVAO(vertices, texCoords, indices);

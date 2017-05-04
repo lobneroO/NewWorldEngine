@@ -6,19 +6,26 @@ This work is done next to my Master's Thesis, thus updates can't be as frequent 
 
 ### What is this repository for? ###
 
-* Basic Rendering and Game Engine by New World Laboratories (i.e. Tim Lobner). Currently only loading and displaying of models with or without textures and a basic 3rd person camera for a player entity, that you can move around.
-* version 0.1
+* Basic Rendering and Game Engine by New World Laboratories (i.e. Tim Lobner). 
+Currently available features and techniques (i.e. all features that can be used in the master branch, may not necessarily be used in the release branches which are more of a demo thing and don't contain unused code for data size sake): 
+-loading and displaying of models with or without textures 
+-basic 3rd person camera for a player entity, that you can move around.
+* Version 0.1
 
 ### How do I get set up? ###
 
-* Set Up: Download the source code and set up the project in your IDE. Set up JOGL (i.e. the jogl-all.jar, the gluegen-rt.jar and the two jars specified for your OS have to be added to the project) and JOML (i.e. the joml-1.9.2.jar has to be added to the project) as libraries and you should be good to go. The JOGL and JOML dependencies have not been tested for other versions, so no guarantees outside of the mentioned versions.
-* Configuration: -
+* Set Up: Download the source code and set up the project in your IDE. Set up JOGL  and JOML as libraries and you should be good to go. The JOGL and JOML dependencies have not been tested for other versions, so no guarantees outside of the mentioned versions.
+* Configuration: 
+- the jogl-all.jar, the gluegen-rt.jar and the two jars specified for your OS have to be added to the project
+- the joml-1.9.2.jar has to be added to the project
 * Dependencies: 
 - JOGL v 1.1.1. https://jogamp.org/wiki/index.php/Downloading_and_installing_JOGL
 - JOML v 1.9.2. http://joml-ci.github.io/JOML/
 * Database configuration: -
 * How to run tests: -
-* Deployment instructions: -
+* Deployment instructions: 
+- The master branch has to be runnable at all times!
+- Public releases get their own release branch in the repository that are named "release_major.minor" where major and minor are the version numbers. The branch should not be updated once it is pushed to the repository, unless there are problems with running the files contained in the branch or files are missing. Before pushing the branch, delete all content that is not used in the runnable version. Once a release branch is pushed to the repository, create executable versions of the program named and archive them as "NWEmajor.minor_OSNAMEbit.zip", where major and minor are the version numbers, OSNAME is the respective name of the OS it is for (win, mac, linux) and bit is the bit version of the OS, if applicable (e.g. NWE0.1_win64bit.zip, NWE0.1_mac.zip). Upload the files to this repository's download section.
 
 ### Contribution guidelines ###
 

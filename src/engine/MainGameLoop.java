@@ -20,6 +20,8 @@ import entities.Player;
 import entities.RawModel;
 import entities.TexturedModel;
 import shader.BasicLightShader;
+import shader.TerrainShader;
+import terrains.Terrain;
 import util.Program;
 
 /**
@@ -51,15 +53,17 @@ public class MainGameLoop extends Program
 
 	ThirdPersonCamera camera;
 	EntityRenderer renderer;
+	TerrainRenderer terrainRenderer;
 	RawModel model;
 	TexturedModel staticModel;
 	Entity entity;
 	Player player;
-	Entity terrain;
+	Terrain terrain;
 	
 	Light light;
 	
 	BasicLightShader shader;
+	TerrainShader terrainShader;
 	@Override
 	public boolean init(GLAutoDrawable drawable) 
 	{
@@ -85,6 +89,10 @@ public class MainGameLoop extends Program
 		renderer = new EntityRenderer(camera, projectionMatrix);
 		renderer.setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
 		
+		terrainShader = new TerrainShader();
+		shaderLoader.loadShader(terrainShader);
+		terrainRenderer = new TerrainRenderer(camera, terrainShader, projectionMatrix);
+		
 //		model = loader.loadToVAO(vertices, texCoords, indices);
 		model = OBJLoader.loadObjModel("cube/model", modelLoader);
 		model.setSpecularIntensity(1);
@@ -92,15 +100,20 @@ public class MainGameLoop extends Program
 		staticModel = new TexturedModel(model, "textures/texObject.png", false);
 		entity = new Entity(staticModel, new Vector3f(3, 0, -3), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		
-		RawModel ter = OBJLoader.loadObjModel("quad/model", modelLoader);
-		TexturedModel texTer = new TexturedModel(ter, "models/quad/texture.png", false);
-		terrain = new Entity(texTer, new Vector3f(0, 0, 0), new Vector3f((float) Math.toRadians(-90), 0, 0), new Vector3f(10, 10, 10));
+//		RawModel ter = OBJLoader.loadObjModel("quad/model", modelLoader);
+//		TexturedModel texTer = new TexturedModel(ter, "models/quad/texture.png", false);
+//		terrain = new Entity(texTer, new Vector3f(0, 0, 0), new Vector3f((float) Math.toRadians(-90), 0, 0), new Vector3f(10, 10, 10));
+		terrain = new Terrain(0, 0, modelLoader, "models/quad/texture.png");
 		
 		shader = new BasicLightShader();
 		shaderLoader.loadShader(shader);
 		
 		shader.start();
 		shader.loadLightColor(light.getColor());
+		shader.stop();
+		terrainShader.start();
+		terrainShader.loadLightColor(light.getColor());
+		terrainShader.stop();
 		
 		return true;
 	}
@@ -136,8 +149,12 @@ public class MainGameLoop extends Program
 		renderer.render(entity, shader);
 		entity.setPosition(-3, 0, -3);
 		renderer.render(entity, shader);
-		renderer.render(terrain, shader);
+//		renderer.render(terrain, shader);
 		shader.stop();
+		terrainShader.start();
+		terrainShader.loadLightPosition(light.getPosition());
+		terrainRenderer.render(terrain);
+		terrainShader.stop();
 	}
 	
 	/**

@@ -1,8 +1,17 @@
 package terrains;
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.media.opengl.GL;
+import javax.media.opengl.GL3;
+import javax.media.opengl.GLContext;
+import javax.media.opengl.GLException;
+
 import loader.ModelLoader;
 
 import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 import entities.RawModel;
 
@@ -29,6 +38,26 @@ public class Terrain
 		this.z = gridZ * SIZE;
 		
 		this.model = generateTerrain(loader);
+	}
+	
+	public Terrain(int gridX, int gridZ, ModelLoader loader, String texturePath)
+	{
+		loadTexture(texturePath, false);
+		this.x = gridX * SIZE;
+		this.z = gridZ * SIZE;
+		
+		this.model = generateTerrain(loader);
+	}
+	public void loadTexture(String filePath, boolean mipmap)
+	{
+		File file = new File(filePath);
+		try {
+			texture = TextureIO.newTexture(file, mipmap);
+		} catch (GLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private RawModel generateTerrain(ModelLoader loader)
@@ -92,6 +121,13 @@ public class Terrain
 		return model;
 	}
 
+	public void bindTexture()
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		gl.glActiveTexture(GL.GL_TEXTURE0);
+		texture.bind(gl);
+	}
+	
 	public Texture getTexture() {
 		return texture;
 	}

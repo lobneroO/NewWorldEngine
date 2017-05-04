@@ -31,13 +31,12 @@ public class EntityRenderer
 	//
 	private Matrix4f projectionMatrix;
 	
-	public EntityRenderer(ThirdPersonCamera camera)
+	public EntityRenderer(ThirdPersonCamera camera, Matrix4f projectionMatrix)
 	{
 		
 		this.camera = camera;
 		
-		projectionMatrix = new Matrix4f();
-		projectionMatrix.identity();
+		this.projectionMatrix = projectionMatrix;
 		
 	}
 	
@@ -48,7 +47,7 @@ public class EntityRenderer
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT|GL.GL_DEPTH_BUFFER_BIT);
 	}
 	
-	public void render(Entity entity, BasicLightShader shader, Matrix4f projectionMatrix)
+	public void render(Entity entity, BasicLightShader shader)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		

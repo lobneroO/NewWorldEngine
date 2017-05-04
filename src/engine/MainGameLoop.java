@@ -82,7 +82,7 @@ public class MainGameLoop extends Program
 		camera = new ThirdPersonCamera(player);
 		backend.addMouseListener(camera);
 		
-		renderer = new EntityRenderer(camera);
+		renderer = new EntityRenderer(camera, projectionMatrix);
 		renderer.setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
 		
 //		model = loader.loadToVAO(vertices, texCoords, indices);
@@ -128,15 +128,15 @@ public class MainGameLoop extends Program
 		shader.start();
 		shader.loadLightPosition(light.getPosition());
 		renderer.prepare();
-		renderer.render(player, shader, projectionMatrix);
-		renderer.render(entity, shader, projectionMatrix);
+		renderer.render(player, shader);
+		renderer.render(entity, shader);
 		entity.setPosition(3, 0, 3);
-		renderer.render(entity, shader, projectionMatrix);
+		renderer.render(entity, shader);
 		entity.setPosition(-3, 0, 3);
-		renderer.render(entity, shader, projectionMatrix);
+		renderer.render(entity, shader);
 		entity.setPosition(-3, 0, -3);
-		renderer.render(entity, shader, projectionMatrix);
-		renderer.render(terrain, shader, projectionMatrix);
+		renderer.render(entity, shader);
+		renderer.render(terrain, shader);
 		shader.stop();
 	}
 	

@@ -11,6 +11,8 @@ Currently available features and techniques (i.e. all features that can be used 
 -loading and displaying of models with or without textures 
 -basic 3rd person camera for a player entity, that you can move around.
 * Version 0.1
+* Download of an executable jar file at https://bitbucket.org/tlobner/new-world-engine/downloads
+Choose the file that suits your OS, extract the archive and run the jar. If you encounter problems, let me know via lobner@mail.upb.de
 
 ### How do I get set up? ###
 

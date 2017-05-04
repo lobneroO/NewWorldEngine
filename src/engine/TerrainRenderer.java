@@ -32,6 +32,8 @@ public class TerrainRenderer
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
+		
+		
 		RawModel rawModel = terrain.getModel();
 		shader.loadMaterialSpecularIntensity(rawModel.getSpecularIntensity());
 		shader.loadMaterialSpecularPower(rawModel.getSpecularPower());
@@ -52,6 +54,8 @@ public class TerrainRenderer
 		
 		gl.glActiveTexture(GL.GL_TEXTURE0);
 		terrain.bindTexture();
+		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
 		
 		gl.glDrawElements(GL.GL_TRIANGLES, rawModel.getNumVertices(), GL.GL_UNSIGNED_INT, 0);
 		gl.glDisableVertexAttribArray(0);

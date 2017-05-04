@@ -79,4 +79,20 @@ public class Terrain
 		
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
 	}
+
+	public float getX() {
+		return x;
+	}
+
+	public float getZ() {
+		return z;
+	}
+
+	public RawModel getModel() {
+		return model;
+	}
+
+	public Texture getTexture() {
+		return texture;
+	}
 }

@@ -28,24 +28,17 @@ public class EntityRenderer
 	//tmp
 	boolean printed = false;
 	//preferences
-	private static final float FOV = 70;
-	private static final float NEAR_PLANE = 0.01f;
-	private static final float FAR_PLANE = 100;
-	private int windowWidth = 1024;
-	private int windowHeight = 768;
 	//
 	private Matrix4f projectionMatrix;
 	
-	public EntityRenderer(int windowWidth, int windowHeight, ThirdPersonCamera camera)
+	public EntityRenderer(ThirdPersonCamera camera)
 	{
-		this.windowWidth = windowWidth;
-		this.windowHeight = windowHeight;
 		
 		this.camera = camera;
 		
 		projectionMatrix = new Matrix4f();
 		projectionMatrix.identity();
-		createProjectionMatrix();
+		
 	}
 	
 	public void prepare()
@@ -55,7 +48,7 @@ public class EntityRenderer
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT|GL.GL_DEPTH_BUFFER_BIT);
 	}
 	
-	public void render(Entity entity, BasicLightShader shader)
+	public void render(Entity entity, BasicLightShader shader, Matrix4f projectionMatrix)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
@@ -92,11 +85,5 @@ public class EntityRenderer
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		gl.glClearColor(color.x, color.y, color.z, color.w);
 		gl.glDisable(GL.GL_CULL_FACE);
-	}
-	
-	private void createProjectionMatrix()
-	{
-		float aspect = (float)windowWidth / (float)windowHeight;
-		projectionMatrix.setPerspective((float)Math.toRadians(FOV), aspect, NEAR_PLANE, FAR_PLANE);
 	}
 }

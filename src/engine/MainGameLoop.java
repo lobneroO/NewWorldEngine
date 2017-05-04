@@ -2,6 +2,7 @@ package engine;
 
 import javax.media.opengl.GLAutoDrawable;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -32,6 +33,7 @@ public class MainGameLoop extends Program
 	//preferences
 	int windowWidth = 1024;
 	int windowHeight = 768;
+	Matrix4f projectionMatrix;
 	
 	//scene
 	ModelLoader modelLoader;
@@ -61,6 +63,7 @@ public class MainGameLoop extends Program
 	@Override
 	public boolean init(GLAutoDrawable drawable) 
 	{
+		createProjectionMatrix();
 		//------LOADERS
 		modelLoader = new ModelLoader();
 		shaderLoader = new ShaderLoader();
@@ -79,7 +82,7 @@ public class MainGameLoop extends Program
 		camera = new ThirdPersonCamera(player);
 		backend.addMouseListener(camera);
 		
-		renderer = new EntityRenderer(windowWidth, windowHeight, camera);
+		renderer = new EntityRenderer(camera);
 		renderer.setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
 		
 //		model = loader.loadToVAO(vertices, texCoords, indices);
@@ -125,16 +128,30 @@ public class MainGameLoop extends Program
 		shader.start();
 		shader.loadLightPosition(light.getPosition());
 		renderer.prepare();
-		renderer.render(player, shader);
-		renderer.render(entity, shader);
+		renderer.render(player, shader, projectionMatrix);
+		renderer.render(entity, shader, projectionMatrix);
 		entity.setPosition(3, 0, 3);
-		renderer.render(entity, shader);
+		renderer.render(entity, shader, projectionMatrix);
 		entity.setPosition(-3, 0, 3);
-		renderer.render(entity, shader);
+		renderer.render(entity, shader, projectionMatrix);
 		entity.setPosition(-3, 0, -3);
-		renderer.render(entity, shader);
-		renderer.render(terrain, shader);
+		renderer.render(entity, shader, projectionMatrix);
+		renderer.render(terrain, shader, projectionMatrix);
 		shader.stop();
+	}
+	
+	/**
+	 * Creates the shared projection matrix. This function will be moved when the rendering is restructured
+	 */
+	private void createProjectionMatrix()
+	{
+		float FOV = 70;
+		float NEAR_PLANE = 0.01f;
+		float FAR_PLANE = 100;
+		
+		float aspect = (float)windowWidth / (float)windowHeight;
+		projectionMatrix = new Matrix4f();
+		projectionMatrix.setPerspective((float)Math.toRadians(FOV), aspect, NEAR_PLANE, FAR_PLANE);
 	}
 
 	@Override

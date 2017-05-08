@@ -81,9 +81,10 @@ public class simpleMathWithReturnValues {
 	 * @param vector 3-component vector
 	 * @return returns Normalized copy
 	 */
+	@Deprecated
 	public static float[] normalize(float[] vector){
 		float[] result = vector.clone();
-		FloatUtil.normalize(result);;
+//		FloatUtil.normalize(result);	//old function not enabled anymore
 		return result;
 	}
 
@@ -94,9 +95,10 @@ public class simpleMathWithReturnValues {
 	 * @param v2 3-component vector
 	 * @return v1 X v2
 	 */
+	@Deprecated
 	public static float[] cross(float[] v1, float[] v2){
 		float[] result = new float[3];
-		FloatUtil.cross(v1, v2, result);
+//		FloatUtil.cross(v1, v2, result);	//old function not enabled anymore
 		return result;
 	}
 	
@@ -150,7 +152,7 @@ public class simpleMathWithReturnValues {
 					  0, 1, 0, 0, 
 					  0, 0, 1, 0, 
 					  x, y, z, 1 };
-		FloatUtil.multMatrixf(m, 0, t, 0);
+		FloatUtil.multMatrix(m, 0, t, 0);
 	}
 
 	/**
@@ -175,7 +177,7 @@ public class simpleMathWithReturnValues {
             x * y * (1.0f - c) - z * s, y * y * (1.0f - c) + c,     y * z * (1.0f - c) + x * s, 0.0f,
             x * z * (1.0f - c) + y * s, y * z * (1.0f - c) - x * s, z * z * (1.0f - c) + c,     0.0f,
             0, 0, 0, 1 };
-		FloatUtil.multMatrixf(m, 0, r, 0);
+		FloatUtil.multMatrix(m, 0, r, 0);
     }
     
 	/**
@@ -192,7 +194,7 @@ public class simpleMathWithReturnValues {
 					  0, y, 0, 0, 
 					  0, 0, z, 0, 
 					  0, 0, 0, 1 };
-		FloatUtil.multMatrixf(m, 0, s, 0);
+		FloatUtil.multMatrix(m, 0, s, 0);
 	}
 	
     /** 
@@ -206,7 +208,7 @@ public class simpleMathWithReturnValues {
      */
 	public static final float[] multiplyMatrix(float[] a, float[] b){
         float[] aCopy = a.clone();
-        FloatUtil.multMatrixf(aCopy, 0, b, 0);
+        FloatUtil.multMatrix(aCopy, 0, b, 0);
         return aCopy;
     }
 	
@@ -219,7 +221,7 @@ public class simpleMathWithReturnValues {
      */
 	public static final float[] multiplyMatrixVector(float[] m, float[] v){
 		float[] result = new float[4];
-        FloatUtil.multMatrixVecf(m, 0, v, 0, result, 0);
+        FloatUtil.multMatrixVec(m, 0, v, 0, result, 0);
         return result;
     }
     

@@ -168,7 +168,7 @@ public class Math3d
 	{
 		float[] result = m1.clone();
 		
-		FloatUtil.multMatrixf(result, 0, m2, 0);
+		FloatUtil.multMatrix(result, 0, m2, 0);
 		
 		return result;
 	}

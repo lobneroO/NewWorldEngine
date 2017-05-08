@@ -28,10 +28,24 @@ public class Player extends Entity implements KeyListener
 	private boolean isInAir = false;
 	
 	boolean[] keys = new boolean[KeyEvent.EVENT_KEY_PRESSED];
+	boolean[] keyReleased = new boolean[KeyEvent.EVENT_KEY_PRESSED];
+	float[] keyTime = new float[KeyEvent.EVENT_KEY_PRESSED];
+	float releaseEpsilon = 1f;	//time in milliseconds to check against
 	
 	public Player(TexturedModel model, Vector3f position, Vector3f rotation,
 			Vector3f scale) {
 		super(model, position, rotation, scale);
+		initKeyArrays();
+	}
+	
+	private void initKeyArrays()
+	{
+		for(int i = 0; i < keys.length; i++)
+		{
+			keys[i] = false;
+			keyReleased[i] = false;
+			keyTime[i] = 0;
+		}
 	}
 	
 	/**
@@ -109,6 +123,26 @@ public class Player extends Entity implements KeyListener
 				jump();
 			}
 		}
+		
+		for(int i = 0; i < keys.length; i++)
+		{
+			if(keyReleased[i])
+			{
+				float time = System.currentTimeMillis();
+				if(time!=(float)keyTime[i])
+				{
+					keyTime[i] = 0;
+					keyReleased[i] = false;
+					keys[i] = false;
+				}
+				else
+				{
+					System.out.println(i);
+					System.out.println("time = " + keyTime[i]);
+					System.out.println("systime = " + System.currentTimeMillis());
+				}
+			}
+		}
 	}
 	
 	/* the key event doesn't trigger anything automatically 
@@ -117,12 +151,19 @@ public class Player extends Entity implements KeyListener
 	@Override
 	public void keyPressed(KeyEvent e) {
 		keys[e.getKeyCode()] = true;
+		System.out.println(e.getKeyCode() + " is pressed!");
+		keyReleased[e.getKeyCode()] = false;
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		keys[e.getKeyCode()] = false;
-		
+//		keys[e.getKeyCode()] = false;
+		System.out.println(e.getKeyCode() + " is released!");
+		/*after some time, wrong keyReleased events are triggered, thus stopping
+		* the input action of the user. check for the time between the two, to 
+		* stop this from happening and enable a normal input*/
+		keyTime[e.getKeyCode()] = System.currentTimeMillis();
+		keyReleased[e.getKeyCode()] = true;
 	}
 
 	

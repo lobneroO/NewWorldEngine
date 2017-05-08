@@ -3,9 +3,9 @@ package textures;
 import java.io.File;
 import java.io.IOException;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL3;
-import javax.media.opengl.GLContext;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GLContext;
 
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;

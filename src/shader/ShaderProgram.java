@@ -2,8 +2,8 @@ package shader;
 
 import java.nio.FloatBuffer;
 
-import javax.media.opengl.GL3;
-import javax.media.opengl.GLContext;
+import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GLContext;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;

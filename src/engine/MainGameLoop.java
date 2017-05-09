@@ -4,7 +4,6 @@ import com.jogamp.opengl.GLAutoDrawable;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import loader.ModelLoader;
 import loader.OBJLoader;
@@ -19,7 +18,6 @@ import entities.Light;
 import entities.Player;
 import entities.RawModel;
 import entities.TexturedModel;
-import shader.BasicLightShader;
 import shader.TerrainShader;
 import terrains.Terrain;
 import util.Program;
@@ -40,19 +38,8 @@ public class MainGameLoop extends Program
 	//scene
 	ModelLoader modelLoader;
 	ShaderLoader shaderLoader;
-	float[] vertices = {-0.5f, 0.5f, 0f,
-			-0.5f, -0.5f, 0f,
-			0.5f, -0.5f, 0f,
-			0.5f, 0.5f, 0f};
-	float[] texCoords = {0.0f, 1.0f,
-			0.0f, 0.0f,
-			1.0f, 0.0f,
-			1.0f, 1.0f};
-	int[] indices = {0, 1, 3,
-		3, 1, 2};
 
 	ThirdPersonCamera camera;
-	EntityRenderer renderer;
 	TerrainRenderer terrainRenderer;
 	RawModel model;
 	TexturedModel staticModel;
@@ -61,8 +48,6 @@ public class MainGameLoop extends Program
 	Terrain terrain;
 	
 	Light light;
-	
-	BasicLightShader shader;
 	TerrainShader terrainShader;
 	@Override
 	public boolean init(GLAutoDrawable drawable) 
@@ -86,9 +71,6 @@ public class MainGameLoop extends Program
 		camera = new ThirdPersonCamera(player);
 		backend.addMouseListener(camera);
 		
-		renderer = new EntityRenderer(camera, projectionMatrix);
-		renderer.setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
-		
 		terrainShader = new TerrainShader();
 		shaderLoader.loadShader(terrainShader);
 		terrainRenderer = new TerrainRenderer(camera, terrainShader, projectionMatrix);
@@ -105,12 +87,6 @@ public class MainGameLoop extends Program
 //		terrain = new Entity(texTer, new Vector3f(0, 0, 0), new Vector3f((float) Math.toRadians(-90), 0, 0), new Vector3f(10, 10, 10));
 		terrain = new Terrain(0, 0, modelLoader, "models/quad/texture.png");
 		
-		shader = new BasicLightShader();
-		shaderLoader.loadShader(shader);
-		
-		shader.start();
-		shader.loadLightColor(light.getColor());
-		shader.stop();
 		terrainShader.start();
 		terrainShader.loadLightColor(light.getColor());
 		terrainShader.stop();
@@ -138,19 +114,6 @@ public class MainGameLoop extends Program
 	{
 		player.move(backend.getFrameTime()/1000);
 		camera.move();
-		shader.start();
-		shader.loadLightPosition(light.getPosition());
-		renderer.prepare();
-		renderer.render(player, shader);
-		renderer.render(entity, shader);
-		entity.setPosition(3, 0, 3);
-		renderer.render(entity, shader);
-		entity.setPosition(-3, 0, 3);
-		renderer.render(entity, shader);
-		entity.setPosition(-3, 0, -3);
-		renderer.render(entity, shader);
-//		renderer.render(terrain, shader);
-		shader.stop();
 		terrainShader.start();
 		terrainShader.loadLightPosition(light.getPosition());
 		terrainRenderer.render(terrain);

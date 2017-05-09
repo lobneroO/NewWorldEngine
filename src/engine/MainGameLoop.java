@@ -35,6 +35,8 @@ public class MainGameLoop extends Program
 	int windowHeight = 768;
 	Matrix4f projectionMatrix;
 	
+	MasterRenderer renderer;
+	
 	//scene
 	ModelLoader modelLoader;
 	ShaderLoader shaderLoader;
@@ -53,12 +55,17 @@ public class MainGameLoop extends Program
 	public boolean init(GLAutoDrawable drawable) 
 	{
 		createProjectionMatrix();
+		
 		//------LOADERS
 		modelLoader = new ModelLoader();
 		shaderLoader = new ShaderLoader();
-		
+				
 		//------LIGHTS
 		light = new Light(new Vector3f(-5f, 5, -5f), new Vector3f(1.0f, 1.0f, 1.0f));
+				
+		renderer = new MasterRenderer();
+		renderer.init(projectionMatrix, light, shaderLoader);
+		
 		
 		//------MDOELS, PLAYER and CAMERA
 		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
@@ -75,16 +82,12 @@ public class MainGameLoop extends Program
 		shaderLoader.loadShader(terrainShader);
 		terrainRenderer = new TerrainRenderer(camera, terrainShader, projectionMatrix);
 		
-//		model = loader.loadToVAO(vertices, texCoords, indices);
 		model = OBJLoader.loadObjModel("cube/model", modelLoader);
 		model.setSpecularIntensity(1);
 		model.setSpecularPower(32);
 		staticModel = new TexturedModel(model, "textures/texObject.png", false);
 		entity = new Entity(staticModel, new Vector3f(3, 0, -3), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		
-//		RawModel ter = OBJLoader.loadObjModel("quad/model", modelLoader);
-//		TexturedModel texTer = new TexturedModel(ter, "models/quad/texture.png", false);
-//		terrain = new Entity(texTer, new Vector3f(0, 0, 0), new Vector3f((float) Math.toRadians(-90), 0, 0), new Vector3f(10, 10, 10));
 		terrain = new Terrain(0, 0, modelLoader, "models/quad/texture.png");
 		
 		terrainShader.start();
@@ -100,6 +103,7 @@ public class MainGameLoop extends Program
 		//this standard dispose (or the one in backend) is not called, when System.exit(0)
 		//is called. so if i want to close on a button, i need to be able to do from an own
 		//dispose method
+		renderer.cleanUp();
 		System.out.println("Exiting program, cleaning up");
 		modelLoader.cleanUp();
 		System.out.println("loader - done");
@@ -114,6 +118,11 @@ public class MainGameLoop extends Program
 	{
 		player.move(backend.getFrameTime()/1000);
 		camera.move();
+		
+		renderer.processEntity(entity);
+		renderer.processEntity(player);
+		renderer.render(light, camera);
+		
 		terrainShader.start();
 		terrainShader.loadLightPosition(light.getPosition());
 		terrainRenderer.render(terrain);

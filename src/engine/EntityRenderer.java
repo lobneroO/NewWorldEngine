@@ -104,10 +104,8 @@ public class EntityRenderer
 		shader.loadModelViewProjectionMatrix(modelViewProjectionMatrix);
 	}
 	
-	public void setClearColor(Vector4f color)
+	public void setProjectionMatrix(Matrix4f projectionMatrix)
 	{
-		GL3 gl = GLContext.getCurrentGL().getGL3();
-		gl.glClearColor(color.x, color.y, color.z, color.w);
-		gl.glDisable(GL.GL_CULL_FACE);
+		this.projectionMatrix = projectionMatrix;
 	}
 }

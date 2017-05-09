@@ -29,8 +29,8 @@ public class Player extends Entity implements KeyListener
 	
 	boolean[] keys = new boolean[KeyEvent.EVENT_KEY_PRESSED];
 	boolean[] keyReleased = new boolean[KeyEvent.EVENT_KEY_PRESSED];
-	float[] keyTime = new float[KeyEvent.EVENT_KEY_PRESSED];
-	float releaseEpsilon = 1f;	//time in milliseconds to check against
+	long[] keyTime = new long[KeyEvent.EVENT_KEY_PRESSED];
+	float releaseEpsilon = 10f;	//time in milliseconds to check against
 	
 	public Player(TexturedModel model, Vector3f position, Vector3f rotation,
 			Vector3f scale) {
@@ -124,12 +124,12 @@ public class Player extends Entity implements KeyListener
 			}
 		}
 		
+		long time = System.currentTimeMillis();
 		for(int i = 0; i < keys.length; i++)
 		{
 			if(keyReleased[i])
 			{
-				float time = System.currentTimeMillis();
-				if(time!=(float)keyTime[i])
+				if(time - keyTime[i] > releaseEpsilon)
 				{
 					keyTime[i] = 0;
 					keyReleased[i] = false;

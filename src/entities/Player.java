@@ -1,5 +1,8 @@
 package entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joml.Vector3f;
 
 import com.jogamp.newt.event.KeyEvent;
@@ -29,6 +32,7 @@ public class Player extends Entity implements KeyListener
 	
 	boolean[] keys = new boolean[KeyEvent.EVENT_KEY_PRESSED];
 	boolean[] keyReleased = new boolean[KeyEvent.EVENT_KEY_PRESSED];
+	List<Short> pressedKeys = new ArrayList<Short>();
 	long[] keyTime = new long[KeyEvent.EVENT_KEY_PRESSED];
 	float releaseEpsilon = 10f;	//time in milliseconds to check against
 	
@@ -152,7 +156,14 @@ public class Player extends Entity implements KeyListener
 	public void keyPressed(KeyEvent e) {
 		keys[e.getKeyCode()] = true;
 		System.out.println(e.getKeyCode() + " is pressed!");
-		keyReleased[e.getKeyCode()] = false;
+//		keyReleased[e.getKeyCode()] = false;
+		/*If you press another key while a key is pressed, the press/release events stop for the first one
+		 *In that case, the old key needs to keep being pressed*/
+		for(short key : pressedKeys)
+		{
+			keyReleased[key] = false;
+		}
+		pressedKeys.add(e.getKeyCode());
 	}
 
 	@Override
@@ -164,6 +175,7 @@ public class Player extends Entity implements KeyListener
 		* stop this from happening and enable a normal input*/
 		keyTime[e.getKeyCode()] = System.currentTimeMillis();
 		keyReleased[e.getKeyCode()] = true;
+		
 	}
 
 	

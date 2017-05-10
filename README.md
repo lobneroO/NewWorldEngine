@@ -8,8 +8,9 @@ This work is done next to my Master's Thesis, thus updates can't be as frequent 
 * Update to JOGL 2.3.2
 * Better keyboard input (there still remains an issue when pressing a key and releasing another one at the same time, but that is due to problems with repeated keyPressed and keyReleased events which shouldn't be there in the first place - it works loads better than the old version though and should not be a problem most of the time)
 * A MasterRenderer to manage all individual Renderers to come
-* Change the old Renderer to EntityRenderer
-* Addition of a TerrainRenderer (instead of rendering the Terrain as an Entity)
+* Change the old Renderer to EntityRenderer and change the camera management and projection set up to the MasterRenderer
+* Rendering entities in batches of equal entities (i.e. a batch contains every instance of an entity with the same texture and raw model) rather than every entity individually
+* Addition of TerrainRenderer, TerrainShader and Terrain classes (instead of rendering the Terrain as an Entity)
 
 ### What is this repository for? ###
 

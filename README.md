@@ -4,6 +4,13 @@ Source code for the New World Engine by New World Laboratories.
 For now this is a practice environment to learn "new" OpenGL functionalities and game development.
 This work is done next to my Master's Thesis, thus updates can't be as frequent as I want them to be.
 
+### Changes and additions in version 0.2 (these may be changed or extended according to programming progress) ###
+* Update to JOGL 2.3.2
+* Better keyboard input (there still remains an issue when pressing a key and releasing another one at the same time, but that is due to problems with repeated keyPressed and keyReleased events which shouldn't be there in the first place - it works loads better than the old version though and should not be a problem most of the time)
+* A MasterRenderer to manage all individual Renderers to come
+* Change the old Renderer to EntityRenderer
+* Addition of a TerrainRenderer (instead of rendering the Terrain as an Entity)
+
 ### What is this repository for? ###
 
 * Basic Rendering and Game Engine by New World Laboratories (i.e. Tim Lobner). 

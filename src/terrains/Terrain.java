@@ -3,6 +3,8 @@ package terrains;
 import java.io.File;
 import java.io.IOException;
 
+import org.joml.Vector3f;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLContext;
@@ -116,8 +118,13 @@ public class Terrain
 	public float getZ() {
 		return z;
 	}
+	
+	public Vector3f getPosition()
+	{
+		return new Vector3f(x, 0, z);
+	}
 
-	public RawModel getModel() {
+	public RawModel getRawModel() {
 		return model;
 	}
 
@@ -126,6 +133,9 @@ public class Terrain
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		gl.glActiveTexture(GL.GL_TEXTURE0);
 		texture.bind(gl);
+		//the gl call is gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+		texture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+		texture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
 	}
 	
 	public Texture getTexture() {

@@ -18,13 +18,18 @@ import entities.Entity;
 import entities.Light;
 import entities.TexturedModel;
 import shader.BasicLightShader;
+import shader.TerrainShader;
+import terrains.Terrain;
 
 public class MasterRenderer 
 {
-	private BasicLightShader shader;
+	private BasicLightShader basicLightShader;
 	private EntityRenderer entityRenderer;
+	private TerrainShader terrainShader;
+	private TerrainRenderer terrainRenderer;
 	
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
+	private List<Terrain> terrains = new ArrayList<Terrain>();
 	
 	public MasterRenderer()
 	{
@@ -33,25 +38,41 @@ public class MasterRenderer
 	
 	public void init(Matrix4f projectionMatrix, Light sun, ShaderLoader shaderLoader)
 	{
-		shader = new BasicLightShader();
-		shaderLoader.loadShader(shader);
-		entityRenderer = new EntityRenderer(shader);
+		basicLightShader = new BasicLightShader();
+		shaderLoader.loadShader(basicLightShader);
+		entityRenderer = new EntityRenderer(basicLightShader);
 		entityRenderer.setProjectionMatrix(projectionMatrix);
-		//TODO: add projectionMatrix to all entityRenderers
-		shader.start();
-		shader.loadLightColor(sun.getColor());
-		shader.stop();
+		basicLightShader.start();
+		basicLightShader.loadLightColor(sun.getColor());
+		basicLightShader.stop();
+		
+		terrainShader = new TerrainShader();
+		shaderLoader.loadShader(terrainShader);
+		terrainShader.start();
+		terrainShader.loadLightColor(sun.getColor());
+		terrainShader.stop();
+		terrainRenderer = new TerrainRenderer(terrainShader);
+		terrainRenderer.setProjectionMatrix(projectionMatrix);
 		
 		setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
 	}
 	
 	public void render(Light sun, Camera camera)
 	{
-		entityRenderer.prepare();
-		shader.start();
-		shader.loadLightPosition(sun.getPosition());
+		prepare();
+		
+		basicLightShader.start();
+		basicLightShader.loadLightPosition(sun.getPosition());
 		entityRenderer.render(camera, entities);
-		shader.stop();
+		basicLightShader.stop();
+		
+		terrainShader.start();
+		terrainShader.loadLightPosition(sun.getPosition());
+		terrainRenderer.render(camera, terrains);
+		terrainShader.stop();
+		
+		entities.clear();
+		terrains.clear();
 	}
 	
 	public void processEntity(Entity entity)
@@ -73,6 +94,18 @@ public class MasterRenderer
 		}
 	}
 	
+	public void processTerrains(Terrain terrain)
+	{
+		terrains.add(terrain);
+	}
+	
+	public void prepare()
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		gl.glEnable(GL.GL_DEPTH_TEST);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT|GL.GL_DEPTH_BUFFER_BIT);
+	}
+	
 	public void setClearColor(Vector4f color)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
@@ -82,6 +115,6 @@ public class MasterRenderer
 	
 	public void cleanUp()
 	{
-		//shader.cleanUp();	//is done in the shader loader, don't forget if changing
+		//basicLightShader.cleanUp();	//is done in the shader loader, don't forget if changing
 	}
 }

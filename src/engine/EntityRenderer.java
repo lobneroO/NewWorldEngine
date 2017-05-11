@@ -10,7 +10,6 @@ import com.jogamp.opengl.GLContext;
 import org.joml.Matrix4f;
 
 import cameras.Camera;
-import cameras.ThirdPersonCamera;
 import shader.BasicLightShader;
 import toolbox.Maths;
 import entities.Entity;
@@ -27,8 +26,6 @@ import entities.TexturedModel;
 public class EntityRenderer 
 {
 	BasicLightShader shader;
-	//controls
-	ThirdPersonCamera camera;
 	//tmp
 	boolean printed = false;
 	//preferences
@@ -38,13 +35,6 @@ public class EntityRenderer
 	public EntityRenderer(BasicLightShader shader)
 	{
 		this.shader = shader;
-	}
-	
-	public void prepare()
-	{
-		GL3 gl = GLContext.getCurrentGL().getGL3();
-		gl.glEnable(GL.GL_DEPTH_TEST);
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT|GL.GL_DEPTH_BUFFER_BIT);
 	}
 	
 	public void render(Camera camera, Map<TexturedModel, List<Entity>> entities)

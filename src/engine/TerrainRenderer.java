@@ -1,5 +1,7 @@
 package engine;
 
+import java.util.List;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLContext;
@@ -19,22 +21,30 @@ public class TerrainRenderer
 	
 	private Matrix4f projectionMatrix;
 	
-	private Camera camera;
-	
-	public TerrainRenderer(Camera camera, TerrainShader shader, Matrix4f projectionMatrix)
+	public TerrainRenderer(TerrainShader shader)
 	{
-		this.camera = camera;
 		this.shader = shader;
-		this.projectionMatrix = projectionMatrix;
 	}
 	
-	public void render(Terrain terrain)
+	public void render(Camera camera, List<Terrain> terrains)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
+		for(Terrain terrain : terrains)
+		{
+			prepareTerrain(terrain);
+			prepareMatrices(camera, terrain);
+			gl.glDrawElements(GL.GL_TRIANGLES, terrain.getRawModel().getNumVertices(), 
+					GL.GL_UNSIGNED_INT, 0);
+			unbindTerrain();
+		}
+	}
+	
+	public void prepareTerrain(Terrain terrain)
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
-		
-		RawModel rawModel = terrain.getModel();
+		RawModel rawModel = terrain.getRawModel();
 		shader.loadMaterialSpecularIntensity(rawModel.getSpecularIntensity());
 		shader.loadMaterialSpecularPower(rawModel.getSpecularPower());
 		
@@ -43,24 +53,34 @@ public class TerrainRenderer
 		gl.glEnableVertexAttribArray(1);	//texCoords
 		gl.glEnableVertexAttribArray(2);	//normals
 		
-		Matrix4f modelMatrix = Maths.createModelMatrix(new Vector3f(terrain.getX(),0,terrain.getZ()), 
-				new Vector3f(0,0,0), new Vector3f(1,1,1));
+		gl.glActiveTexture(GL.GL_TEXTURE0);
+		terrain.bindTexture();
+	}
+	
+	public void unbindTerrain()
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		
+		gl.glDisableVertexAttribArray(0);
+		gl.glDisableVertexAttribArray(1);
+		gl.glDisableVertexAttribArray(2);
+		gl.glBindVertexArray(0);
+	}
+	
+	public void prepareMatrices(Camera camera, Terrain terrain)
+	{
+		Matrix4f modelMatrix = Maths.createModelMatrix(terrain.getPosition(), 
+				new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		Matrix4f modelViewProjectionMatrix = new Matrix4f();
 		projectionMatrix.mul(camera.getViewMatrix(), modelViewProjectionMatrix);//MVP = P * V
 		modelViewProjectionMatrix.mul(modelMatrix);								//MVP = PV * M
 		
 		shader.loadModelMatrix(modelMatrix);
 		shader.loadModelViewProjectionMatrix(modelViewProjectionMatrix);
-		
-		gl.glActiveTexture(GL.GL_TEXTURE0);
-		terrain.bindTexture();
-		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
-		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
-		
-		gl.glDrawElements(GL.GL_TRIANGLES, rawModel.getNumVertices(), GL.GL_UNSIGNED_INT, 0);
-		gl.glDisableVertexAttribArray(0);
-		gl.glDisableVertexAttribArray(1);
-		gl.glDisableVertexAttribArray(2);
-		gl.glBindVertexArray(0);
+	}
+	
+	public void setProjectionMatrix(Matrix4f projectionMatrix)
+	{
+		this.projectionMatrix = projectionMatrix;
 	}
 }

@@ -18,7 +18,6 @@ import entities.Light;
 import entities.Player;
 import entities.RawModel;
 import entities.TexturedModel;
-import shader.TerrainShader;
 import terrains.Terrain;
 import util.Program;
 
@@ -50,7 +49,6 @@ public class MainGameLoop extends Program
 	Terrain terrain;
 	
 	Light light;
-	TerrainShader terrainShader;
 	@Override
 	public boolean init(GLAutoDrawable drawable) 
 	{
@@ -78,10 +76,6 @@ public class MainGameLoop extends Program
 		camera = new ThirdPersonCamera(player);
 		backend.addMouseListener(camera);
 		
-		terrainShader = new TerrainShader();
-		shaderLoader.loadShader(terrainShader);
-		terrainRenderer = new TerrainRenderer(camera, terrainShader, projectionMatrix);
-		
 		model = OBJLoader.loadObjModel("cube/model", modelLoader);
 		model.setSpecularIntensity(1);
 		model.setSpecularPower(32);
@@ -90,9 +84,7 @@ public class MainGameLoop extends Program
 		
 		terrain = new Terrain(0, 0, modelLoader, "models/quad/texture.png");
 		
-		terrainShader.start();
-		terrainShader.loadLightColor(light.getColor());
-		terrainShader.stop();
+
 		
 		return true;
 	}
@@ -121,12 +113,8 @@ public class MainGameLoop extends Program
 		
 		renderer.processEntity(entity);
 		renderer.processEntity(player);
+		renderer.processTerrains(terrain);
 		renderer.render(light, camera);
-		
-		terrainShader.start();
-		terrainShader.loadLightPosition(light.getPosition());
-		terrainRenderer.render(terrain);
-		terrainShader.stop();
 	}
 	
 	/**

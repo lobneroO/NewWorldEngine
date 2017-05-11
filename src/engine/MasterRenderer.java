@@ -22,7 +22,7 @@ import shader.BasicLightShader;
 public class MasterRenderer 
 {
 	private BasicLightShader shader;
-	private EntityRenderer renderer;
+	private EntityRenderer entityRenderer;
 	
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	
@@ -35,9 +35,9 @@ public class MasterRenderer
 	{
 		shader = new BasicLightShader();
 		shaderLoader.loadShader(shader);
-		renderer = new EntityRenderer(shader);
-		renderer.setProjectionMatrix(projectionMatrix);
-		//TODO: add projectionMatrix to all renderers
+		entityRenderer = new EntityRenderer(shader);
+		entityRenderer.setProjectionMatrix(projectionMatrix);
+		//TODO: add projectionMatrix to all entityRenderers
 		shader.start();
 		shader.loadLightColor(sun.getColor());
 		shader.stop();
@@ -47,10 +47,10 @@ public class MasterRenderer
 	
 	public void render(Light sun, Camera camera)
 	{
-		renderer.prepare();
+		entityRenderer.prepare();
 		shader.start();
 		shader.loadLightPosition(sun.getPosition());
-		renderer.render(camera, entities);
+		entityRenderer.render(camera, entities);
 		shader.stop();
 	}
 	

@@ -8,7 +8,6 @@ import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLContext;
 
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 import cameras.Camera;
 import cameras.ThirdPersonCamera;

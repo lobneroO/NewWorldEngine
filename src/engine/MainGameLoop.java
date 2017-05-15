@@ -1,6 +1,14 @@
 package engine;
 
+import java.io.File;
+import java.io.IOException;
+
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLException;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -19,6 +27,8 @@ import entities.Player;
 import entities.RawModel;
 import entities.TexturedModel;
 import terrains.Terrain;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
 import util.Program;
 
 /**
@@ -52,6 +62,7 @@ public class MainGameLoop extends Program
 	@Override
 	public boolean init(GLAutoDrawable drawable) 
 	{
+		GL3 gl = drawable.getGL().getGL3();
 		createProjectionMatrix();
 		
 		//------LOADERS
@@ -69,7 +80,7 @@ public class MainGameLoop extends Program
 		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
 		cylinder.setSpecularIntensity(10);
 		cylinder.setSpecularPower(10);
-		TexturedModel texCylinder = new TexturedModel(cylinder, "models/cylinder/texture.png", false);
+		TexturedModel texCylinder = new TexturedModel(cylinder, "textures/tex_player.png", false);
 		player = new Player(texCylinder, new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		backend.addKeyListener(player);
 		
@@ -79,12 +90,36 @@ public class MainGameLoop extends Program
 		model = OBJLoader.loadObjModel("cube/model", modelLoader);
 		model.setSpecularIntensity(1);
 		model.setSpecularPower(32);
-		staticModel = new TexturedModel(model, "textures/texObject.png", false);
+		staticModel = new TexturedModel(model, "textures/tex_terrain_0.png", false);
 		entity = new Entity(staticModel, new Vector3f(3, 0, -3), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		
-		terrain = new Terrain(0, 0, modelLoader, "models/quad/texture.png");
-		
-
+		Texture[] textures = new Texture[4];
+		Texture blendMap;
+		File[] files = new File[4];
+		files[0] = new File("textures/tex_terrain_0.png");
+		files[1] = new File("textures/tex_terrain_1.png");
+		files[2] = new File("textures/tex_terrain_2.png");
+		files[3] = new File("textures/tex_terrain_3.png");
+		File fileBM = new File("textures/tex_blendMap.png");
+		try {
+			for(int i = 0; i < files.length; i++)
+			{
+				textures[i] = TextureIO.newTexture(files[i], false);
+				textures[i].setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+				textures[i].setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
+			}
+			blendMap = TextureIO.newTexture(fileBM, false);
+			TerrainTexturePack tTP = new TerrainTexturePack(new TerrainTexture(textures[0]), 
+					new TerrainTexture(textures[1]), new TerrainTexture(textures[2]),
+					new TerrainTexture(textures[3]));
+			terrain = new Terrain(0, 0, modelLoader, tTP, new TerrainTexture(blendMap));
+		} catch (GLException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 		
 		return true;
 	}

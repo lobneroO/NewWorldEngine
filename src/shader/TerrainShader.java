@@ -14,6 +14,12 @@ public class TerrainShader extends StaticShader
 		private int location_materialSpecularPower;
 		private int location_cameraPosition;
 		
+		private int location_blackMap;
+		private int location_redMap;
+		private int location_greenMap;
+		private int location_blueMap;
+		private int location_blendMap;
+		
 		public TerrainShader() 
 		{
 			super();
@@ -43,6 +49,12 @@ public class TerrainShader extends StaticShader
 			location_materialSpecularIntensity = getUniformLocation("uIntensity");
 			location_materialSpecularPower = getUniformLocation("uPower");
 			location_cameraPosition = getUniformLocation("uCamPos");
+			
+			location_blackMap = getUniformLocation("blackMap");
+			location_redMap = getUniformLocation("redMap");
+			location_greenMap = getUniformLocation("greenMap");
+			location_blueMap = getUniformLocation("blueMap");
+			location_blendMap = getUniformLocation("blendMap");
 		}
 		
 		public void loadModelMatrix(Matrix4f matrix)
@@ -78,5 +90,14 @@ public class TerrainShader extends StaticShader
 		public void loadCameraPosition(Vector3f position)
 		{
 			loadVec3(location_cameraPosition, position);
+		}
+		
+		public void loadTextures()
+		{
+			loadInt(location_blackMap, 0);
+			loadInt(location_redMap, 0);
+			loadInt(location_greenMap, 0);
+			loadInt(location_blueMap, 0);
+			loadInt(location_blendMap, 0);
 		}
 }

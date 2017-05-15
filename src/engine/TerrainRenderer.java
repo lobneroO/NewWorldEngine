@@ -13,6 +13,7 @@ import cameras.Camera;
 import entities.RawModel;
 import shader.TerrainShader;
 import terrains.Terrain;
+import textures.TerrainTexturePack;
 import toolbox.Maths;
 
 public class TerrainRenderer 
@@ -24,6 +25,11 @@ public class TerrainRenderer
 	public TerrainRenderer(TerrainShader shader)
 	{
 		this.shader = shader;
+	}
+	
+	public void init()
+	{
+		shader.loadTextures();
 	}
 	
 	public void render(Camera camera, List<Terrain> terrains)
@@ -53,8 +59,29 @@ public class TerrainRenderer
 		gl.glEnableVertexAttribArray(1);	//texCoords
 		gl.glEnableVertexAttribArray(2);	//normals
 		
+		bindTextures(terrain);
+	}
+	
+	private void bindTextures(Terrain terrain)
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		
+		TerrainTexturePack texturePack = terrain.getTexturePack();
+		
 		gl.glActiveTexture(GL.GL_TEXTURE0);
-		terrain.bindTexture();
+		gl.glBindTexture(GL.GL_TEXTURE_2D, texturePack.getBlackTexture().getTextureID());
+		
+		gl.glActiveTexture(GL.GL_TEXTURE1);
+		gl.glBindTexture(GL.GL_TEXTURE_2D, texturePack.getRedTexture().getTextureID());
+		
+		gl.glActiveTexture(GL.GL_TEXTURE2);
+		gl.glBindTexture(GL.GL_TEXTURE_2D, texturePack.getGreenTexture().getTextureID());
+		
+		gl.glActiveTexture(GL.GL_TEXTURE3);
+		gl.glBindTexture(GL.GL_TEXTURE_2D, texturePack.getBlueTexture().getTextureID());
+		
+		gl.glActiveTexture(GL.GL_TEXTURE4);
+		gl.glBindTexture(GL.GL_TEXTURE_2D, terrain.getBlendMap().getTextureID());
 	}
 	
 	public void unbindTerrain()

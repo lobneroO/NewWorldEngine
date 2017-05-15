@@ -24,5 +24,5 @@ void main()
 	vLightDirection = uLightPosition - vPosWS;
 	vLightDirection = normalize(vLightDirection);
 		
-	vTexCoords = texCoords * 40;	//leads to tiling of the texture
+	vTexCoords = texCoords;// * 40;	//leads to tiling of the texture, will be done in the fragment shader now
 }

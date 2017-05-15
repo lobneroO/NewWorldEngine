@@ -50,8 +50,9 @@ public class MasterRenderer
 		shaderLoader.loadShader(terrainShader);
 		terrainShader.start();
 		terrainShader.loadLightColor(sun.getColor());
-		terrainShader.stop();
 		terrainRenderer = new TerrainRenderer(terrainShader);
+		terrainRenderer.init();
+		terrainShader.stop();
 		terrainRenderer.setProjectionMatrix(projectionMatrix);
 		
 		setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));

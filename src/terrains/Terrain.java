@@ -1,19 +1,12 @@
 package terrains;
 
-import java.io.File;
-import java.io.IOException;
 
 import org.joml.Vector3f;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL3;
-import com.jogamp.opengl.GLContext;
-import com.jogamp.opengl.GLException;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
 
 import loader.ModelLoader;
-
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
 
 import entities.RawModel;
 
@@ -31,35 +24,18 @@ public class Terrain
 	
 	private float x, z;
 	private RawModel model;
-	private Texture texture;
+	//support several textures and a blend map via the TerrainTexture class
+	private TerrainTexturePack texturePack;
+	private TerrainTexture blendMap;
 	
-	public Terrain(int gridX, int gridZ, ModelLoader loader, Texture texture)
+	public Terrain(int gridX, int gridZ, ModelLoader loader, TerrainTexturePack texturePack, TerrainTexture blendMap)
 	{
-		this. texture = texture;
+		this. texturePack = texturePack;
+		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
 		
 		this.model = generateTerrain(loader);
-	}
-	
-	public Terrain(int gridX, int gridZ, ModelLoader loader, String texturePath)
-	{
-		loadTexture(texturePath, false);
-		this.x = gridX * SIZE;
-		this.z = gridZ * SIZE;
-		
-		this.model = generateTerrain(loader);
-	}
-	public void loadTexture(String filePath, boolean mipmap)
-	{
-		File file = new File(filePath);
-		try {
-			texture = TextureIO.newTexture(file, mipmap);
-		} catch (GLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	private RawModel generateTerrain(ModelLoader loader)
@@ -111,11 +87,13 @@ public class Terrain
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
 	}
 
-	public float getX() {
+	public float getX() 
+	{
 		return x;
 	}
 
-	public float getZ() {
+	public float getZ() 
+	{
 		return z;
 	}
 	
@@ -124,21 +102,18 @@ public class Terrain
 		return new Vector3f(x, 0, z);
 	}
 
-	public RawModel getRawModel() {
+	public RawModel getRawModel() 
+	{
 		return model;
 	}
-
-	public void bindTexture()
+	
+	public TerrainTexturePack getTexturePack() 
 	{
-		GL3 gl = GLContext.getCurrentGL().getGL3();
-		gl.glActiveTexture(GL.GL_TEXTURE0);
-		texture.bind(gl);
-		//the gl call is gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
-		texture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
-		texture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
+		return texturePack;
 	}
 	
-	public Texture getTexture() {
-		return texture;
+	public TerrainTexture getBlendMap()
+	{
+		return blendMap;
 	}
 }

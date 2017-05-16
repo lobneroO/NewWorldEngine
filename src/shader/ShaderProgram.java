@@ -107,6 +107,12 @@ public abstract class ShaderProgram
 		gl.glUniform1f(location, value);
 	}
 	
+	protected void loadInt(int location, int value)
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		gl.glUniform1i(location, value);
+	}
+	
 	protected void loadVec3(int location, float[] vec)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();

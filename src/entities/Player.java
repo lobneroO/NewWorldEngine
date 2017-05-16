@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.joml.Vector3f;
@@ -32,7 +33,7 @@ public class Player extends Entity implements KeyListener
 	
 	boolean[] keys = new boolean[KeyEvent.EVENT_KEY_PRESSED];
 	boolean[] keyReleased = new boolean[KeyEvent.EVENT_KEY_PRESSED];
-	List<Short> pressedKeys = new ArrayList<Short>();
+	HashSet<Short> pressedKeys = new HashSet<Short>();
 	long[] keyTime = new long[KeyEvent.EVENT_KEY_PRESSED];
 	float releaseEpsilon = 10f;	//time in milliseconds to check against
 	
@@ -131,6 +132,7 @@ public class Player extends Entity implements KeyListener
 		long time = System.currentTimeMillis();
 		//TODO: if this loop is executed while a keyevent is triggered, a
 		//ConcurrentModificationException is thrown, there needs to be some error handling
+		List<Short> releasedKeys = new ArrayList<Short>();
 		for(short key : pressedKeys)
 		{
 			if(keyReleased[key])
@@ -140,9 +142,15 @@ public class Player extends Entity implements KeyListener
 					keyTime[key] = 0;
 					keyReleased[key] = false;
 					keys[key] = false;
+					releasedKeys.add(key);
 				}
 			}
 		}
+		for(short key : releasedKeys)
+		{
+			pressedKeys.remove(key);
+		}
+		releasedKeys.clear();
 	}
 	
 	/* the key event doesn't trigger anything automatically 

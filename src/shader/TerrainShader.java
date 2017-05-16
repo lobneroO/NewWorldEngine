@@ -95,9 +95,9 @@ public class TerrainShader extends StaticShader
 		public void loadTextures()
 		{
 			loadInt(location_blackMap, 0);
-			loadInt(location_redMap, 0);
-			loadInt(location_greenMap, 0);
-			loadInt(location_blueMap, 0);
-			loadInt(location_blendMap, 0);
+			loadInt(location_redMap, 1);
+			loadInt(location_greenMap, 2);
+			loadInt(location_blueMap, 3);
+			loadInt(location_blendMap, 4);
 		}
 }

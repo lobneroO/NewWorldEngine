@@ -43,6 +43,7 @@ public class TerrainRenderer
 			gl.glDrawElements(GL.GL_TRIANGLES, terrain.getRawModel().getNumVertices(), 
 					GL.GL_UNSIGNED_INT, 0);
 			unbindTerrain();
+			unbindTextures(terrain);
 		}
 	}
 	
@@ -69,19 +70,37 @@ public class TerrainRenderer
 		TerrainTexturePack texturePack = terrain.getTexturePack();
 		
 		gl.glActiveTexture(GL.GL_TEXTURE0);
-		gl.glBindTexture(GL.GL_TEXTURE_2D, texturePack.getBlackTexture().getTextureID());
+//		texturePack.getBlackTexture().getTexture().enable(gl);
+		texturePack.getBlackTexture().getTexture().bind(gl);
 		
 		gl.glActiveTexture(GL.GL_TEXTURE1);
-		gl.glBindTexture(GL.GL_TEXTURE_2D, texturePack.getRedTexture().getTextureID());
+//		texturePack.getRedTexture().getTexture().enable(gl);
+		texturePack.getRedTexture().getTexture().bind(gl);
 		
 		gl.glActiveTexture(GL.GL_TEXTURE2);
-		gl.glBindTexture(GL.GL_TEXTURE_2D, texturePack.getGreenTexture().getTextureID());
+//		texturePack.getGreenTexture().getTexture().enable(gl);
+		texturePack.getGreenTexture().getTexture().bind(gl);
 		
 		gl.glActiveTexture(GL.GL_TEXTURE3);
-		gl.glBindTexture(GL.GL_TEXTURE_2D, texturePack.getBlueTexture().getTextureID());
+//		texturePack.getBlueTexture().getTexture().enable(gl);
+		texturePack.getBlueTexture().getTexture().bind(gl);
 		
 		gl.glActiveTexture(GL.GL_TEXTURE4);
-		gl.glBindTexture(GL.GL_TEXTURE_2D, terrain.getBlendMap().getTextureID());
+//		terrain.getBlendMap().getTexture().enable(gl);
+		terrain.getBlendMap().getTexture().bind(gl);
+	}
+	
+	private void unbindTextures(Terrain terrain)
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		
+		TerrainTexturePack texturePack = terrain.getTexturePack();
+		
+		texturePack.getBlackTexture().getTexture().disable(gl);
+		texturePack.getRedTexture().getTexture().disable(gl);
+		texturePack.getGreenTexture().getTexture().disable(gl);
+		texturePack.getBlueTexture().getTexture().disable(gl);
+		terrain.getBlendMap().getTexture().disable(gl);
 	}
 	
 	public void unbindTerrain()

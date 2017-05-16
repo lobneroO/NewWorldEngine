@@ -105,6 +105,7 @@ public class MainGameLoop extends Program
 			for(int i = 0; i < files.length; i++)
 			{
 				textures[i] = TextureIO.newTexture(files[i], false);
+				textures[i].enable(gl);
 				textures[i].setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
 				textures[i].setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
 			}

@@ -20,7 +20,7 @@ debug_mode/
 .DS_Store
 .classpath
 .project
-Thumbs.db
+*Thumbs.db
 
 #old code that may be reused but is not necessary
 srcOld/*

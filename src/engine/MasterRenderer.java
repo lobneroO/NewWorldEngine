@@ -51,7 +51,6 @@ public class MasterRenderer
 		terrainShader.start();
 		terrainShader.loadLightColor(sun.getColor());
 		terrainRenderer = new TerrainRenderer(terrainShader);
-		terrainRenderer.init();
 		terrainShader.stop();
 		terrainRenderer.setProjectionMatrix(projectionMatrix);
 		

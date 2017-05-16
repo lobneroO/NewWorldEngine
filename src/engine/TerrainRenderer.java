@@ -25,10 +25,6 @@ public class TerrainRenderer
 	public TerrainRenderer(TerrainShader shader)
 	{
 		this.shader = shader;
-	}
-	
-	public void init()
-	{
 		shader.loadTextures();
 	}
 	
@@ -43,7 +39,6 @@ public class TerrainRenderer
 			gl.glDrawElements(GL.GL_TRIANGLES, terrain.getRawModel().getNumVertices(), 
 					GL.GL_UNSIGNED_INT, 0);
 			unbindTerrain();
-			unbindTextures(terrain);
 		}
 	}
 	
@@ -68,39 +63,21 @@ public class TerrainRenderer
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
 		TerrainTexturePack texturePack = terrain.getTexturePack();
-		
+		//bind the textures according to the texture units they are used in in the shader
 		gl.glActiveTexture(GL.GL_TEXTURE0);
-//		texturePack.getBlackTexture().getTexture().enable(gl);
 		texturePack.getBlackTexture().getTexture().bind(gl);
 		
 		gl.glActiveTexture(GL.GL_TEXTURE1);
-//		texturePack.getRedTexture().getTexture().enable(gl);
 		texturePack.getRedTexture().getTexture().bind(gl);
 		
 		gl.glActiveTexture(GL.GL_TEXTURE2);
-//		texturePack.getGreenTexture().getTexture().enable(gl);
 		texturePack.getGreenTexture().getTexture().bind(gl);
 		
 		gl.glActiveTexture(GL.GL_TEXTURE3);
-//		texturePack.getBlueTexture().getTexture().enable(gl);
 		texturePack.getBlueTexture().getTexture().bind(gl);
 		
 		gl.glActiveTexture(GL.GL_TEXTURE4);
-//		terrain.getBlendMap().getTexture().enable(gl);
 		terrain.getBlendMap().getTexture().bind(gl);
-	}
-	
-	private void unbindTextures(Terrain terrain)
-	{
-		GL3 gl = GLContext.getCurrentGL().getGL3();
-		
-		TerrainTexturePack texturePack = terrain.getTexturePack();
-		
-		texturePack.getBlackTexture().getTexture().disable(gl);
-		texturePack.getRedTexture().getTexture().disable(gl);
-		texturePack.getGreenTexture().getTexture().disable(gl);
-		texturePack.getBlueTexture().getTexture().disable(gl);
-		terrain.getBlendMap().getTexture().disable(gl);
 	}
 	
 	public void unbindTerrain()
@@ -113,7 +90,7 @@ public class TerrainRenderer
 		gl.glBindVertexArray(0);
 	}
 	
-	public void prepareMatrices(Camera camera, Terrain terrain)
+	private void prepareMatrices(Camera camera, Terrain terrain)
 	{
 		Matrix4f modelMatrix = Maths.createModelMatrix(terrain.getPosition(), 
 				new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));

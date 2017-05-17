@@ -1,5 +1,8 @@
 package textures;
 
+import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GLContext;
+
 /**
  * Contains several Textures that can be used by a Terrain model.
  * The Terrain model reads a blend map that determines which Texture to use 
@@ -61,5 +64,13 @@ public class TerrainTexturePack
 		return blueTexture;
 	}
 	
-	
+	public void cleanUp()
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		
+		blackTexture.getTexture().destroy(gl);
+		redTexture.getTexture().destroy(gl);
+		greenTexture.getTexture().destroy(gl);
+		blueTexture.getTexture().destroy(gl);
+	}
 }

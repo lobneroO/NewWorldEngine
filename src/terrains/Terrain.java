@@ -3,11 +3,12 @@ package terrains;
 
 import org.joml.Vector3f;
 
+import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GLContext;
+
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
-
 import loader.ModelLoader;
-
 import entities.RawModel;
 
 /**
@@ -115,5 +116,12 @@ public class Terrain
 	public TerrainTexture getBlendMap()
 	{
 		return blendMap;
+	}
+	
+	public void cleanUp()
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		texturePack.cleanUp();
+		blendMap.getTexture().destroy(gl);
 	}
 }

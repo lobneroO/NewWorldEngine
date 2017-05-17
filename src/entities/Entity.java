@@ -97,4 +97,9 @@ public class Entity
 	public void setScale(Vector3f scale) {
 		this.scale = scale;
 	}
+	
+	public void cleanUp()
+	{
+		model.cleanUp();
+	}
 }

@@ -59,6 +59,7 @@ public class MainGameLoop extends Program
 	TexturedModel staticModel;
 	Entity entity;
 	List<Entity> entities;
+	List<Texture> textures;
 	Player player;
 	Terrain terrain;
 	
@@ -148,10 +149,10 @@ public class MainGameLoop extends Program
 		Texture[] textures = new Texture[4];
 		Texture blendMap;
 		File[] files = new File[4];
-		files[0] = new File("textures/tex_grass.jpg");
-		files[1] = new File("textures/tex_leafs.jpg");
-		files[2] = new File("textures/tex_ground.jpg");
-		files[3] = new File("textures/tex_stone_ground.jpg");
+		files[0] = new File("textures/terrain/grass_green2y_d.jpg");
+		files[1] = new File("textures/terrain/grass_autumn_red_d.jpg");
+		files[2] = new File("textures/terrain/grass_rocky_d.jpg");
+		files[3] = new File("textures/terrain/ground_crackedo_d.jpg");
 		File fileBM = new File("textures/tex_blendMap.png");
 		try {
 			for(int i = 0; i < files.length; i++)
@@ -189,6 +190,15 @@ public class MainGameLoop extends Program
 		System.out.println("loader - done");
 		shaderLoader.cleanUp();
 		System.out.println("shader - done");
+		
+		for(int i = 0; i < entities.size(); i++)
+		{
+			entities.get(i).cleanUp();
+			System.out.println("cleaning up another entity");
+		}
+		
+		terrain.cleanUp();
+		player.cleanUp();
 				
 		System.exit(0);
 	}

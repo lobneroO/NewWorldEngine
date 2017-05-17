@@ -55,6 +55,11 @@ public class TexturedModel
 		texture.bind(gl);
 	}
 	
+	public Texture getTexture()
+	{
+		return texture;
+	}
+	
 	public void setTexture(Texture texture)
 	{
 		this.texture = texture;

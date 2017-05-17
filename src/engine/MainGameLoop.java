@@ -87,6 +87,8 @@ public class MainGameLoop extends Program
 		cylinder.setSpecularIntensity(10);
 		cylinder.setSpecularPower(10);
 		TexturedModel texCylinder = new TexturedModel(cylinder, "textures/tex_player.png", false);
+		texCylinder.getTexture().setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+		texCylinder.getTexture().setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
 		texCylinder.setHasTransparency(true);
 		player = new Player(texCylinder, new Vector3f(12, 0, 12), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		backend.addKeyListener(player);

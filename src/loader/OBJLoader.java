@@ -48,6 +48,8 @@ public class OBJLoader
 			while(true)
 			{
 				line = br.readLine();
+				//replace (multiple) tabs, new lines or spaces with a single space
+				line = line.replaceAll("\\s+", " ");	
 				String[] currentLine = line.split(" ");
 				if(line.startsWith("v "))
 				{

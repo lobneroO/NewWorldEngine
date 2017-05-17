@@ -2,6 +2,8 @@ package engine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
@@ -29,6 +31,7 @@ import entities.TexturedModel;
 import terrains.Terrain;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.Maths;
 import util.Program;
 
 /**
@@ -55,6 +58,7 @@ public class MainGameLoop extends Program
 	RawModel model;
 	TexturedModel staticModel;
 	Entity entity;
+	List<Entity> entities;
 	Player player;
 	Terrain terrain;
 	
@@ -77,11 +81,12 @@ public class MainGameLoop extends Program
 		
 		
 		//------MDOELS, PLAYER and CAMERA
+		entities = new ArrayList<Entity>();
 		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
 		cylinder.setSpecularIntensity(10);
 		cylinder.setSpecularPower(10);
 		TexturedModel texCylinder = new TexturedModel(cylinder, "textures/tex_player.png", false);
-		player = new Player(texCylinder, new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
+		player = new Player(texCylinder, new Vector3f(12, 0, 12), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		backend.addKeyListener(player);
 		
 		camera = new ThirdPersonCamera(player);
@@ -91,15 +96,62 @@ public class MainGameLoop extends Program
 		model.setSpecularIntensity(1);
 		model.setSpecularPower(32);
 		staticModel = new TexturedModel(model, "textures/tex_terrain_0.png", false);
-		entity = new Entity(staticModel, new Vector3f(3, 0, -3), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
+		
+		RawModel rawBamboo = OBJLoader.loadObjModel("plants/bamboo", modelLoader);
+		TexturedModel texturedBamboo = new TexturedModel(rawBamboo, 
+				"textures/plants/tex_bamboo.tga", false);
+		
+		RawModel rawBush = OBJLoader.loadObjModel("plants/bush", modelLoader);
+		TexturedModel texturedBush = new TexturedModel(rawBush,
+				"textures/plants/tex_bush.tga", false);
+		
+		RawModel rawHemp = OBJLoader.loadObjModel("plants/hemp", modelLoader);
+		TexturedModel texturedHemp = new TexturedModel(rawHemp,
+				"textures/plants/tex_hemp.tga", false);
+		
+		RawModel rawSwirl = OBJLoader.loadObjModel("plants/swirl", modelLoader);
+		TexturedModel texturedSwirl = new TexturedModel(rawSwirl,
+				"textures/plants/tex_swirl.tga", false);
+		
+		RawModel rawWhiteFlower = OBJLoader.loadObjModel("plants/white_flower", modelLoader);
+		TexturedModel texturedWhiteFlower = new TexturedModel(rawWhiteFlower,
+				"textures/plants/tex_white_flower.tga", false);
+		
+		for(int i = 0; i < 30; i++)
+		{
+			float x = (float) (Math.random() * 100);
+			float y = 0;
+			float z = (float) (Math.random() * 100);
+			float rot = (float) (Math.random() * 2 * Maths.PIf);
+			
+			TexturedModel chosenModel;
+			float scale = 1;
+			int rand = (int) (Math.random()*5);
+			switch(rand)
+			{
+				case 0: chosenModel = texturedBamboo; scale = 1.0f/25.0f;break;
+				case 1: chosenModel = texturedBush; scale = 1.0f/25.0f;break;
+				case 2: chosenModel = texturedHemp; scale = 1.0f/25.0f;break;
+				case 3: chosenModel = texturedSwirl; scale = 1.0f/25.0f;break;
+				case 4: chosenModel = texturedWhiteFlower; scale = 1.0f/25.0f;break;
+				default: chosenModel = staticModel; y = 1; break;
+			}
+			//create some randomly placed entities. *100 because that's the size of the terrain
+			
+			entities.add(new Entity(chosenModel,
+					new Vector3f(x, y, z),
+					new Vector3f(0, rot, 0),
+					new Vector3f(scale, scale, scale)));
+		}
+		entity = new Entity(staticModel, new Vector3f(10, 1, 10), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		
 		Texture[] textures = new Texture[4];
 		Texture blendMap;
 		File[] files = new File[4];
-		files[0] = new File("textures/tex_terrain_0.png");
-		files[1] = new File("textures/tex_terrain_1.png");
-		files[2] = new File("textures/tex_terrain_2.png");
-		files[3] = new File("textures/tex_terrain_3.png");
+		files[0] = new File("textures/tex_grass.jpg");
+		files[1] = new File("textures/tex_leafs.jpg");
+		files[2] = new File("textures/tex_ground.jpg");
+		files[3] = new File("textures/tex_stone_ground.jpg");
 		File fileBM = new File("textures/tex_blendMap.png");
 		try {
 			for(int i = 0; i < files.length; i++)
@@ -147,6 +199,10 @@ public class MainGameLoop extends Program
 		player.move(backend.getFrameTime()/1000);
 		camera.move();
 		
+		for(int i = 0; i < entities.size(); i++)
+		{
+			renderer.processEntity(entities.get(i));
+		}
 		renderer.processEntity(entity);
 		renderer.processEntity(player);
 		renderer.processTerrains(terrain);

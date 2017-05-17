@@ -24,7 +24,7 @@ void main()
 	//the blackTextureAmount is higher the less color the blend map has at a texel it reads out
 	float blackTextureAmount = 1 - blendMapColor.r - blendMapColor.g - blendMapColor.b;
 	
-	vec2 tiledCoords = vTexCoords * 40;	//leads to tiling the terrain
+	vec2 tiledCoords = vTexCoords * 10;	//leads to tiling the terrain
 	//read out the individual textures and weight them by the color of the blendmap
 	vec4 blackMapColor = texture(blackMap, tiledCoords) * blackTextureAmount;
 	vec4 redMapColor = texture(redMap, tiledCoords) * blendMapColor.r;

@@ -94,40 +94,48 @@ public class Player extends Entity implements KeyListener
 
 	public void checkInputs()
 	{
-		if(keys[KeyEvent.VK_W])
+		if(!isInAir)
 		{
-			currentSpeed = RUN_SPEED;
-		}
-		else if(keys[KeyEvent.VK_S])
-		{
-			currentSpeed = -RUN_SPEED;
-		}
-		else
-		{
-			currentSpeed = 0;
-		}
-		
-		if(keys[KeyEvent.VK_D])
-		{
-			currentTurnSpeed = -TURN_SPEED;
-		}
-		else if(keys[KeyEvent.VK_A])
-		{
-			currentTurnSpeed = TURN_SPEED;
-		}
-		else
-		{
-			currentTurnSpeed = 0;
-		}
-		
-		if(keys[KeyEvent.VK_SPACE])
-		{
-			if(!isInAir)
+			if(keys[KeyEvent.VK_W])
+			{
+				currentSpeed = RUN_SPEED;
+			}
+			else if(keys[KeyEvent.VK_S])
+			{
+				currentSpeed = -RUN_SPEED;
+			}
+			else
+			{
+				currentSpeed = 0;
+			}
+			
+			if(keys[KeyEvent.VK_D])
+			{
+				currentTurnSpeed = -TURN_SPEED;
+			}
+			else if(keys[KeyEvent.VK_A])
+			{
+				currentTurnSpeed = TURN_SPEED;
+			}
+			else
+			{
+				currentTurnSpeed = 0;
+			}
+			if(keys[KeyEvent.VK_SPACE])
 			{
 				isInAir = true;
 				jump();
 			}
 		}
+//		
+//		if(keys[KeyEvent.VK_SPACE])
+//		{
+//			if(!isInAir)
+//			{
+//				isInAir = true;
+//				jump();
+//			}
+//		}
 	}
 	
 	/* the key event doesn't trigger anything automatically 

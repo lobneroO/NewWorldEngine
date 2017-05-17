@@ -128,29 +128,6 @@ public class Player extends Entity implements KeyListener
 				jump();
 			}
 		}
-		
-		long time = System.currentTimeMillis();
-		//TODO: if this loop is executed while a keyevent is triggered, a
-		//ConcurrentModificationException is thrown, there needs to be some error handling
-		List<Short> releasedKeys = new ArrayList<Short>();
-		for(short key : pressedKeys)
-		{
-			if(keyReleased[key])
-			{
-				if(time - keyTime[key] > releaseEpsilon)
-				{
-					keyTime[key] = 0;
-					keyReleased[key] = false;
-					keys[key] = false;
-					releasedKeys.add(key);
-				}
-			}
-		}
-		for(short key : releasedKeys)
-		{
-			pressedKeys.remove(key);
-		}
-		releasedKeys.clear();
 	}
 	
 	/* the key event doesn't trigger anything automatically 
@@ -158,31 +135,24 @@ public class Player extends Entity implements KeyListener
 	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
-		keys[e.getKeyCode()] = true;
-		/*If you press another key while a key is pressed, the press/release events stop for the first one
-		 *In that case, the old key needs to keep being pressed*
-		 *This solution does not allow to release a key and press another one at the same time
-		 *as the released key will still be tracked until it is pressed again, but for the time
-		 *being this is the best solution i can achieve without getting a key state without a
-		 *key event because the last event triggered upon pushing a new key is always a keyrelease
-		 *event for the old key, which makes it impossible to distinguish between just pushing
-		 *a new key and holding the old one and actually releasing the old one
-		 */
-		for(short key : pressedKeys)
+		/*after some time, wrong keyReleased events are triggered, thus stopping
+		* the input action of the user. this is an autoRepeatEvent, and can be 
+		* queried as thus - just omit the event if it is*/
+		if(!e.isAutoRepeat())
 		{
-			keyReleased[key] = false;
+			keys[e.getKeyCode()] = true;
 		}
-		pressedKeys.add(e.getKeyCode());
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		/*after some time, wrong keyReleased events are triggered, thus stopping
-		* the input action of the user. check for the time between the two, to 
-		* stop this from happening and enable a normal input*/
-		keyTime[e.getKeyCode()] = System.currentTimeMillis();
-		keyReleased[e.getKeyCode()] = true;
-		
+		* the input action of the user. this is an autoRepeatEvent, and can be 
+		* queried as thus - just omit the event if it is*/
+		if(!e.isAutoRepeat())
+		{
+			keys[e.getKeyCode()] = false;
+		}
 	}
 
 	

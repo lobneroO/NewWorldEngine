@@ -135,9 +135,10 @@ public class Player extends Entity implements KeyListener
 	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
-		/*after some time, wrong keyReleased events are triggered, thus stopping
-		* the input action of the user. this is an autoRepeatEvent, and can be 
-		* queried as thus - just omit the event if it is*/
+		/*after some time, wrong keyReleased events (followed by wrong keyPressed events)
+		 * are triggered, thus stopping the input action of the user. 
+		 * this is an autoRepeatEvent, and can be queried as thus -
+		 * just omit the event if it is*/
 		if(!e.isAutoRepeat())
 		{
 			keys[e.getKeyCode()] = true;

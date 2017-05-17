@@ -24,6 +24,8 @@ public class TexturedModel
 	RawModel model;
 	Texture texture;
 	
+	boolean hasTransparencey = false;
+	
 	public TexturedModel(RawModel model)
 	{
 		this.model = model;
@@ -56,6 +58,16 @@ public class TexturedModel
 	public void setTexture(Texture texture)
 	{
 		this.texture = texture;
+	}
+	
+	public void setHasTransparency(boolean hasTransparency)
+	{
+		this.hasTransparencey = hasTransparency;
+	}
+	
+	public boolean getHasTransparency()
+	{
+		return hasTransparencey;
 	}
 	
 	public void loadTexture(String filePath, boolean mipmap)

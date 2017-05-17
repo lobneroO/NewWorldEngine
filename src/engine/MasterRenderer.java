@@ -106,6 +106,19 @@ public class MasterRenderer
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT|GL.GL_DEPTH_BUFFER_BIT);
 	}
 	
+	public static void enableCulling()
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		gl.glEnable(GL.GL_CULL_FACE);
+		gl.glCullFace(GL.GL_BACK);
+	}
+	
+	public static void disableCulling()
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		gl.glDisable(GL.GL_CULL_FACE);
+	}
+	
 	public void setClearColor(Vector4f color)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();

@@ -15,6 +15,13 @@ out vec4 fragColor;
 
 void main()
 {
+	vec4 textureColor = texture(diffuseMap, vTexCoords);
+	if(textureColor.a < 0.5)
+	{	//quick and dirty support for transparency in model textures
+		//this only works for pixels that should bei either opaque (a = 1) 
+		//or fully transparent (a = 0)
+		discard;
+	}
 	float nDotl = dot(vNormalWS, vLightDirection);	//calculate the "angle" between the normal and the light direction
 				//this determines the brightness of the fragment
 	float brightness = max(nDotl, 0.0);
@@ -32,5 +39,5 @@ void main()
 	vec4 specularLight = clamp(vec4(uLightColor * uIntensity * specIntensity, 1.0),
 		vec4(0), vec4(1));	//for some reason specular lighting can take negative values otherwise
 
-	fragColor = (vec4(diffuse, 1.0) + ambientLight + specularLight) * texture(diffuseMap, vTexCoords);
+	fragColor = (vec4(diffuse, 1.0) + ambientLight + specularLight) * textureColor;
 }

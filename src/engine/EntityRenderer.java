@@ -68,6 +68,10 @@ public class EntityRenderer
 		gl.glEnableVertexAttribArray(1);	//texCoords
 		gl.glEnableVertexAttribArray(2);	//normals
 		
+		if(model.getHasTransparency())
+		{
+			MasterRenderer.disableCulling();
+		}
 		gl.glActiveTexture(GL.GL_TEXTURE0);
 		model.bindTexture();
 	}
@@ -80,6 +84,8 @@ public class EntityRenderer
 		gl.glDisableVertexAttribArray(1);
 		gl.glDisableVertexAttribArray(2);
 		gl.glBindVertexArray(0);
+		
+		MasterRenderer.enableCulling();
 	}
 	
 	public void prepareEntity(Camera camera, Entity entity)

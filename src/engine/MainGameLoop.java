@@ -87,6 +87,7 @@ public class MainGameLoop extends Program
 		cylinder.setSpecularIntensity(10);
 		cylinder.setSpecularPower(10);
 		TexturedModel texCylinder = new TexturedModel(cylinder, "textures/tex_player.png", false);
+		texCylinder.setHasTransparency(true);
 		player = new Player(texCylinder, new Vector3f(12, 0, 12), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		backend.addKeyListener(player);
 		
@@ -101,22 +102,27 @@ public class MainGameLoop extends Program
 		RawModel rawBamboo = OBJLoader.loadObjModel("plants/bamboo", modelLoader);
 		TexturedModel texturedBamboo = new TexturedModel(rawBamboo, 
 				"textures/plants/tex_bamboo.tga", false);
+		texturedBamboo.setHasTransparency(true);
 		
 		RawModel rawBush = OBJLoader.loadObjModel("plants/bush", modelLoader);
 		TexturedModel texturedBush = new TexturedModel(rawBush,
 				"textures/plants/tex_bush.tga", false);
+		texturedBush.setHasTransparency(true);
 		
 		RawModel rawHemp = OBJLoader.loadObjModel("plants/hemp", modelLoader);
 		TexturedModel texturedHemp = new TexturedModel(rawHemp,
 				"textures/plants/tex_hemp.tga", false);
+		texturedHemp.setHasTransparency(true);
 		
 		RawModel rawSwirl = OBJLoader.loadObjModel("plants/swirl", modelLoader);
 		TexturedModel texturedSwirl = new TexturedModel(rawSwirl,
 				"textures/plants/tex_swirl.tga", false);
+		texturedSwirl.setHasTransparency(true);
 		
 		RawModel rawWhiteFlower = OBJLoader.loadObjModel("plants/white_flower", modelLoader);
 		TexturedModel texturedWhiteFlower = new TexturedModel(rawWhiteFlower,
 				"textures/plants/tex_white_flower.tga", false);
+		texturedWhiteFlower.setHasTransparency(true);
 		
 		for(int i = 0; i < 30; i++)
 		{

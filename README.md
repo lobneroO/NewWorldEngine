@@ -11,9 +11,11 @@ This work is done next to my Master's Thesis, thus updates can't be as frequent 
 * Change the old Renderer to EntityRenderer and change the camera management and projection set up to the MasterRenderer
 * Rendering entities in batches of equal entities (i.e. a batch contains every instance of an entity with the same texture and raw model) rather than every entity individually
 * Enabled backface culling by default, can be turned off for TexturedModels by setting the hasTransparency flag
-* Supporting fully transparent texels (i.e. they get discarded if the alpha value is less than 0.5)
+* Support fully transparent texels (i.e. they get discarded if the alpha value is less than 0.5)
 * Addition of TerrainRenderer, TerrainShader and Terrain classes (instead of rendering the Terrain as an Entity)
 * Support multiple textures for the terrain as well as a blend map
+* Support loading obj models with multiple spaces in the obj file
+* Support obj models with vertices being used in several vertex/texcoord/normal combinations in the face data
 
 ### What is this repository for? ###
 

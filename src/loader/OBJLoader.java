@@ -58,7 +58,6 @@ public class OBJLoader
 				//therefore, the file has to be scanned for all vertex and face data first
 				//where the face data is stored in a list an processed later on
 				
-//				line = br.readLine();
 				//replace (multiple) tabs, new lines or spaces with a single space
 				line = line.replaceAll("\\s+", " ");	
 				String[] currentLine = line.split(" ");
@@ -88,7 +87,7 @@ public class OBJLoader
 					//therefore, face data starts [1]
 					//problem is, if the object is made out of quads rather than triangles
 					if(currentLine.length == 4)
-					{ 	//f + v1 + v2 + v3 -> triangle
+					{ 	//"f " + v1 + v2 + v3 -> triangle
 						String[] v1 = currentLine[1].split("/");
 						String[] v2 = currentLine[2].split("/");
 						String[] v3 = currentLine[3].split("/");
@@ -98,13 +97,15 @@ public class OBJLoader
 						faces.add(face);
 					}
 					else
-					if(currentLine.length == 4)
-					{ 	//f + v1 + v2 + v3 + v4 -> quad
+					if(currentLine.length == 5)
+					{ 	//"f " + v1 + v2 + v3 + v4 -> quad
 						String[] v1 = currentLine[1].split("/");
 						String[] v2 = currentLine[2].split("/");
 						String[] v3 = currentLine[3].split("/");
 						String[] v4 = currentLine[4].split("/");
 						
+						//going counter clockwise this will always produce two
+						//triangle faces t1,t2 from one quad face q1 such that t1+t2=q1
 						Face face1 = processFaceData(v1, v2, v3);
 						Face face2 = processFaceData(v3, v4, v1);
 						
@@ -114,14 +115,12 @@ public class OBJLoader
 				}
 			}
 			br.close();
-			//at this point, all vertex positions, tex coords and normals are read in
-			//and the faces are stored to be processed
+			//at this point everything is read in, the faces can now be processed
 			
 			//the face combinations of v/t/n determine how to setup the vertex,
 			//texcoord and normal arrays. 1/1/1 and 1/2/1 and 1/1/2 have to be stored individually
 			//thus these three vertices would lead to three different storages of vertex position 1
 			//and three indices accordingly
-			
 			
 			for(Face face : faces)
 			{
@@ -132,8 +131,7 @@ public class OBJLoader
 			System.err.println("There was a problem with the file " + filePath + "!");
 			e.printStackTrace();
 		}
-		
-		//TODO: return the data from the VTNSet as needed
+
 		verticesArray = dataSet.getVertexPositionsArray();
 		texCoordsArray = dataSet.getTexCoordsArray();
 		normalsArray = dataSet.getNormalsArray();
@@ -150,6 +148,10 @@ public class OBJLoader
 	private static void addFace(Face face, VTNSet dataSet, List<Integer> indices,
 			List<Vector3f> vertices, List<Vector2f> texCoords, List<Vector3f> normals)
 	{
+		//takes the individual vertex data from the current face
+		//and looks up, whether this particular combination is stored already
+		//if so, the index it is stored at is read out and added to the indices array
+		//otherwise the combination is added and the new index is stored in the indices array
 		indices.add(lookUpIdOrAdd(face.getV1(), dataSet, vertices, texCoords, normals));
 		indices.add(lookUpIdOrAdd(face.getV2(), dataSet, vertices, texCoords, normals));
 		indices.add(lookUpIdOrAdd(face.getV3(), dataSet, vertices, texCoords, normals));

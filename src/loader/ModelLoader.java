@@ -42,17 +42,14 @@ public class ModelLoader
 		
 	}
 	
-//	public RawModel loadToVAO(float[] positions, float[] texCoords, int[] indices)	//positions may be vertices, textures or normals 
-//	{												//(or something else entirely)
-//		int[] VAO = createVAO();
-//		bindIndicesBuffer(indices);
-//		storeDataInAttributeList(0, positions, 3);
-//		storeDataInAttributeList(1, texCoords, 2);
-//		unbindVAO();
-//		
-//		return new RawModel(VAO.clone(), indices.length);
-//	}
-	
+	/**
+	 * Takes in information for an object and creates a RawModel object
+	 * @param positions	vertex positions with 3 values per position
+	 * @param texCoords texture coordinates with 2 values per texture coordinate
+	 * @param normals normals with 3 values per normal
+	 * @param indices indices for the index buffer with three vertices per face (i.e. triangle)
+	 * @return RawModel object created from the data that was input
+	 */
 	public RawModel loadToVAO(float[] positions, float[] texCoords, float[] normals, int[] indices)
 	{
 		int[] VAO = createVAO();

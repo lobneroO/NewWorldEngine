@@ -6,8 +6,14 @@ import java.util.List;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+/**
+ * An auxiliary class to process an obj file
+ * @author Lobner
+ *
+ */
 public class VTNSet 
 {
+	//the lists contain the actual vertices(/tex coords/normals), not the indices
 	List<Vector3f> vList = new ArrayList<Vector3f>();
 	List<Vector2f> tList = new ArrayList<Vector2f>();
 	List<Vector3f> nList = new ArrayList<Vector3f>();
@@ -18,7 +24,7 @@ public class VTNSet
 	 * @param v	Vertex position (v data in obj file)
 	 * @param t Texture coordinate (vt data in obj file)
 	 * @param n Normal data (vn data in obj file)
-	 * @return ID of the new vertex data set
+	 * @return ID of the new vertex data set in the to-be-vertex-buffer-object
 	 */
 	public int getID(Vector3f v, Vector2f t, Vector3f n)
 	{
@@ -54,16 +60,28 @@ public class VTNSet
 		}
 	}
 	
+	/**
+	 * Returns an array with all vertices as they are to be stored in the VBO
+	 * @return float array that contains all the positions of the vertices for a VBO
+	 */
 	public float[] getVertexPositionsArray()
 	{
 		return convertVector3fListToFloatArray(vList);
 	}
 	
+	/**
+	 * Returns an array with all texture coordinates as they are to be stored in the VBO
+	 * @return float array that contains all the texcoords of the vertices for a VBO
+	 */
 	public float[] getTexCoordsArray()
 	{
 		return convertVector2fListToFloatArray(tList);
 	}
 	
+	/**
+	 * Returns an array with all normals as they are to be stored in the VBO
+	 * @return float array that contains all the normals of the vertices for a VBO
+	 */
 	public float[] getNormalsArray()
 	{
 		return convertVector3fListToFloatArray(nList);

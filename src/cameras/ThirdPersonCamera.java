@@ -25,6 +25,10 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 	public ThirdPersonCamera(Player player)
 	{
 		this.player = player;
+		if(player.isMirrored())
+		{
+			angleAroundPlayer = 0;
+		}
 		pitch = (float) Math.toRadians(45);
 		viewMatrix = Maths.createViewMatrix(position, pitch, yaw);
 	}

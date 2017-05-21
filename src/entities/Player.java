@@ -15,7 +15,7 @@ import com.jogamp.newt.event.KeyListener;
  */
 public class Player extends Entity implements KeyListener
 {
-	private static final float RUN_SPEED = 20;		//units per second
+	private static float RUN_SPEED = 20;		//units per second
 	private static final float TURN_SPEED = 90;	//degrees per second
 	private static final float GRAVITY = -50;
 	private static final float JUMP_POWER = 30;
@@ -26,6 +26,7 @@ public class Player extends Entity implements KeyListener
 	private float currentTurnSpeed = 0;
 	private float upwardsSpeed = 0;
 	private boolean isInAir = false;
+	private boolean mirrored = false;
 	
 	boolean[] keys = new boolean[KeyEvent.EVENT_KEY_PRESSED];
 	
@@ -145,5 +146,17 @@ public class Player extends Entity implements KeyListener
 		}
 	}
 
+	public boolean isMirrored()
+	{
+		return mirrored;
+	}
 	
+	public void setMirrored(boolean mirrored)
+	{
+		this.mirrored = mirrored;
+		if(mirrored)
+		{
+			RUN_SPEED = -RUN_SPEED;
+		}
+	}
 }

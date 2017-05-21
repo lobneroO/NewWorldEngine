@@ -83,14 +83,17 @@ public class MainGameLoop extends Program
 		
 		//------MDOELS, PLAYER and CAMERA
 		entities = new ArrayList<Entity>();
-		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
-		cylinder.setSpecularIntensity(10);
-		cylinder.setSpecularPower(10);
-		TexturedModel texCylinder = new TexturedModel(cylinder, "textures/tex_player.png", false);
-		texCylinder.getTexture().setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
-		texCylinder.getTexture().setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
-		texCylinder.setHasTransparency(true);
-		player = new Player(texCylinder, new Vector3f(12, 0, 12), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
+		RawModel rmPlayer = OBJLoader.loadObjModel("player/model", modelLoader);
+		rmPlayer.setSpecularIntensity(10);
+		rmPlayer.setSpecularPower(10);
+		TexturedModel texPlayer = new TexturedModel(rmPlayer, 
+				"textures/player/tex_player.png", false);
+		texPlayer.getTexture().setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+		texPlayer.getTexture().setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
+		texPlayer.setHasTransparency(true);
+		player = new Player(texPlayer, new Vector3f(12, 0, 12), new Vector3f(0, Maths.PIf, 0), 
+				new Vector3f(1f/30f, 1f/30f, 1f/30f));
+		player.setMirrored(true);
 		backend.addKeyListener(player);
 		
 		camera = new ThirdPersonCamera(player);

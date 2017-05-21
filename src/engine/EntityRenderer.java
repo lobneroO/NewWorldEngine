@@ -17,9 +17,7 @@ import entities.RawModel;
 import entities.TexturedModel;
 
 /**
- * The Renderer class takes care of the rendering tasks themselves.
- * That is, it takes care of loading up the data to the grapics card, clear the frame buffer
- * and setting up the projection matrix.
+ * The renderer for Entity objects
  * @author Lobner
  *
  */
@@ -37,6 +35,13 @@ public class EntityRenderer
 		this.shader = shader;
 	}
 	
+	/**
+	 * Renders a list of entities in batches of equivalent RawModel and Texture combinations
+	 * i.e. Entities that share the RawModel and Texture object are rendered in a series
+	 * to not set up everything anew
+	 * @param camera The camera responsible for the view matrix
+	 * @param entities The list of entities that share the same RawModel object and Texture
+	 */
 	public void render(Camera camera, Map<TexturedModel, List<Entity>> entities)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
@@ -85,6 +90,7 @@ public class EntityRenderer
 		gl.glDisableVertexAttribArray(2);
 		gl.glBindVertexArray(0);
 		
+		//instead of checking whether back face culling was disabled just enable by default
 		MasterRenderer.enableCulling();
 	}
 	

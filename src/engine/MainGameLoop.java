@@ -205,6 +205,7 @@ public class MainGameLoop extends Program
 			System.out.println("cleaning up another entity");
 		}
 		
+		entity.cleanUp();
 		terrain.cleanUp();
 		player.cleanUp();
 				
@@ -311,7 +312,9 @@ public class MainGameLoop extends Program
 	@Override
 	public void printHelp() 
 	{
-		System.out.println("Move around with WASD");		
+		System.out.println("Move around with WASD, Jump with SPACE");
+		System.out.println("Click the left mouse button to move the camera around the player");
+		System.out.println("Use the mouse wheel to zoom the camera in or out");
 	}
 
 	@Override

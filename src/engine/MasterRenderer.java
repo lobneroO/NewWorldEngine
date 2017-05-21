@@ -21,6 +21,11 @@ import shader.BasicLightShader;
 import shader.TerrainShader;
 import terrains.Terrain;
 
+/**
+ * Manages all the individual renderers, their shaders and OpenGL set ups
+ * @author Lobner
+ *
+ */
 public class MasterRenderer 
 {
 	private BasicLightShader basicLightShader;
@@ -36,6 +41,12 @@ public class MasterRenderer
 		
 	}
 	
+	/**
+	 * Sets up the individual shaders and corresponding renderers
+	 * @param projectionMatrix The projection matrix that is shared among all renderers
+	 * @param sun The light for the scene
+	 * @param shaderLoader The shader loader that takes care of cleaning up afterwards
+	 */
 	public void init(Matrix4f projectionMatrix, Light sun, ShaderLoader shaderLoader)
 	{
 		basicLightShader = new BasicLightShader();
@@ -57,6 +68,13 @@ public class MasterRenderer
 		setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
 	}
 	
+	/**
+	 * Render the entity batches, i.e. if two entities have the same RawModel and Texture,
+	 * they don't need individual OpenGL set ups (other than the matrices), so they are rendered
+	 * as efficiently as possible
+	 * @param sun
+	 * @param camera
+	 */
 	public void render(Light sun, Camera camera)
 	{
 		prepare();
@@ -75,6 +93,11 @@ public class MasterRenderer
 		terrains.clear();
 	}
 	
+	/**
+	 * Puts the new entity into the batch of equal entities.
+	 * If there is no batch for this entity yet, a new one will be created.
+	 * @param entity
+	 */
 	public void processEntity(Entity entity)
 	{
 		TexturedModel entityModel = entity.getModel();
@@ -94,6 +117,10 @@ public class MasterRenderer
 		}
 	}
 	
+	/**
+	 * Adds the terrain to the terrains that ought to be rendered
+	 * @param terrain
+	 */
 	public void processTerrains(Terrain terrain)
 	{
 		terrains.add(terrain);
@@ -128,6 +155,6 @@ public class MasterRenderer
 	
 	public void cleanUp()
 	{
-		//basicLightShader.cleanUp();	//is done in the shader loader, don't forget if changing
+		
 	}
 }

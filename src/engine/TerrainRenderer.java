@@ -16,6 +16,11 @@ import terrains.Terrain;
 import textures.TerrainTexturePack;
 import toolbox.Maths;
 
+/**
+ * The renderer to render Terrain objects.
+ * @author Lobner
+ *
+ */
 public class TerrainRenderer 
 {
 	private TerrainShader shader;

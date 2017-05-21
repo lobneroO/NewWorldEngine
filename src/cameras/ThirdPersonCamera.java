@@ -29,6 +29,9 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 		viewMatrix = Maths.createViewMatrix(position, pitch, yaw);
 	}
 	
+	/**
+	 * Updates the camera position and view direction according to the processed mouse input
+	 */
 	public void move()
 	{
 		float horizontalDistance = calculateHorizontalDistance();

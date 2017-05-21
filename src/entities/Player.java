@@ -117,15 +117,6 @@ public class Player extends Entity implements KeyListener
 				jump();
 			}
 		}
-//		
-//		if(keys[KeyEvent.VK_SPACE])
-//		{
-//			if(!isInAir)
-//			{
-//				isInAir = true;
-//				jump();
-//			}
-//		}
 	}
 	
 	/* the key event doesn't trigger anything automatically 

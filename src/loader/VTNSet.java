@@ -34,8 +34,7 @@ public class VTNSet
 			if(currentV.equals(v) && currentT.equals(t) && currentN.equals(n))
 			{
 				isInList = true;
-				id = i+1;	//for indicies starting at 1, whereas the list is working with indices
-							//starting at 0 (i.e. initially i==0)
+				id = i;
 				break;
 			}
 		}
@@ -50,8 +49,8 @@ public class VTNSet
 			vList.add(v);
 			tList.add(t);
 			nList.add(n);
-			//the new set is at the last position in the lists, thus the index is the size
-			return vList.size();
+			//the new set is at the last position in the lists, thus the index is the size-1 (indices starting at 0)
+			return vList.size()-1;
 		}
 	}
 	

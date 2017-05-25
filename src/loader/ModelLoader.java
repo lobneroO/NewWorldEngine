@@ -62,6 +62,15 @@ public class ModelLoader
 		return new RawModel(VAO.clone(), indices.length);
 	}
 	
+	public RawModel loadToVAO(float[] positions, int dimensions)
+	{
+		int[] VAO = createVAO();
+//		binIndicesBuffer(indices);
+		storeDataInAttributeList(0, positions, dimensions);
+		unbindVAO();
+		return new RawModel(VAO, positions.length/dimensions);
+	}
+	
 	private int[] createVAO()
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();

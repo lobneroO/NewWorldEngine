@@ -2,13 +2,13 @@
 
 layout (location = 0) in vec3 position;
 
-uniform mat4 gMVPMatrix;
-out vec3 texCoord;
+uniform mat4 uViewProjectionMatrix;
+out vec3 vTexCoords;
 
 void main()
 {
-	vec4 MVP_Pos = gMVPMatrix * vec4(position, 1.0);
-	gl_Position = MVP_Pos.xyww;	//perspective divide leads to z=1.0
+	vec4 VP_Pos = uViewProjectionMatrix * vec4(position, 1.0);
+	gl_Position = VP_Pos.xyww;	//perspective divide leads to z=1.0
 								//this corresponds to the far plane
 								//thus the skybox will always be rendered on empty spaces, 
 								//but is guaranteed to be behind everything else

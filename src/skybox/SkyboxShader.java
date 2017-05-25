@@ -13,8 +13,8 @@ import shader.ShaderProgram;
 public class SkyboxShader extends ShaderProgram 
 {	
 	//locations
-	private int location_modelMatrix;
-	private int location_modelViewProjectionMatrix;
+//	private int location_modelMatrix;
+	private int location_viewProjectionMatrix;
 	
 	public SkyboxShader() 
 	{
@@ -37,18 +37,18 @@ public class SkyboxShader extends ShaderProgram
 	@Override
 	protected void getAllUniformLocations() 
 	{
-		location_modelMatrix = getUniformLocation("uModelMatrix");
-		location_modelViewProjectionMatrix = getUniformLocation("uModelViewProjectionMatrix");
+//		location_modelMatrix = getUniformLocation("uModelMatrix");
+		location_viewProjectionMatrix = getUniformLocation("uModelViewProjectionMatrix");
 	}
 	
-	public void loadModelMatrix(Matrix4f matrix)
-	{
-		loadMat4(location_modelMatrix, matrix);
-	}
+//	public void loadModelMatrix(Matrix4f matrix)
+//	{
+//		loadMat4(location_modelMatrix, matrix);
+//	}
 	
-	public void loadModelViewProjectionMatrix(Matrix4f matrix)
+	public void loadViewProjectionMatrix(Matrix4f matrix)
 	{
-		loadMat4(location_modelViewProjectionMatrix, matrix);
+		loadMat4(location_viewProjectionMatrix, matrix);
 	}
 	
 }

@@ -16,11 +16,17 @@ bin/
 debug_mode/
 .settings/
 
+#content that is not meant for release can be moved into a folder EditorOnly, makes ignoring and locally using it easier (see unity)
+#this can also be used for texture and model packages, where not everything will be used (yet) but can be stored in the engine
+EditorOnly/
+EditorOnly*
+
 #single files that (probably?) should be ignored
 .DS_Store
 .classpath
 .project
 *Thumbs.db
+*/Thumbs.db
 
 #old code that may be reused but is not necessary
 srcOld/*

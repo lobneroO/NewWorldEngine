@@ -31,20 +31,13 @@ public class SkyboxShader extends ShaderProgram
 	protected void bindAttributes() 
 	{
 		bindAttribute(0, "position");
-		bindAttribute(1, "texCoords");
 	}
 
 	@Override
 	protected void getAllUniformLocations() 
 	{
-//		location_modelMatrix = getUniformLocation("uModelMatrix");
-		location_viewProjectionMatrix = getUniformLocation("uModelViewProjectionMatrix");
+		location_viewProjectionMatrix = getUniformLocation("uViewProjectionMatrix");
 	}
-	
-//	public void loadModelMatrix(Matrix4f matrix)
-//	{
-//		loadMat4(location_modelMatrix, matrix);
-//	}
 	
 	public void loadViewProjectionMatrix(Matrix4f matrix)
 	{

@@ -4,11 +4,11 @@ in vec3 vTexCoords;
 
 out vec4 fragColor;
 
-uniform samplerCube gCubemapTexture;
+uniform samplerCube cubemapTexture;
 
 void main()
 {
 	//no more calculations are done, no lighting goes into this
 	//thus just reading out the correct texture pixel suffices
-	fragColor = texture(gCubemapTexture, texCoord);
+	fragColor = texture(cubemapTexture, texCoord);
 }

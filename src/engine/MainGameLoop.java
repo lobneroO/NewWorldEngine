@@ -161,7 +161,7 @@ public class MainGameLoop extends Program
 		files[1] = new File("textures/terrain/grass_autumn_red_d.jpg");
 		files[2] = new File("textures/terrain/grass_rocky_d.jpg");
 		files[3] = new File("textures/terrain/ground_crackedo_d.jpg");
-		File fileBM = new File("textures/tex_blendMap.png");
+		File fileBM = new File("textures/terrain/tex_blendMap.png");
 		try {
 			for(int i = 0; i < files.length; i++)
 			{

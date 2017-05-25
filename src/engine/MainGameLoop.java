@@ -62,6 +62,7 @@ public class MainGameLoop extends Program
 	List<Texture> textures;
 	Player player;
 	Terrain terrain;
+	RawModel skybox;
 	
 	Light light;
 	@Override
@@ -182,6 +183,8 @@ public class MainGameLoop extends Program
 			e.printStackTrace();
 			return false;
 		}
+		
+		renderer.setSkybox(modelLoader);
 		
 		return true;
 	}

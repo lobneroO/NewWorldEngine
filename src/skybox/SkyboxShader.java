@@ -13,7 +13,7 @@ import shader.ShaderProgram;
 public class SkyboxShader extends ShaderProgram 
 {	
 	//locations
-//	private int location_modelMatrix;
+	private int location_cubemap;
 	private int location_viewProjectionMatrix;
 	
 	public SkyboxShader() 
@@ -37,11 +37,17 @@ public class SkyboxShader extends ShaderProgram
 	protected void getAllUniformLocations() 
 	{
 		location_viewProjectionMatrix = getUniformLocation("uViewProjectionMatrix");
+		location_cubemap = getUniformLocation("cubemapTexture");
 	}
 	
 	public void loadViewProjectionMatrix(Matrix4f matrix)
 	{
 		loadMat4(location_viewProjectionMatrix, matrix);
+	}
+	
+	public void loadCubemap()
+	{
+		loadInt(location_cubemap, 0);
 	}
 	
 }

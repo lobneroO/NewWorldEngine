@@ -62,10 +62,16 @@ public class ModelLoader
 		return new RawModel(VAO.clone(), indices.length);
 	}
 	
+	/**
+	 * Load a model without textures or normals
+	 * and create a RawModel with the vertex positions in attribute 0
+	 * @param positions vertex positions
+	 * @param dimensions determines the number of position values per position
+	 * @return RawModel object created form the data that was input
+	 */
 	public RawModel loadToVAO(float[] positions, int dimensions)
 	{
 		int[] VAO = createVAO();
-//		binIndicesBuffer(indices);
 		storeDataInAttributeList(0, positions, dimensions);
 		unbindVAO();
 		return new RawModel(VAO, positions.length/dimensions);

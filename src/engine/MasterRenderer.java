@@ -12,13 +12,17 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLContext;
 
+import loader.ModelLoader;
+import loader.OBJLoader;
 import loader.ShaderLoader;
 import cameras.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.RawModel;
 import entities.TexturedModel;
 import shader.BasicLightShader;
 import shader.TerrainShader;
+import skybox.SkyboxRenderer;
 import terrains.Terrain;
 
 /**
@@ -28,10 +32,14 @@ import terrains.Terrain;
  */
 public class MasterRenderer 
 {
+	private Matrix4f projectionMatrix;
+	
 	private BasicLightShader basicLightShader;
 	private EntityRenderer entityRenderer;
 	private TerrainShader terrainShader;
 	private TerrainRenderer terrainRenderer;
+	private SkyboxRenderer skyboxRenderer;
+	boolean skyboxIsSet = false;
 	
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private List<Terrain> terrains = new ArrayList<Terrain>();
@@ -49,6 +57,8 @@ public class MasterRenderer
 	 */
 	public void init(Matrix4f projectionMatrix, Light sun, ShaderLoader shaderLoader)
 	{
+		this.projectionMatrix = projectionMatrix;
+		
 		basicLightShader = new BasicLightShader();
 		shaderLoader.loadShader(basicLightShader);
 		entityRenderer = new EntityRenderer(basicLightShader);
@@ -91,6 +101,11 @@ public class MasterRenderer
 		
 		entities.clear();
 		terrains.clear();
+		
+		if(skyboxIsSet)
+		{
+			skyboxRenderer.render(camera);
+		}
 	}
 	
 	/**
@@ -124,6 +139,20 @@ public class MasterRenderer
 	public void processTerrains(Terrain terrain)
 	{
 		terrains.add(terrain);
+	}
+	
+	public void setSkybox(ModelLoader loader)
+	{
+		RawModel skybox = OBJLoader.loadObjModel("cube/model", loader);
+		skyboxRenderer = new SkyboxRenderer(skybox, projectionMatrix);
+		skyboxIsSet = true;
+	}
+	
+	public void setSkybox(ModelLoader loader, String path, String[] textures)
+	{
+		RawModel skybox = OBJLoader.loadObjModel("cube/model", loader);
+		skyboxRenderer = new SkyboxRenderer(skybox, projectionMatrix, path, textures);
+		skyboxIsSet = true;
 	}
 	
 	public void prepare()

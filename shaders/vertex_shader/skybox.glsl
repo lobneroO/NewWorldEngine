@@ -13,7 +13,7 @@ void main()
 								//thus the skybox will always be rendered on empty spaces, 
 								//but is guaranteed to be behind everything else
 								
-	texCoord = position;		//this is done since the cube map is a 3d texture and the
+	vTexCoords = position;		//this is done since the cube map is a 3d texture and the
 								//correct pixel is found by a vector from the origin 
 								//through a point in the skybox, 
 								//thus making the position the texture coordinate

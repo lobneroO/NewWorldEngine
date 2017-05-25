@@ -141,17 +141,17 @@ public class MasterRenderer
 		terrains.add(terrain);
 	}
 	
-	public void setSkybox(ModelLoader loader)
+	public void setSkybox(ShaderLoader shaderLoader, ModelLoader modelLoader)
 	{
-		RawModel skybox = OBJLoader.loadObjModel("cube/model", loader);
-		skyboxRenderer = new SkyboxRenderer(skybox, projectionMatrix);
+		RawModel skybox = OBJLoader.loadObjModel("cube/model", modelLoader);
+		skyboxRenderer = new SkyboxRenderer(shaderLoader, skybox, projectionMatrix);
 		skyboxIsSet = true;
 	}
 	
-	public void setSkybox(ModelLoader loader, String path, String[] textures)
+	public void setSkybox(ShaderLoader shaderLoader, ModelLoader modelLoader, String path, String[] textures)
 	{
-		RawModel skybox = OBJLoader.loadObjModel("cube/model", loader);
-		skyboxRenderer = new SkyboxRenderer(skybox, projectionMatrix, path, textures);
+		RawModel skybox = OBJLoader.loadObjModel("cube/model", modelLoader);
+		skyboxRenderer = new SkyboxRenderer(shaderLoader,skybox, projectionMatrix, path, textures);
 		skyboxIsSet = true;
 	}
 	

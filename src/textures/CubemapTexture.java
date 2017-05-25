@@ -64,7 +64,7 @@ public class CubemapTexture
 			{
 				File texFile = new File(m_fileNames[i]);
 				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(), texFile, 
-						GL.GL_RGB, GL.GL_RGBA, false, fileSuffix);
+						GL.GL_RGBA, GL.GL_RGB, false, fileSuffix);
 				
 				if(data == null)
 				{

@@ -1,5 +1,7 @@
 package skybox;
 
+import loader.ShaderLoader;
+
 import org.joml.Matrix4f;
 
 import textures.CubemapTexture;
@@ -25,22 +27,28 @@ public class SkyboxRenderer
 	private Matrix4f projectionMatrix;
 	private SkyboxShader shader;
 	
-	public SkyboxRenderer(RawModel skybox, Matrix4f projectionMatrix)
+	public SkyboxRenderer(ShaderLoader loader, RawModel skybox, Matrix4f projectionMatrix)
 	{
-		this.skybox = skybox;
-		this.projectionMatrix = projectionMatrix;
+		init(loader, skybox, projectionMatrix);
 		
 		loadCubemap();
 	}
 	
-	public SkyboxRenderer(RawModel skybox, Matrix4f projectionMatrix, String path, String[] textures)
+	public SkyboxRenderer(ShaderLoader loader, RawModel skybox, Matrix4f projectionMatrix, String path, String[] textures)
 	{
-		this.skybox = skybox;
-		this.projectionMatrix = projectionMatrix;
+		init(loader, skybox, projectionMatrix);
 		
 		loadCubemap(path, textures);
 	}
 	
+	
+	public void init(ShaderLoader loader, RawModel skybox, Matrix4f projectionMatrix)
+	{
+		this.skybox = skybox;
+		this.projectionMatrix = projectionMatrix;
+		shader = new SkyboxShader();
+		loader.loadShader(shader);
+	}
 	public void render(Camera camera)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();

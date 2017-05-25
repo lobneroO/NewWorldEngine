@@ -184,7 +184,7 @@ public class MainGameLoop extends Program
 			return false;
 		}
 		
-		renderer.setSkybox(modelLoader);
+		renderer.setSkybox(shaderLoader, modelLoader);
 		
 		return true;
 	}

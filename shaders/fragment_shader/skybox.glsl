@@ -10,5 +10,5 @@ void main()
 {
 	//no more calculations are done, no lighting goes into this
 	//thus just reading out the correct texture pixel suffices
-	fragColor = texture(cubemapTexture, texCoord);
+	fragColor = texture(cubemapTexture, vTexCoords);
 }

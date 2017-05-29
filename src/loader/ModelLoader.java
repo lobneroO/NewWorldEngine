@@ -74,7 +74,7 @@ public class ModelLoader
 		int[] VAO = createVAO();
 		storeDataInAttributeList(0, positions, dimensions);
 		unbindVAO();
-		return new RawModel(VAO, positions.length/dimensions);
+		return new RawModel(VAO.clone(), positions.length/dimensions);
 	}
 	
 	private int[] createVAO()

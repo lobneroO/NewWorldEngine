@@ -49,9 +49,11 @@ public class SkyboxRenderer
 		shader = new SkyboxShader();
 		loader.loadShader(shader);
 	}
+	
 	public void render(Camera camera)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
+		gl.glDisable(GL.GL_CULL_FACE);
 		
 		shader.start();
 		
@@ -59,15 +61,20 @@ public class SkyboxRenderer
 		gl.glEnableVertexAttribArray(0);	//vertices
 		
 		Matrix4f viewMatrix = camera.getViewMatrix();
-		Matrix4f viewProjectionMatrix = projectionMatrix.mul(viewMatrix);
+		Matrix4f viewProjectionMatrix = new Matrix4f();
+		viewProjectionMatrix.identity();
+		viewProjectionMatrix.mul(projectionMatrix);
+		viewProjectionMatrix.mul(viewMatrix);
 		shader.loadViewProjectionMatrix(viewProjectionMatrix);
 		cubemap.bind(gl, GL.GL_TEXTURE0);
 		
-		gl.glDrawElements(GL.GL_TRIANGLES, skybox.getNumVertices(), GL.GL_UNSIGNED_INT, 0);
+//		gl.glDrawElements(GL.GL_TRIANGLES, skybox.getNumVertices(), GL.GL_UNSIGNED_INT, 0);
+		gl.glDrawArrays(GL.GL_TRIANGLES, 0, skybox.getNumVertices());
 		
 		gl.glDisableVertexAttribArray(0);
 		
 		shader.stop();
+		gl.glEnable(GL.GL_CULL_FACE);
 	}
 	
 	/**

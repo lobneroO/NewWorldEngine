@@ -24,6 +24,7 @@ import shader.BasicLightShader;
 import shader.TerrainShader;
 import skybox.SkyboxRenderer;
 import terrains.Terrain;
+import toolbox.StandardModels;
 
 /**
  * Manages all the individual renderers, their shaders and OpenGL set ups
@@ -89,18 +90,18 @@ public class MasterRenderer
 	{
 		prepare();
 		
-		basicLightShader.start();
-		basicLightShader.loadLightPosition(sun.getPosition());
-		entityRenderer.render(camera, entities);
-		basicLightShader.stop();
-		
-		terrainShader.start();
-		terrainShader.loadLightPosition(sun.getPosition());
-		terrainRenderer.render(camera, terrains);
-		terrainShader.stop();
-		
-		entities.clear();
-		terrains.clear();
+//		basicLightShader.start();
+//		basicLightShader.loadLightPosition(sun.getPosition());
+//		entityRenderer.render(camera, entities);
+//		basicLightShader.stop();
+//		
+//		terrainShader.start();
+//		terrainShader.loadLightPosition(sun.getPosition());
+//		terrainRenderer.render(camera, terrains);
+//		terrainShader.stop();
+//		
+//		entities.clear();
+//		terrains.clear();
 		
 		if(skyboxIsSet)
 		{
@@ -143,12 +144,14 @@ public class MasterRenderer
 	
 	public void setSkybox(ShaderLoader shaderLoader, ModelLoader modelLoader)
 	{
-		RawModel skybox = OBJLoader.loadObjModel("cube/model", modelLoader);
+//		RawModel skybox = OBJLoader.loadObjModel("cube/model", modelLoader);
+		RawModel skybox = modelLoader.loadToVAO(StandardModels.getCubeVertices(100f), 3);
 		skyboxRenderer = new SkyboxRenderer(shaderLoader, skybox, projectionMatrix);
 		skyboxIsSet = true;
 	}
 	
-	public void setSkybox(ShaderLoader shaderLoader, ModelLoader modelLoader, String path, String[] textures)
+	public void setSkybox(ShaderLoader shaderLoader, ModelLoader modelLoader, String path, 
+			String[] textures)
 	{
 		RawModel skybox = OBJLoader.loadObjModel("cube/model", modelLoader);
 		skyboxRenderer = new SkyboxRenderer(shaderLoader,skybox, projectionMatrix, path, textures);
@@ -158,7 +161,7 @@ public class MasterRenderer
 	public void prepare()
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
-		gl.glEnable(GL.GL_DEPTH_TEST);
+//		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT|GL.GL_DEPTH_BUFFER_BIT);
 	}
 	

@@ -55,12 +55,17 @@ public class SkyboxRenderer
 		
 		shader.start();
 		
+		gl.glBindVertexArray(skybox.getVAO()[0]);
+		gl.glEnableVertexAttribArray(0);	//vertices
+		
 		Matrix4f viewMatrix = camera.getViewMatrix();
 		Matrix4f viewProjectionMatrix = projectionMatrix.mul(viewMatrix);
 		shader.loadViewProjectionMatrix(viewProjectionMatrix);
-		cubemap.bind(gl, 0);
+		cubemap.bind(gl, GL.GL_TEXTURE0);
 		
 		gl.glDrawElements(GL.GL_TRIANGLES, skybox.getNumVertices(), GL.GL_UNSIGNED_INT, 0);
+		
+		gl.glDisableVertexAttribArray(0);
 		
 		shader.stop();
 	}

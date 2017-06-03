@@ -95,13 +95,13 @@ public class MasterRenderer
 //		entityRenderer.render(camera, entities);
 //		basicLightShader.stop();
 //		
-//		terrainShader.start();
-//		terrainShader.loadLightPosition(sun.getPosition());
-//		terrainRenderer.render(camera, terrains);
-//		terrainShader.stop();
+		terrainShader.start();
+		terrainShader.loadLightPosition(sun.getPosition());
+		terrainRenderer.render(camera, terrains);
+		terrainShader.stop();
 //		
 //		entities.clear();
-//		terrains.clear();
+		terrains.clear();
 		
 		if(skyboxIsSet)
 		{
@@ -161,7 +161,7 @@ public class MasterRenderer
 	public void prepare()
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
-//		gl.glEnable(GL.GL_DEPTH_TEST);
+		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT|GL.GL_DEPTH_BUFFER_BIT);
 	}
 	

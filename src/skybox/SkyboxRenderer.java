@@ -93,7 +93,7 @@ public class SkyboxRenderer
 		cubemap = new CubemapTexture("textures/skybox/", TEX_RIGHT, TEX_LEFT, TEX_TOP, 
 				TEX_BOTTOM, TEX_FRONT, TEX_BACK);
 		
-		cubemap.load(gl);
+		cubemap.loadWithJOGL(gl);
 	}
 	
 	/**
@@ -107,7 +107,7 @@ public class SkyboxRenderer
 		cubemap = new CubemapTexture("textures/skybox/", textures[0], textures[1], textures[2], 
 				textures[3], textures[4], textures[5]);
 		
-		cubemap.load(gl);
+		cubemap.loadWithJOGL(gl);
 	}
 	
 	public void cleanUp()

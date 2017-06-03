@@ -54,35 +54,35 @@ public class CubemapTexture
 		gl.glBindTexture(GL.GL_TEXTURE_CUBE_MAP, m_textureObj[0]);
 	}
 	
-	public boolean load(GL3 gl)
-	{
-		cubemapTexture = TextureIO.newTexture(GL.GL_TEXTURE_CUBE_MAP);
-
-		try
-		{
-			for(int i = 0; i < types.length; i++)
-			{
-				File texFile = new File(m_fileNames[i]);
-				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(), texFile, 
-						GL.GL_RGBA, GL.GL_RGB, false, fileSuffix);
-				
-				if(data == null)
-				{
-					System.err.println("Could not create cubemap!");
-					System.err.println("Could not use " + m_fileNames[i]);
-					return false;
-				}
-				
-				cubemapTexture.updateImage(gl, data, types[i]);
-			}
-		} catch(IOException e)
-		{
-			System.err.println(e);
-			return false;
-		}
-		
-		return true;
-	}
+//	public boolean load(GL3 gl)
+//	{
+//		cubemapTexture = TextureIO.newTexture(GL.GL_TEXTURE_CUBE_MAP);
+//
+//		try
+//		{
+//			for(int i = 0; i < types.length; i++)
+//			{
+//				File texFile = new File(m_fileNames[i]);
+//				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(), texFile, 
+//						GL.GL_RGBA, GL.GL_RGB, false, fileSuffix);
+//				
+//				if(data == null)
+//				{
+//					System.err.println("Could not create cubemap!");
+//					System.err.println("Could not use " + m_fileNames[i]);
+//					return false;
+//				}
+//				
+//				cubemapTexture.updateImage(gl, data, types[i]);
+//			}
+//		} catch(IOException e)
+//		{
+//			System.err.println(e);
+//			return false;
+//		}
+//		
+//		return true;
+//	}
 	
 	public boolean loadWithJOGL(GL3 gl)
 	{
@@ -96,7 +96,7 @@ public class CubemapTexture
 				File texFile = new File(m_fileNames[i]);
 				gl.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1);
 				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(), texFile, 
-						GL.GL_RGB, GL.GL_RGBA, false, fileSuffix);
+						GL.GL_RGB, GL.GL_RGB, false, fileSuffix);
 				
 //				gl.glTexImage2D(int target, int level, int internalformat, 
 //						int width, int height, int border, 

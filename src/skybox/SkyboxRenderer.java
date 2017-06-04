@@ -110,15 +110,15 @@ public class SkyboxRenderer
 	 * textures/cubemap/left.jpg
 	 * textures/cubemap/top.jpg
 	 * textures/cubemap/bottom.jpg
-	 * textures/cubemap/front.jpg
 	 * textures/cubemap/back.jpg
+	 * textures/cubemap/front.jpg
 	 */
 	public void loadCubemap()
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
 		cubemap = new CubemapTexture("textures/skybox/", TEX_RIGHT, TEX_LEFT, TEX_TOP, 
-				TEX_BOTTOM, TEX_FRONT, TEX_BACK);
+				TEX_BOTTOM, TEX_BACK, TEX_FRONT);
 		
 		cubemap.loadWithJOGL(gl);
 	}

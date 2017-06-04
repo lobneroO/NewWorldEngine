@@ -48,33 +48,60 @@ public class SkyboxRenderer
 		this.projectionMatrix = projectionMatrix;
 		shader = new SkyboxShader();
 		loader.loadShader(shader);
+		shader.start();
+		shader.loadCubemap();
+		shader.stop();
 	}
 	
 	public void render(Camera camera)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
-		gl.glDisable(GL.GL_CULL_FACE);
-		
+
 		shader.start();
 		
-		gl.glBindVertexArray(skybox.getVAO()[0]);
-		gl.glEnableVertexAttribArray(0);	//vertices
+		prepareSkybox();
+		prepareMatrices(camera);
+		prepareCubemap();
 		
-		Matrix4f viewMatrix = camera.getViewMatrix();
-		Matrix4f viewProjectionMatrix = new Matrix4f();
-		viewProjectionMatrix.identity();
-		viewProjectionMatrix.mul(projectionMatrix);
-		viewProjectionMatrix.mul(viewMatrix);
-		shader.loadViewProjectionMatrix(viewProjectionMatrix);
-		cubemap.bind(gl, GL.GL_TEXTURE0);
-		
-//		gl.glDrawElements(GL.GL_TRIANGLES, skybox.getNumVertices(), GL.GL_UNSIGNED_INT, 0);
 		gl.glDrawArrays(GL.GL_TRIANGLES, 0, skybox.getNumVertices());
 		
-		gl.glDisableVertexAttribArray(0);
+		unbindSkybox();
 		
 		shader.stop();
 		gl.glEnable(GL.GL_CULL_FACE);
+	}
+	
+	private void prepareSkybox()
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		gl.glDisable(GL.GL_CULL_FACE);
+		gl.glDepthFunc(GL.GL_LEQUAL);	//the skybox is always on the farplane, but the standard test
+										//fails if something is ON the farplane (as the test is Less Than),
+										//thus the skybox would always fail the depth test. 
+										//this way it will never fail the depth test
+		
+		gl.glBindVertexArray(skybox.getVAO()[0]);
+		gl.glEnableVertexAttribArray(0);	//vertices
+	}
+	
+	private void prepareMatrices(Camera camera)
+	{
+		Matrix4f viewProjectionMatrix = new Matrix4f();
+		projectionMatrix.mul(camera.getViewMatrix(), viewProjectionMatrix);	//VPMatrix = PMatrix * VMatrix
+		shader.loadViewProjectionMatrix(viewProjectionMatrix);
+	}
+	
+	private void prepareCubemap()
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		cubemap.bind(gl, GL.GL_TEXTURE0);
+	}
+	
+	private void unbindSkybox()
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		gl.glDisableVertexAttribArray(0);
+		gl.glBindVertexArray(0);
 	}
 	
 	/**

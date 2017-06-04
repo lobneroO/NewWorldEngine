@@ -90,17 +90,17 @@ public class MasterRenderer
 	{
 		prepare();
 		
-//		basicLightShader.start();
-//		basicLightShader.loadLightPosition(sun.getPosition());
-//		entityRenderer.render(camera, entities);
-//		basicLightShader.stop();
-//		
+		basicLightShader.start();
+		basicLightShader.loadLightPosition(sun.getPosition());
+		entityRenderer.render(camera, entities);
+		basicLightShader.stop();
+		
 		terrainShader.start();
 		terrainShader.loadLightPosition(sun.getPosition());
 		terrainRenderer.render(camera, terrains);
 		terrainShader.stop();
-//		
-//		entities.clear();
+		
+		entities.clear();
 		terrains.clear();
 		
 		if(skyboxIsSet)
@@ -144,7 +144,6 @@ public class MasterRenderer
 	
 	public void setSkybox(ShaderLoader shaderLoader, ModelLoader modelLoader)
 	{
-//		RawModel skybox = OBJLoader.loadObjModel("cube/model", modelLoader);
 		RawModel skybox = modelLoader.loadToVAO(StandardModels.getCubeVertices(100f), 3);
 		skyboxRenderer = new SkyboxRenderer(shaderLoader, skybox, projectionMatrix);
 		skyboxIsSet = true;
@@ -153,7 +152,7 @@ public class MasterRenderer
 	public void setSkybox(ShaderLoader shaderLoader, ModelLoader modelLoader, String path, 
 			String[] textures)
 	{
-		RawModel skybox = OBJLoader.loadObjModel("cube/model", modelLoader);
+		RawModel skybox = modelLoader.loadToVAO(StandardModels.getCubeVertices(100f), 3);
 		skyboxRenderer = new SkyboxRenderer(shaderLoader,skybox, projectionMatrix, path, textures);
 		skyboxIsSet = true;
 	}

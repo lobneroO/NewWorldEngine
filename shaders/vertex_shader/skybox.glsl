@@ -11,7 +11,7 @@ void main()
 	gl_Position = VP_Pos.xyww;	//perspective divide leads to z=1.0
 								//this corresponds to the far plane
 								//thus the skybox will always be rendered on empty spaces, 
-								//but is guaranteed to be behind everything else
+								//but is guaranteed to be behind everything else	
 								
 	vTexCoords = position;		//this is done since the cube map is a 3d texture and the
 								//correct pixel is found by a vector from the origin 

@@ -7,7 +7,7 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLContext;
 
-import com.jogamp.opengl.util.texture.Texture;
+//import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 
@@ -30,7 +30,7 @@ public class CubemapTexture
 			GL.GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
 			GL.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
 	};
-	private Texture cubemapTexture;
+//	private Texture cubemapTexture;
 	
 	public CubemapTexture(String directoryPath, 
 			String posXFilename, String negXFilename,

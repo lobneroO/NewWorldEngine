@@ -7,7 +7,7 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLContext;
 
-//import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 
@@ -30,7 +30,7 @@ public class CubemapTexture
 			GL.GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
 			GL.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
 	};
-//	private Texture cubemapTexture;
+	private Texture cubemapTexture;
 	
 	public CubemapTexture(String directoryPath, 
 			String posXFilename, String negXFilename,
@@ -51,38 +51,40 @@ public class CubemapTexture
 	public void bind(GL3 gl, int textureUnit)
 	{
 		gl.glActiveTexture(textureUnit);
-		gl.glBindTexture(GL.GL_TEXTURE_CUBE_MAP, m_textureObj[0]);
+//		gl.glBindTexture(GL.GL_TEXTURE_CUBE_MAP, m_textureObj[0]);
+		cubemapTexture.bind(gl);
 	}
 	
-//	public boolean load(GL3 gl)
-//	{
-//		cubemapTexture = TextureIO.newTexture(GL.GL_TEXTURE_CUBE_MAP);
-//
-//		try
-//		{
-//			for(int i = 0; i < types.length; i++)
-//			{
-//				File texFile = new File(m_fileNames[i]);
-//				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(), texFile, 
-//						GL.GL_RGBA, GL.GL_RGB, false, fileSuffix);
-//				
-//				if(data == null)
-//				{
-//					System.err.println("Could not create cubemap!");
-//					System.err.println("Could not use " + m_fileNames[i]);
-//					return false;
-//				}
-//				
-//				cubemapTexture.updateImage(gl, data, types[i]);
-//			}
-//		} catch(IOException e)
-//		{
-//			System.err.println(e);
-//			return false;
-//		}
-//		
-//		return true;
-//	}
+	public boolean load(GL3 gl)
+	{
+		cubemapTexture = TextureIO.newTexture(GL.GL_TEXTURE_CUBE_MAP);
+
+		try
+		{
+			for(int i = 0; i < types.length; i++)
+			{
+				System.out.println("i = " + i);
+				File texFile = new File(m_fileNames[i]);
+				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(), 
+						texFile, false, fileSuffix);
+				
+				if(data == null)
+				{
+					System.err.println("Could not create cubemap!");
+					System.err.println("Could not use " + m_fileNames[i]);
+					return false;
+				}
+				
+				cubemapTexture.updateImage(gl, data, types[i]);
+			}
+		} catch(IOException e)
+		{
+			System.err.println(e);
+			return false;
+		}
+		
+		return true;
+	}
 	
 	public boolean loadWithJOGL(GL3 gl)
 	{
@@ -94,9 +96,16 @@ public class CubemapTexture
 			for(int i = 0; i < types.length; i++)
 			{
 				File texFile = new File(m_fileNames[i]);
-				gl.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1);
-				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(), texFile, 
-						GL.GL_RGB, GL.GL_RGB, false, fileSuffix);
+//				gl.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1);
+				
+//				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 
+//                        0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
+//						);
+				
+//				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(), texFile, 
+//						GL.GL_RGB, GL.GL_RGB, false, fileSuffix);
+				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(), 
+						texFile, false, fileSuffix);
 				
 //				gl.glTexImage2D(int target, int level, int internalformat, 
 //						int width, int height, int border, 
@@ -105,9 +114,9 @@ public class CubemapTexture
 						data.getPixelFormat(), GL.GL_UNSIGNED_BYTE, data.getBuffer());
 				gl.glTexParameteri(GL.GL_TEXTURE_CUBE_MAP, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
 				gl.glTexParameteri(GL.GL_TEXTURE_CUBE_MAP, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
-				gl.glTexParameteri(GL.GL_TEXTURE_CUBE_MAP, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE);
-				gl.glTexParameteri(GL.GL_TEXTURE_CUBE_MAP, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
-				gl.glTexParameteri(GL.GL_TEXTURE_CUBE_MAP, GL3.GL_TEXTURE_WRAP_R, GL.GL_CLAMP_TO_EDGE);
+//				gl.glTexParameteri(GL.GL_TEXTURE_CUBE_MAP, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE);
+//				gl.glTexParameteri(GL.GL_TEXTURE_CUBE_MAP, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
+//				gl.glTexParameteri(GL.GL_TEXTURE_CUBE_MAP, GL3.GL_TEXTURE_WRAP_R, GL.GL_CLAMP_TO_EDGE);
 				
 				//texFile doesn't need to be closed, since java.io.File represents
 				//only a file path, but the file is never technically opened

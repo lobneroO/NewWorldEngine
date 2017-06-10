@@ -120,7 +120,7 @@ public class SkyboxRenderer
 		cubemap = new CubemapTexture("textures/skybox/", TEX_RIGHT, TEX_LEFT, TEX_TOP, 
 				TEX_BOTTOM, TEX_BACK, TEX_FRONT);
 		
-		cubemap.loadWithJOGL(gl);
+		cubemap.load(gl);
 	}
 	
 	/**

@@ -19,16 +19,4 @@ void main()
 								//thus making the position the texture coordinate
 								//for the fragment shader, it will be interpolated
 								//as it always is, just in 3d
-	if(vTexCoords.x != 0)
-	{
-		vTexCoords.x /= vTexCoords.x;
-	}
-	if(vTexCoords.y != 0)
-	{
-		vTexCoords.y /= vTexCoords.y;
-	}
-	if(vTexCoords.z != 0)
-	{
-		vTexCoords.z /= vTexCoords.z;
-	}
 }

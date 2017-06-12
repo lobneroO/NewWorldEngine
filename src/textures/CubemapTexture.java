@@ -58,13 +58,25 @@ public class CubemapTexture
 	
 	public boolean load(GL3 gl)
 	{
+		boolean[] flipped = new boolean[6];
+		for(int i = 0; i < 6; i++)
+		{
+			flipped[i] = false;
+		}
+		
+		load(gl, flipped);
+		
+		return true;
+	}
+	
+	public boolean load(GL3 gl, boolean[] flipped)
+	{
 		cubemapTexture = TextureIO.newTexture(GL.GL_TEXTURE_CUBE_MAP);
 
 		try
 		{
 			for(int i = 0; i < types.length; i++)
 			{
-				System.out.println("i = " + i);
 				File texFile = new File(m_fileNames[i]);
 				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(), 
 						texFile, false, fileSuffix);
@@ -76,9 +88,16 @@ public class CubemapTexture
 					return false;
 				}
 				
-				TextureData flipped = TextureUtils.flipTextureData(data);
+				if(flipped[i])
+				{
+					TextureData flippedData = TextureUtils.flipTextureData(data);
+					cubemapTexture.updateImage(gl, flippedData, types[i]);
+				}
+				else
+				{
+					cubemapTexture.updateImage(gl, data, types[i]);
+				}
 				
-				cubemapTexture.updateImage(gl, flipped, types[i]);
 			}
 		} catch(IOException e)
 		{

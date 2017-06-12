@@ -93,9 +93,10 @@ public class SkyboxRenderer
 	private void prepareMatrices(Camera camera)
 	{
 		Matrix4f modelViewProjectionMatrix = new Matrix4f();
+		//MVPMatrix = VMatrix * MMatrix
 		camera.getViewMatrix().mul(modelMatrix, modelViewProjectionMatrix);
+		//MVPMatrix = PMatrix * MVMatrix
 		projectionMatrix.mul(modelViewProjectionMatrix, modelViewProjectionMatrix);
-//		projectionMatrix.mul(camera.getViewMatrix(), viewProjectionMatrix);	//VPMatrix = PMatrix * VMatrix
 		shader.loadModelViewProjectionMatrix(modelViewProjectionMatrix);
 	}
 	
@@ -128,7 +129,7 @@ public class SkyboxRenderer
 		cubemap = new CubemapTexture("textures/skybox/", TEX_RIGHT, TEX_LEFT, TEX_TOP, 
 				TEX_BOTTOM, TEX_BACK, TEX_FRONT);
 		
-		cubemap.load(gl);
+		cubemap.load(gl, new boolean[]{true, true, false, false, true, true});
 	}
 	
 	/**

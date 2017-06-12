@@ -51,11 +51,16 @@ public class CubemapTexture
 	
 	public void bind(GL3 gl, int textureUnit)
 	{
-		gl.glActiveTexture(textureUnit);
-//		gl.glBindTexture(GL.GL_TEXTURE_CUBE_MAP, m_textureObj[0]);		
+		gl.glActiveTexture(textureUnit);	
 		cubemapTexture.bind(gl);
 	}
 	
+	/**
+	 * Loads in the standard cubemap for the skybox located at "textures/skybox/" with the 
+	 * filenames "back.jpg", "bottom.jpg", "front.jpg", "left.jpg", "right.jpg" and "top.jpg".
+	 * @param gl
+	 * @return Returns whether the cubemap was correctly loaded
+	 */
 	public boolean load(GL3 gl)
 	{
 		boolean[] flipped = new boolean[6];
@@ -69,6 +74,18 @@ public class CubemapTexture
 		return true;
 	}
 	
+	/**
+	 * Loads in the standard cubemap for the skybox located at "textures/skybox/" with the 
+	 * filenames "back.jpg", "bottom.jpg", "front.jpg", "left.jpg", "right.jpg" and "top.jpg".
+	 * Individual files can be flipped. Which ones are specified in the flipped array.
+	 * The indices are as follows:
+	 * Positive x (right), negative x (left), 
+	 * positive y (top), negative y (bottom), 
+	 * positive z (back), negative z (front)
+	 * @param gl
+	 * @param flipped
+	 * @return
+	 */
 	public boolean load(GL3 gl, boolean[] flipped)
 	{
 		cubemapTexture = TextureIO.newTexture(GL.GL_TEXTURE_CUBE_MAP);
@@ -100,52 +117,6 @@ public class CubemapTexture
 				
 			}
 		} catch(IOException e)
-		{
-			System.err.println(e);
-			return false;
-		}
-		
-		return true;
-	}
-	
-	public boolean loadWithJOGL(GL3 gl)
-	{
-		gl.glGenTextures(1, m_textureObj, 0);
-		gl.glBindTexture(GL.GL_TEXTURE_CUBE_MAP, m_textureObj[0]);
-		
-		try
-		{
-			for(int i = 0; i < types.length; i++)
-			{
-				File texFile = new File(m_fileNames[i]);
-				gl.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1);
-				
-//				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 
-//                        0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
-//						);
-				
-//				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(), texFile, 
-//						GL.GL_RGB, GL.GL_RGB, false, fileSuffix);
-				TextureData data = TextureIO.newTextureData(GLContext.getCurrentGL().getGLProfile(), 
-						texFile, false, fileSuffix);
-				
-//				gl.glTexImage2D(int target, int level, int internalformat, 
-//						int width, int height, int border, 
-//						int format, int type, Buffer pixels);
-				gl.glTexImage2D(types[i], 0, data.getInternalFormat(), data.getWidth(), data.getHeight(), 0, 
-						data.getPixelFormat(), GL.GL_UNSIGNED_BYTE, data.getBuffer());
-				gl.glTexParameteri(GL.GL_TEXTURE_CUBE_MAP, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
-				gl.glTexParameteri(GL.GL_TEXTURE_CUBE_MAP, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
-				gl.glTexParameteri(GL.GL_TEXTURE_CUBE_MAP, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE);
-				gl.glTexParameteri(GL.GL_TEXTURE_CUBE_MAP, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
-				gl.glTexParameteri(GL.GL_TEXTURE_CUBE_MAP, GL3.GL_TEXTURE_WRAP_R, GL.GL_CLAMP_TO_EDGE);
-				
-				//texFile doesn't need to be closed, since java.io.File represents
-				//only a file path, but the file is never technically opened
-				//however, the texture data can be destroyed once OpenGL has stored it in a texture
-				data.destroy();
-			}
-		}catch(IOException e)
 		{
 			System.err.println(e);
 			return false;

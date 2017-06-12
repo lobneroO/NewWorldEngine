@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import com.jogamp.opengl.GL;
@@ -145,7 +146,9 @@ public class MasterRenderer
 	{
 		float skyboxSize = 100f;
 		RawModel skybox = modelLoader.loadToVAO(StandardModels.getCubeVertices(skyboxSize), 3);
-		skyboxRenderer = new SkyboxRenderer(shaderLoader, skybox, skyboxSize, projectionMatrix);
+		skyboxRenderer = new SkyboxRenderer(shaderLoader, skybox, projectionMatrix);
+		float t = skyboxSize/2; //translate it to match the terrain
+		skyboxRenderer.translateSkybox(new Vector3f(t, 0, t));
 		skyboxIsSet = true;
 	}
 	
@@ -154,7 +157,9 @@ public class MasterRenderer
 	{
 		float skyboxSize = 100f;
 		RawModel skybox = modelLoader.loadToVAO(StandardModels.getCubeVertices(skyboxSize), 3);
-		skyboxRenderer = new SkyboxRenderer(shaderLoader,skybox, skyboxSize, projectionMatrix, path, textures);
+		skyboxRenderer = new SkyboxRenderer(shaderLoader,skybox, projectionMatrix, path, textures);
+		float t = skyboxSize/2; //translate it to match the terrain
+		skyboxRenderer.translateSkybox(new Vector3f(t, 0, t));
 		skyboxIsSet = true;
 	}
 	

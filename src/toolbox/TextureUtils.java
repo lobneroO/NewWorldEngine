@@ -7,8 +7,20 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.texture.TextureData;
 
+/**
+ * The TextureUtils class is a class that takes in texture data and edits it as needed
+ * @author Lobner
+ *
+ */
 public class TextureUtils 
 {
+	/**
+	 * Flips the texture data in s and t direction.
+	 * Supported pixel formats are GL_RGB, GL_BGR, GL_RGBA and GL_BGRA.
+	 * Supported pixel types are GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, GL_UNSIGNED_INT and GL_FLOAT.
+	 * @param data The TextureData object that is to be flipped.
+	 * @return A new TextureData object that is exactly the same as the input TextureData, but flipped.
+	 */
 	public static TextureData flipTextureData(TextureData data)
 	{
 		//the number of bytes per pixel has to be calculated first
@@ -19,7 +31,7 @@ public class TextureUtils
 			case GL.GL_BGR: numBytes = 3; break;
 			case GL.GL_RGBA: numBytes = 4; break;
 			case GL.GL_BGRA: numBytes = 4; break;
-			default: System.out.println("default pixel format");break;
+			default: break;
 		}
 		
 		switch(data.getPixelType())

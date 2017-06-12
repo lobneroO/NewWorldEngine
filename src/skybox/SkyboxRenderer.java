@@ -30,27 +30,26 @@ public class SkyboxRenderer
 	private Matrix4f projectionMatrix;
 	private SkyboxShader shader;
 	
-	public SkyboxRenderer(ShaderLoader loader, RawModel skybox, float skyboxLength, Matrix4f projectionMatrix)
+	public SkyboxRenderer(ShaderLoader loader, RawModel skybox, Matrix4f projectionMatrix)
 	{
-		init(loader, skybox, skyboxLength, projectionMatrix);
+		init(loader, skybox, projectionMatrix);
 		
 		loadCubemap();
 	}
 	
-	public SkyboxRenderer(ShaderLoader loader, RawModel skybox, float skyboxLength, Matrix4f projectionMatrix, String path, String[] textures)
+	public SkyboxRenderer(ShaderLoader loader, RawModel skybox, Matrix4f projectionMatrix, String path, String[] textures)
 	{
-		init(loader, skybox, skyboxLength, projectionMatrix);
+		init(loader, skybox, projectionMatrix);
 		
 		loadCubemap(path, textures);
 	}
 	
 	
-	public void init(ShaderLoader loader, RawModel skybox, float skyboxLength, Matrix4f projectionMatrix)
+	public void init(ShaderLoader loader, RawModel skybox, Matrix4f projectionMatrix)
 	{
 		this.skybox = skybox;
 		modelMatrix = new Matrix4f();
-		float t = skyboxLength/2; //translate it to match the terrain
-		modelMatrix.translate(t, 0, t);
+		modelMatrix.identity();
 		this.projectionMatrix = projectionMatrix;
 		shader = new SkyboxShader();
 		loader.loadShader(shader);
@@ -143,12 +142,15 @@ public class SkyboxRenderer
 		cubemap = new CubemapTexture("textures/skybox/", textures[0], textures[1], textures[2], 
 				textures[3], textures[4], textures[5]);
 		
-		cubemap.loadWithJOGL(gl);
+		cubemap.load(gl);
 	}
 	
 	public void cleanUp()
 	{
 		shader.cleanUp();
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		cubemap.destroy(gl);
+		System.out.println("cleaning up the skybox and corresponding cubemap");
 	}
 	
 	public void translateSkybox(Vector3f t)

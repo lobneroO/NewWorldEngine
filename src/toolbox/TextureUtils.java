@@ -10,23 +10,6 @@ import com.jogamp.opengl.util.texture.TextureData;
 
 public class TextureUtils 
 {
-	public static TextureData flipTexture(TextureData data)
-	{
-		Buffer b = data.getBuffer();
-		b.flip();
-		
-		GLProfile glProfile = GLContext.getCurrentGL().getGLProfile();
-		
-		TextureData d = new TextureData(glProfile, data.getInternalFormat(), data.getWidth(),
-				data.getHeight(), data.getBorder(), data.getPixelAttributes(),
-				data.getMipmap(), data.isDataCompressed(), data.getMustFlipVertically(),
-				b, null);
-		
-		
-		
-		return d;
-	}
-	
 	public static TextureData flipTextureData(TextureData data)
 	{
 		//the number of bytes per pixel has to be calculated first

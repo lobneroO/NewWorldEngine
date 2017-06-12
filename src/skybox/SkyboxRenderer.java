@@ -3,6 +3,7 @@ package skybox;
 import loader.ShaderLoader;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import textures.CubemapTexture;
 
@@ -147,5 +148,16 @@ public class SkyboxRenderer
 	public void cleanUp()
 	{
 		shader.cleanUp();
+	}
+	
+	public void translateSkybox(Vector3f t)
+	{
+		modelMatrix.identity();
+		modelMatrix.translate(t);
+	}
+	
+	public void translateSkybox(Matrix4f m)
+	{
+		modelMatrix = m;
 	}
 }

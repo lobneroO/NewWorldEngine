@@ -4,7 +4,6 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GLContext;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.texture.TextureData;
 

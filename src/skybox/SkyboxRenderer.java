@@ -49,7 +49,7 @@ public class SkyboxRenderer
 		this.skybox = skybox;
 		modelMatrix = new Matrix4f();
 		float t = skyboxLength/2; //translate it to match the terrain
-		modelMatrix.translate(t, t, t);
+		modelMatrix.translate(t, 0, t);
 		this.projectionMatrix = projectionMatrix;
 		shader = new SkyboxShader();
 		loader.loadShader(shader);

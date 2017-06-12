@@ -47,6 +47,10 @@ Choose the file that suits your OS, extract the archive and run the jar. If you 
 * Repo owner and admin: Tim Lobner, lobner@mail.upb.de
 * Other community or team contact: This is a one man project thus far. Apart from the usual benefits of source code version control, it is meant for applications to show understanding of git and coding in general, as well as for demo reels (although they will be exported for quick use in all instances as well).
 
+### Changes and additions in version 0.3 ###
+* Supports cubemaps
+* Supports a skybox
+* Supports flipping TextureData and thus flipping a Texture at load time
 
 ### Changes and additions in version 0.2 ###
 * Update to JOGL 2.3.2 (not fully downards compatible)

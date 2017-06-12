@@ -14,7 +14,7 @@ public class SkyboxShader extends ShaderProgram
 {	
 	//locations
 	private int location_cubemap;
-	private int location_viewProjectionMatrix;
+	private int location_modelViewProjectionMatrix;
 	
 	public SkyboxShader() 
 	{
@@ -36,13 +36,13 @@ public class SkyboxShader extends ShaderProgram
 	@Override
 	protected void getAllUniformLocations() 
 	{
-		location_viewProjectionMatrix = getUniformLocation("uViewProjectionMatrix");
+		location_modelViewProjectionMatrix = getUniformLocation("uModelViewProjectionMatrix");
 		location_cubemap = getUniformLocation("cubemapTexture");
 	}
 	
-	public void loadViewProjectionMatrix(Matrix4f matrix)
+	public void loadModelViewProjectionMatrix(Matrix4f matrix)
 	{
-		loadMat4(location_viewProjectionMatrix, matrix);
+		loadMat4(location_modelViewProjectionMatrix, matrix);
 	}
 	
 	public void loadCubemap()

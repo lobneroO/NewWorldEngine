@@ -13,7 +13,6 @@ import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLContext;
 
 import loader.ModelLoader;
-import loader.OBJLoader;
 import loader.ShaderLoader;
 import cameras.Camera;
 import entities.Entity;
@@ -144,16 +143,18 @@ public class MasterRenderer
 	
 	public void setSkybox(ShaderLoader shaderLoader, ModelLoader modelLoader)
 	{
-		RawModel skybox = modelLoader.loadToVAO(StandardModels.getCubeVertices(100f), 3);
-		skyboxRenderer = new SkyboxRenderer(shaderLoader, skybox, projectionMatrix);
+		float skyboxSize = 100f;
+		RawModel skybox = modelLoader.loadToVAO(StandardModels.getCubeVertices(skyboxSize), 3);
+		skyboxRenderer = new SkyboxRenderer(shaderLoader, skybox, skyboxSize, projectionMatrix);
 		skyboxIsSet = true;
 	}
 	
 	public void setSkybox(ShaderLoader shaderLoader, ModelLoader modelLoader, String path, 
 			String[] textures)
 	{
-		RawModel skybox = modelLoader.loadToVAO(StandardModels.getCubeVertices(100f), 3);
-		skyboxRenderer = new SkyboxRenderer(shaderLoader,skybox, projectionMatrix, path, textures);
+		float skyboxSize = 100f;
+		RawModel skybox = modelLoader.loadToVAO(StandardModels.getCubeVertices(skyboxSize), 3);
+		skyboxRenderer = new SkyboxRenderer(shaderLoader,skybox, skyboxSize, projectionMatrix, path, textures);
 		skyboxIsSet = true;
 	}
 	

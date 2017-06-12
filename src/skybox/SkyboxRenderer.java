@@ -24,27 +24,32 @@ public class SkyboxRenderer
 	
 	private RawModel skybox;
 	private CubemapTexture cubemap;
+	private Matrix4f modelMatrix;	//the cube is centered around (0,0,0) 
+									//and needs to be moved accordingly
 	private Matrix4f projectionMatrix;
 	private SkyboxShader shader;
 	
-	public SkyboxRenderer(ShaderLoader loader, RawModel skybox, Matrix4f projectionMatrix)
+	public SkyboxRenderer(ShaderLoader loader, RawModel skybox, float skyboxLength, Matrix4f projectionMatrix)
 	{
-		init(loader, skybox, projectionMatrix);
+		init(loader, skybox, skyboxLength, projectionMatrix);
 		
 		loadCubemap();
 	}
 	
-	public SkyboxRenderer(ShaderLoader loader, RawModel skybox, Matrix4f projectionMatrix, String path, String[] textures)
+	public SkyboxRenderer(ShaderLoader loader, RawModel skybox, float skyboxLength, Matrix4f projectionMatrix, String path, String[] textures)
 	{
-		init(loader, skybox, projectionMatrix);
+		init(loader, skybox, skyboxLength, projectionMatrix);
 		
 		loadCubemap(path, textures);
 	}
 	
 	
-	public void init(ShaderLoader loader, RawModel skybox, Matrix4f projectionMatrix)
+	public void init(ShaderLoader loader, RawModel skybox, float skyboxLength, Matrix4f projectionMatrix)
 	{
 		this.skybox = skybox;
+		modelMatrix = new Matrix4f();
+		float t = skyboxLength/2; //translate it to match the terrain
+		modelMatrix.translate(t, t, t);
 		this.projectionMatrix = projectionMatrix;
 		shader = new SkyboxShader();
 		loader.loadShader(shader);
@@ -86,9 +91,11 @@ public class SkyboxRenderer
 	
 	private void prepareMatrices(Camera camera)
 	{
-		Matrix4f viewProjectionMatrix = new Matrix4f();
-		projectionMatrix.mul(camera.getViewMatrix(), viewProjectionMatrix);	//VPMatrix = PMatrix * VMatrix
-		shader.loadViewProjectionMatrix(viewProjectionMatrix);
+		Matrix4f modelViewProjectionMatrix = new Matrix4f();
+		camera.getViewMatrix().mul(modelMatrix, modelViewProjectionMatrix);
+		projectionMatrix.mul(modelViewProjectionMatrix, modelViewProjectionMatrix);
+//		projectionMatrix.mul(camera.getViewMatrix(), viewProjectionMatrix);	//VPMatrix = PMatrix * VMatrix
+		shader.loadModelViewProjectionMatrix(modelViewProjectionMatrix);
 	}
 	
 	private void prepareCubemap()

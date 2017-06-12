@@ -2,18 +2,19 @@
 
 layout (location = 0) in vec3 position;
 
-uniform mat4 uViewProjectionMatrix;
+uniform mat4 uModelViewProjectionMatrix;
 out vec3 vTexCoords;
 
 void main()
 {
-	vec4 VP_Pos = uViewProjectionMatrix * vec4(position, 1.0);
+	vec4 VP_Pos = uModelViewProjectionMatrix * vec4(position, 1.0);
 	gl_Position = VP_Pos.xyww;	//perspective divide leads to z=1.0
 								//this corresponds to the far plane
 								//thus the skybox will always be rendered on empty spaces, 
 								//but is guaranteed to be behind everything else	
 								
-	vTexCoords = position;		//this is done since the cube map is a 3d texture and the
+	vTexCoords = position;
+								//this is done since the cube map is a 3d texture and the
 								//correct pixel is found by a vector from the origin 
 								//through a point in the skybox, 
 								//thus making the position the texture coordinate

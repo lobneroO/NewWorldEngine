@@ -104,17 +104,17 @@ public class StandardModels
 	}
 	
 	/**
-	 * Returns vertex positions for a quad centered at (0.5, 0.5) that can be drawn
+	 * Returns vertex positions for a quad centered at (0.0, 0.0) that can be drawn
 	 * on the screen (i.e. it lacks z coordinates)
 	 * @return
 	 */
 	public static float[] get2DQuadTriangleStripVertices()
 	{
 		float[] positions =  {
-				1.0f, 0.0f, 
+				1.0f, -1.0f, 
 				1.0f, 1.0f, 
-				0.0f, 0.0f, 
-				1.0f, 1.0f
+				-1.0f, -1.0f, 
+				-1.0f, 1.0f
 		};
 		
 		return positions;

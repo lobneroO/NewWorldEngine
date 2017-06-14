@@ -32,6 +32,11 @@ public class GUITexture
 		texture.destroy(gl);
 	}
 	
+	public void bind(GL3 gl)
+	{
+		texture.bind(gl);
+	}
+	
 	public Texture getTexture() 
 	{
 		return texture;

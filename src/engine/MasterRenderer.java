@@ -214,6 +214,7 @@ public class MasterRenderer
 	
 	public void cleanUp()
 	{
-		
+		skyboxRenderer.cleanUp();
+		guiRenderer.cleanUp();
 	}
 }

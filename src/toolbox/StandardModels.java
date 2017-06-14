@@ -119,4 +119,21 @@ public class StandardModels
 		
 		return positions;
 	}
+	
+	/**
+	 * Returns texture coordinates for a quad corresponding to the get2DQuadTriangleStripVertices()
+	 * function
+	 * @return
+	 */
+	public static float[] get2DQuadTriangleStripTexCoords()
+	{
+		float[] texCoords = {
+			1.0f, 0.0f,
+			1.0f, 1.0f,
+			0.0f, 0.0f,
+			0.0f, 1.0f
+		};
+		
+		return texCoords;
+	}
 }

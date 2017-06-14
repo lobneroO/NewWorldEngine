@@ -2,7 +2,6 @@ package gui;
 
 import java.util.List;
 
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 import com.jogamp.opengl.GL;
@@ -23,7 +22,8 @@ public class GUIRenderer
 	
 	public GUIRenderer(ModelLoader modelLoader, ShaderLoader shaderLoader)
 	{
-		quad = modelLoader.loadToVAO(StandardModels.get2DQuadTriangleStripVertices(), 2);
+		quad = modelLoader.loadToVAO(StandardModels.get2DQuadTriangleStripVertices(), 
+				StandardModels.get2DQuadTriangleStripTexCoords(), 2);
 		shader = new GUIShader();
 		shaderLoader.loadShader(shader);
 	}
@@ -32,10 +32,14 @@ public class GUIRenderer
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		
 		shader.start();
 		
 		gl.glBindVertexArray(quad.getVAO()[0]);
 		gl.glEnableVertexAttribArray(0);
+		gl.glEnableVertexAttribArray(1);
 		
 		for(GUITexture guiTex : guiTextures)
 		{
@@ -51,7 +55,10 @@ public class GUIRenderer
 		}
 		
 		gl.glDisableVertexAttribArray(0);
+		gl.glDisableVertexAttribArray(1);
 		gl.glBindVertexArray(0);
+		
+		gl.glDisable(GL.GL_BLEND);
 		
 		shader.stop();
 	}

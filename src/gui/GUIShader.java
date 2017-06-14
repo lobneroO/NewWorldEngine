@@ -30,6 +30,7 @@ public class GUIShader extends ShaderProgram
 	protected void bindAttributes() 
 	{
 		bindAttribute(0, "position");
+		bindAttribute(1, "texCoords");
 	}
 
 	public void loadModelMatrix(Matrix4f matrix)

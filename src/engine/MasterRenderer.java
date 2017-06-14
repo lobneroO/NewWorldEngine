@@ -117,6 +117,8 @@ public class MasterRenderer
 		{
 			guiRenderer.render(guiTextures);
 		}
+		
+		guiTextures.clear();
 	}
 	
 	/**

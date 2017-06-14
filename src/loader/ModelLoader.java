@@ -77,6 +77,24 @@ public class ModelLoader
 		return new RawModel(VAO.clone(), positions.length/dimensions);
 	}
 	
+	/**
+	 * Load a model without normals
+	 * and create a RawModel with the vertex positions in attribute 0
+	 * and texture coordinates in attribute 1
+	 * @param positions vertex positions
+	 * @param texCoords texture coordinates
+	 * @param dimensions determines the number of position values per position
+	 * @return RawModel object created form the data that was input
+	 */
+	public RawModel loadToVAO(float[] positions, float[] texCoords, int dimensions)
+	{
+		int[] VAO = createVAO();
+		storeDataInAttributeList(0, positions, dimensions);
+		storeDataInAttributeList(1, texCoords, 2);
+		unbindVAO();
+		return new RawModel(VAO.clone(), positions.length/dimensions);
+	}
+	
 	private int[] createVAO()
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();

@@ -32,7 +32,11 @@ public class GUIRenderer
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
-		gl.glEnable(GL.GL_BLEND);
+		//disable depth testint to render multiple guis at the same positions
+		gl.glDisable(GL.GL_DEPTH_TEST);	
+		
+		//enable blending for transparency in the gui textures
+		gl.glEnable(GL.GL_BLEND);	
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		
 		shader.start();
@@ -59,6 +63,7 @@ public class GUIRenderer
 		gl.glBindVertexArray(0);
 		
 		gl.glDisable(GL.GL_BLEND);
+		gl.glEnable(GL.GL_DEPTH_TEST);
 		
 		shader.stop();
 	}

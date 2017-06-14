@@ -13,6 +13,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import loader.ModelLoader;
@@ -29,6 +30,7 @@ import entities.Player;
 import entities.RawModel;
 import entities.TexturedModel;
 import terrains.Terrain;
+import textures.GUITexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import toolbox.Maths;
@@ -65,6 +67,9 @@ public class MainGameLoop extends Program
 	RawModel skybox;
 	
 	Light light;
+	
+	//GUIs
+	ArrayList<GUITexture> guiTextures;
 	@Override
 	public boolean init(GLAutoDrawable drawable) 
 	{
@@ -186,6 +191,21 @@ public class MainGameLoop extends Program
 		
 		renderer.setSkybox(shaderLoader, modelLoader);
 		
+		//GUIs
+		guiTextures = new ArrayList<GUITexture>();
+		
+		try{
+			File fileTex = new File("textures/gui/gui_first.png");
+			Texture tex = TextureIO.newTexture(fileTex, false);
+			guiTextures.add(new GUITexture(tex, new Vector2f(0, 0), new Vector2f(1, 1)));
+		} catch (IOException e)
+		{
+			System.err.println("Could not load textures/gui/gui_first.png");
+			System.err.println(e.getStackTrace());
+		}
+		
+		renderer.setGUI(shaderLoader, modelLoader);
+		
 		return true;
 	}
 
@@ -208,6 +228,11 @@ public class MainGameLoop extends Program
 			System.out.println("cleaning up another entity");
 		}
 		
+		for(int i = 0; i < guiTextures.size(); i++)
+		{
+			guiTextures.get(i).cleanUp();
+		}
+		
 		entity.cleanUp();
 		terrain.cleanUp();
 		player.cleanUp();
@@ -221,13 +246,18 @@ public class MainGameLoop extends Program
 		player.move(backend.getFrameTime()/1000);
 		camera.move();
 		
-		for(int i = 0; i < entities.size(); i++)
+		for(Entity entity : entities)
 		{
-			renderer.processEntity(entities.get(i));
+			renderer.processEntity(entity);
 		}
 		renderer.processEntity(entity);
 		renderer.processEntity(player);
 		renderer.processTerrains(terrain);
+		for(GUITexture tex : guiTextures)
+		{
+			renderer.processGUITextures(tex);
+		}
+		
 		renderer.render(light, camera);
 	}
 	

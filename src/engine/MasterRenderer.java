@@ -20,10 +20,12 @@ import entities.Entity;
 import entities.Light;
 import entities.RawModel;
 import entities.TexturedModel;
+import gui.GUIRenderer;
 import shader.BasicLightShader;
 import shader.TerrainShader;
 import skybox.SkyboxRenderer;
 import terrains.Terrain;
+import textures.GUITexture;
 import toolbox.StandardModels;
 
 /**
@@ -40,10 +42,13 @@ public class MasterRenderer
 	private TerrainShader terrainShader;
 	private TerrainRenderer terrainRenderer;
 	private SkyboxRenderer skyboxRenderer;
+	private GUIRenderer guiRenderer;
 	boolean skyboxIsSet = false;
+	boolean guiIsSet = false;
 	
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private List<Terrain> terrains = new ArrayList<Terrain>();
+	private List<GUITexture> guiTextures = new ArrayList<GUITexture>();
 	
 	public MasterRenderer()
 	{
@@ -107,6 +112,11 @@ public class MasterRenderer
 		{
 			skyboxRenderer.render(camera);
 		}
+		
+		if(guiIsSet)
+		{
+			guiRenderer.render(guiTextures);
+		}
 	}
 	
 	/**
@@ -140,6 +150,18 @@ public class MasterRenderer
 	public void processTerrains(Terrain terrain)
 	{
 		terrains.add(terrain);
+	}
+	
+	public void processGUITextures(GUITexture guiTexture)
+	{
+		guiTextures.add(guiTexture);
+	}
+	
+	public void setGUI(ShaderLoader shaderLoader, ModelLoader modelLoader)
+	{
+		guiRenderer = new GUIRenderer(modelLoader, shaderLoader);
+		
+		guiIsSet = true;
 	}
 	
 	public void setSkybox(ShaderLoader shaderLoader, ModelLoader modelLoader)

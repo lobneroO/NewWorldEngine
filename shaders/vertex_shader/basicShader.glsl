@@ -2,7 +2,9 @@
 
 layout (location = 0) in vec3 position;
 
-out vec3 color;
+uniform mat4 uModelMatrix;
+
+out vec3 vTexCoords;
 
 void main()
 {

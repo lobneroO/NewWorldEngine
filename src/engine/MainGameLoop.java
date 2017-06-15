@@ -195,22 +195,12 @@ public class MainGameLoop extends Program
 		guiTextures = new ArrayList<GUITexture>();
 		
 		try{
-			File fileTex = new File("textures/gui/gui_second.png");
+			File fileTex = new File("textures/gui/menu.png");
 			Texture tex = TextureIO.newTexture(fileTex, false);
 			guiTextures.add(new GUITexture(tex, new Vector2f(0, 0), new Vector2f(1, 1)));
 		} catch (IOException e)
 		{
 			System.err.println("Could not load textures/gui/gui_second.png");
-			System.err.println(e.getStackTrace());
-		}
-		
-		try{
-			File fileTex = new File("textures/gui/gui_first.png");
-			Texture tex = TextureIO.newTexture(fileTex, false);
-			guiTextures.add(new GUITexture(tex, new Vector2f(0, 0), new Vector2f(1, 1)));
-		} catch (IOException e)
-		{
-			System.err.println("Could not load textures/gui/gui_first.png");
 			System.err.println(e.getStackTrace());
 		}
 		

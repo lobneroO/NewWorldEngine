@@ -70,6 +70,8 @@ public class MainGameLoop extends Program
 	
 	//GUIs
 	ArrayList<GUITexture> guiTextures;
+	boolean displayMenu = false;
+	GUITexture menu;
 	@Override
 	public boolean init(GLAutoDrawable drawable) 
 	{
@@ -197,7 +199,7 @@ public class MainGameLoop extends Program
 		try{
 			File fileTex = new File("textures/gui/menu.png");
 			Texture tex = TextureIO.newTexture(fileTex, false);
-			guiTextures.add(new GUITexture(tex, new Vector2f(0, 0), new Vector2f(1, 1)));
+			menu = new GUITexture(tex, new Vector2f(0, 0), new Vector2f(1, 1));
 		} catch (IOException e)
 		{
 			System.err.println("Could not load textures/gui/gui_second.png");
@@ -232,6 +234,10 @@ public class MainGameLoop extends Program
 		{
 			guiTextures.get(i).cleanUp();
 		}
+		if(menu != null)
+		{
+			menu.cleanUp();
+		}
 		
 		entity.cleanUp();
 		terrain.cleanUp();
@@ -256,6 +262,11 @@ public class MainGameLoop extends Program
 		for(GUITexture tex : guiTextures)
 		{
 			renderer.processGUITextures(tex);
+		}
+		
+		if(displayMenu)
+		{
+			renderer.processGUITextures(menu);
 		}
 		
 		renderer.render(light, camera);
@@ -285,7 +296,17 @@ public class MainGameLoop extends Program
 	@Override
 	public void keyPressed(KeyEvent e) 
 	{
-//		camera.keyPressed(e);
+		if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+		{
+			if(displayMenu)
+			{
+				displayMenu = false;
+			}
+			else
+			{
+				displayMenu = true;
+			}
+		}
 	}
 
 	@Override
@@ -348,6 +369,7 @@ public class MainGameLoop extends Program
 		System.out.println("Move around with WASD, Jump with SPACE");
 		System.out.println("Click the left mouse button to move the camera around the player");
 		System.out.println("Use the mouse wheel to zoom the camera in or out");
+		System.out.println("Open the menu with Esc");
 	}
 
 	@Override

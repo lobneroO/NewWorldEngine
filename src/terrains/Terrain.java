@@ -110,9 +110,10 @@ public class Terrain
 				vertices[vertexPointer*3+1] = getHeightAt(heightMap, j, maxRows-i);
 				vertices[vertexPointer*3+2] = (float)i/((float)numVertices - 1) * SIZE;
 				
-				normals[vertexPointer*3] = 0;
-				normals[vertexPointer*3+1] = 1;
-				normals[vertexPointer*3+2] = 0;
+				Vector3f normal = calculateNormalFromHeightMapAt(heightMap, j, maxRows-i);
+				normals[vertexPointer*3] = normal.x();
+				normals[vertexPointer*3+1] = normal.y();
+				normals[vertexPointer*3+2] = normal.z();
 				
 				textureCoords[vertexPointer*2] = (float)j/((float)numVertices - 1);
 				textureCoords[vertexPointer*2+1] = (float)i/((float)numVertices - 1);
@@ -169,6 +170,20 @@ public class Terrain
 		height -= Math.abs(DEFAULT_MIN_HEIGHT);		
 		
 		return height;
+	}
+	
+	private Vector3f calculateNormalFromHeightMapAt(BufferedImage heightMap, int x, int z)
+	{
+		//get the height of the neighboring vertices (top, bottom left and right suffice)
+		float heightT = getHeightAt(heightMap, x, z-1);
+		float heightB = getHeightAt(heightMap, x, z+1);
+		float heightL = getHeightAt(heightMap, x-1, z);
+		float heightR = getHeightAt(heightMap, x+1, z);
+		
+		Vector3f normal = new Vector3f(heightL-heightR, 2f, heightB - heightT);
+		normal = normal.normalize();
+		
+		return normal;
 	}
 	
 	private RawModel generateTerrain(ModelLoader loader)

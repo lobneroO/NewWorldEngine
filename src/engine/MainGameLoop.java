@@ -183,7 +183,7 @@ public class MainGameLoop extends Program
 					new TerrainTexture(textures[1]), new TerrainTexture(textures[2]),
 					new TerrainTexture(textures[3]));
 			terrain = new Terrain(0, 0, modelLoader, tTP, new TerrainTexture(blendMap), 
-					"textures/terrain/tex_heightMap.png");
+					"textures/terrain/tex_heightMapBlurred.png");
 		} catch (GLException e) {
 			e.printStackTrace();
 			return false;

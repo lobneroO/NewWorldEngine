@@ -21,6 +21,9 @@ debug_mode/
 EditorOnly/
 EditorOnly*
 
+#editors content that won't be used by the engine but is good to store at the correct folders (photoshop / gimp files, ...)
+*.xcf
+
 #single files that (probably?) should be ignored
 .DS_Store
 .classpath

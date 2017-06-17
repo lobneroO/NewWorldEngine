@@ -1,6 +1,7 @@
 package terrains;
 
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,8 +30,8 @@ public class Terrain
 	private static final float SIZE = 100;
 	private static final int NUM_VERTICES = 128;
 	
-	private static final float DEFAULT_MAX_HEIGHT = 40f;
-	private static final float DEFAULT_MIN_HEIGHT = -40f;
+	private static final float DEFAULT_MAX_HEIGHT = 5f;
+	private static final float DEFAULT_MIN_HEIGHT = -5f;
 	private static final int DEFAULT_NUM_VERTICES = 128;
 	
 	private float x, z;
@@ -39,7 +40,8 @@ public class Terrain
 	private TerrainTexturePack texturePack;
 	private TerrainTexture blendMap;
 	
-	public Terrain(int gridX, int gridZ, ModelLoader loader, TerrainTexturePack texturePack, TerrainTexture blendMap)
+	public Terrain(int gridX, int gridZ, ModelLoader loader, TerrainTexturePack texturePack, 
+			TerrainTexture blendMap)
 	{
 		this. texturePack = texturePack;
 		this.blendMap = blendMap;
@@ -47,6 +49,28 @@ public class Terrain
 		this.z = gridZ * SIZE;
 		
 		this.model = generateTerrain(loader);
+	}
+	
+	public Terrain(int gridX, int gridZ, ModelLoader loader, TerrainTexturePack texturePack, 
+			TerrainTexture blendMap, String heightMapPath)
+	{
+		this. texturePack = texturePack;
+		this.blendMap = blendMap;
+		this.x = gridX * SIZE;
+		this.z = gridZ * SIZE;
+		
+		this.model = generateTerrainWithHeightMap(loader, heightMapPath);
+	}
+	
+	public Terrain(int gridX, int gridZ, ModelLoader loader, TerrainTexturePack texturePack, 
+			TerrainTexture blendMap, BufferedImage heightMap)
+	{
+		this. texturePack = texturePack;
+		this.blendMap = blendMap;
+		this.x = gridX * SIZE;
+		this.z = gridZ * SIZE;
+		
+		this.model = generateTerrainWithHeightMap(loader, heightMap);
 	}
 	
 	public RawModel generateTerrainWithHeightMap(ModelLoader loader, String heightMapPath)
@@ -70,6 +94,7 @@ public class Terrain
 			//let each pixel be one vertex
 			numVertices = heightMap.getHeight();
 		}
+		int maxRows = heightMap.getHeight();
 		
 		int count = numVertices * numVertices;
 		float[] vertices = new float[count * 3];
@@ -82,7 +107,7 @@ public class Terrain
 			for(int j=0;j<numVertices;j++)
 			{
 				vertices[vertexPointer*3] = (float)j/((float)numVertices - 1) * SIZE;
-				vertices[vertexPointer*3+1] = 0;
+				vertices[vertexPointer*3+1] = getHeightAt(heightMap, j, maxRows-i);
 				vertices[vertexPointer*3+2] = (float)i/((float)numVertices - 1) * SIZE;
 				
 				normals[vertexPointer*3] = 0;
@@ -132,7 +157,18 @@ public class Terrain
 			return 0;
 		}
 		
-		float height = heightMap.getRGB(x, z);
+		//get the height from the height map
+		Color color = new Color(heightMap.getRGB(x, z));
+		float height = color.getRed();	//TODO: use all color channels
+		
+		//with just the red channel, the value is in [0, 255]
+		//need to scale it to [minHeight, maxHeight]
+		//therefore, divide by 255, multiply by |minHeight|+|maxHeight| and subtract |minHeight|
+		height /= 255;
+		height *= (Math.abs(DEFAULT_MIN_HEIGHT) + Math.abs(DEFAULT_MAX_HEIGHT));
+		height -= Math.abs(DEFAULT_MIN_HEIGHT);		
+		
+		return height;
 	}
 	
 	private RawModel generateTerrain(ModelLoader loader)

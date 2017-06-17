@@ -52,6 +52,8 @@ Choose the file that suits your OS, extract the archive and run the jar. If you 
 * Supports a skybox
 * Supports flipping TextureData and thus flipping a Texture at load time
 * Supports height maps for the terrain and colision detection as well as correct positioning of the entities according to the terrain height
+* Can render static GUIs
+* Adds a standard GUI as a menu that can be called when pressing Esc
 
 ### Changes and additions in version 0.2 ###
 * Update to JOGL 2.3.2 (not fully downards compatible)

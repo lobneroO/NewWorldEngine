@@ -2,6 +2,8 @@ package entities;
 
 import org.joml.Vector3f;
 
+import terrains.Terrain;
+
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 
@@ -20,7 +22,7 @@ public class Player extends Entity implements KeyListener
 	private static final float GRAVITY = -50;
 	private static final float JUMP_POWER = 30;
 	
-	private static final float TERRAIN_HEIGHT = 0;
+//	private static final float TERRAIN_HEIGHT = 0;
 	
 	private float currentSpeed = 0;
 	private float currentTurnSpeed = 0;
@@ -47,7 +49,7 @@ public class Player extends Entity implements KeyListener
 	 * moves the player entity according to the frame time that has passed
 	 * @param frameTime frame time in seconds
 	 */
-	public void move(float frameTime)
+	public void move(float frameTime, Terrain terrain)
 	{
 		checkInputs();	//checks, which keys are currently down 
 		
@@ -62,18 +64,19 @@ public class Player extends Entity implements KeyListener
 		float distance = currentSpeed * frameTime;
 		float dx = (float) (distance * Math.sin(getYRotation()));	//getYRotation returns the angle in radians
 		float dz = (float) (distance * Math.cos(getYRotation()));
-		translate(new Vector3f(-dx, 0, -dz));
+//		translate(new Vector3f(-dx, 0, -dz));
 		//following is for jumping, with the set gravity and speed variables
 		upwardsSpeed += GRAVITY * frameTime;
-		translate(new Vector3f(0, upwardsSpeed*frameTime, 0));
+		translate(new Vector3f(-dx, upwardsSpeed*frameTime, -dz));
 		/* For the time being, the player constantly moves downwards according to gravity
 		 * this must of course be checked to not go below the terrain
 		 */
-		if(getPosition().y < TERRAIN_HEIGHT)
+		float terrainHeight = terrain.getTerrainModelHeightAt(getPosition().x, getPosition().z);
+		if(getPosition().y < terrainHeight)
 		{
 			upwardsSpeed = 0;
 			isInAir = false;
-			setPosition(getPosition().x, 0, getPosition().z);
+			setPosition(getPosition().x, terrainHeight, getPosition().z);
 		}
 	}
 	

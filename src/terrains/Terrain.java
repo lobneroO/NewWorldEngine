@@ -35,6 +35,7 @@ public class Terrain
 	private static final int DEFAULT_NUM_VERTICES = 128;
 	
 	private float x, z;
+	private float[][] height;
 	private RawModel model;
 	//support several textures and a blend map via the TerrainTexture class
 	private TerrainTexturePack texturePack;
@@ -43,10 +44,7 @@ public class Terrain
 	public Terrain(int gridX, int gridZ, ModelLoader loader, TerrainTexturePack texturePack, 
 			TerrainTexture blendMap)
 	{
-		this. texturePack = texturePack;
-		this.blendMap = blendMap;
-		this.x = gridX * SIZE;
-		this.z = gridZ * SIZE;
+		init(gridX, gridZ, texturePack, blendMap);
 		
 		this.model = generateTerrain(loader);
 	}
@@ -54,10 +52,7 @@ public class Terrain
 	public Terrain(int gridX, int gridZ, ModelLoader loader, TerrainTexturePack texturePack, 
 			TerrainTexture blendMap, String heightMapPath)
 	{
-		this. texturePack = texturePack;
-		this.blendMap = blendMap;
-		this.x = gridX * SIZE;
-		this.z = gridZ * SIZE;
+		init(gridX, gridZ, texturePack, blendMap);
 		
 		this.model = generateTerrainWithHeightMap(loader, heightMapPath);
 	}
@@ -65,12 +60,17 @@ public class Terrain
 	public Terrain(int gridX, int gridZ, ModelLoader loader, TerrainTexturePack texturePack, 
 			TerrainTexture blendMap, BufferedImage heightMap)
 	{
-		this. texturePack = texturePack;
+		init(gridX, gridZ, texturePack, blendMap);
+		
+		this.model = generateTerrainWithHeightMap(loader, heightMap);
+	}
+	
+	private void init(int gridX, int gridZ, TerrainTexturePack texturePack, TerrainTexture blendMap)
+	{
+		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
-		
-		this.model = generateTerrainWithHeightMap(loader, heightMap);
 	}
 	
 	public RawModel generateTerrainWithHeightMap(ModelLoader loader, String heightMapPath)
@@ -86,6 +86,59 @@ public class Terrain
 		}
 	}
 	
+	public float getTerrainModelHeightAt(float worldX, float worldZ)
+	{
+		if(height == null)
+		{
+			return 0;
+		}
+		//convert world coordinate to model coordinate (if it was translated in the world)
+		float terrainX = worldX - x;
+		float terrainZ = worldZ - z;
+		
+		//calculate the size of a grid square
+		//for vertices make 3 squares in the grid |*|*|*| -> -1
+		float gridSquareSize = SIZE / ((float)height.length -1);
+		
+		//find the grid square the given coordinate is in
+		int gridX = (int) Math.floor(terrainX / gridSquareSize);
+		int gridZ = (int) Math.floor(terrainZ / gridSquareSize);
+		
+		//check if the coordinate is on the grid at all
+		if(gridX >= height[0].length -1 || gridZ >= height.length
+				|| gridX < 0 || gridZ < 0)
+		{
+			return 0;
+		}
+		
+		//find the distance of the top left grid corner to the coordinates
+		float xCoordOnGridSquare = (terrainX % gridSquareSize) / gridSquareSize;
+		float zCoordOnGridSquare = (terrainZ % gridSquareSize) / gridSquareSize;
+		System.out.println(xCoordOnGridSquare + "; " + zCoordOnGridSquare);
+		//linearly interpolate, first between the upper two vertices
+		//then between the lower two vertices of the square
+		//at last between the two calculated values
+		
+		//CAREFUL: this only works, if the player is not on the last line of squares
+		//(index out of bounds with the gridX/Z+1)
+		if(gridX == height[0].length)
+		{
+			gridX--;
+		}
+		if(gridZ == height.length)
+		{
+			gridZ--;
+		}
+		float upperLineHeight = ((1-xCoordOnGridSquare) * height[gridX][gridZ] + 
+				xCoordOnGridSquare * height[gridX+1][gridZ]);
+		float lowerLineHeight = ((1-xCoordOnGridSquare) * height[gridX][gridZ+1] + 
+				xCoordOnGridSquare * height[gridX+1][gridZ+1]);
+		float interpolatedHeight = ((1-zCoordOnGridSquare) * upperLineHeight 
+				+ zCoordOnGridSquare * lowerLineHeight);
+		
+		return interpolatedHeight;
+	}
+	
 	public RawModel generateTerrainWithHeightMap(ModelLoader loader, BufferedImage heightMap)
 	{
 		int numVertices = DEFAULT_NUM_VERTICES;
@@ -95,6 +148,7 @@ public class Terrain
 			numVertices = heightMap.getHeight();
 		}
 		int maxRows = heightMap.getHeight();
+		height = new float[numVertices][numVertices];
 		
 		int count = numVertices * numVertices;
 		float[] vertices = new float[count * 3];
@@ -108,6 +162,7 @@ public class Terrain
 			{
 				vertices[vertexPointer*3] = (float)j/((float)numVertices - 1) * SIZE;
 				vertices[vertexPointer*3+1] = getHeightAt(heightMap, j, maxRows-i);
+				height[j][i] = getHeightAt(heightMap, j, maxRows-i);
 				vertices[vertexPointer*3+2] = (float)i/((float)numVertices - 1) * SIZE;
 				
 				Vector3f normal = calculateNormalFromHeightMapAt(heightMap, j, maxRows-i);

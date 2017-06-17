@@ -114,21 +114,10 @@ public class Terrain
 		//find the distance of the top left grid corner to the coordinates
 		float xCoordOnGridSquare = (terrainX % gridSquareSize) / gridSquareSize;
 		float zCoordOnGridSquare = (terrainZ % gridSquareSize) / gridSquareSize;
-		System.out.println(xCoordOnGridSquare + "; " + zCoordOnGridSquare);
 		//linearly interpolate, first between the upper two vertices
 		//then between the lower two vertices of the square
 		//at last between the two calculated values
 		
-		//CAREFUL: this only works, if the player is not on the last line of squares
-		//(index out of bounds with the gridX/Z+1)
-		if(gridX == height[0].length)
-		{
-			gridX--;
-		}
-		if(gridZ == height.length)
-		{
-			gridZ--;
-		}
 		float upperLineHeight = ((1-xCoordOnGridSquare) * height[gridX][gridZ] + 
 				xCoordOnGridSquare * height[gridX+1][gridZ]);
 		float lowerLineHeight = ((1-xCoordOnGridSquare) * height[gridX][gridZ+1] + 

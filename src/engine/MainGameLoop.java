@@ -90,6 +90,38 @@ public class MainGameLoop extends Program
 		
 		
 		//------MDOELS, PLAYER and CAMERA
+		//first the terrain to set the y coordinates for all entities 
+		//according to the terrains height
+		Texture[] textures = new Texture[4];
+		Texture blendMap;
+		File[] files = new File[4];
+		files[0] = new File("textures/terrain/grass_green2y_d.jpg");
+		files[1] = new File("textures/terrain/grass_autumn_red_d.jpg");
+		files[2] = new File("textures/terrain/grass_rocky_d.jpg");
+		files[3] = new File("textures/terrain/ground_crackedo_d.jpg");
+		File fileBM = new File("textures/terrain/tex_blendMap.png");
+		try {
+			for(int i = 0; i < files.length; i++)
+			{
+				textures[i] = TextureIO.newTexture(files[i], false);
+				textures[i].enable(gl);
+				textures[i].setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+				textures[i].setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
+			}
+			blendMap = TextureIO.newTexture(fileBM, false);
+			TerrainTexturePack tTP = new TerrainTexturePack(new TerrainTexture(textures[0]), 
+					new TerrainTexture(textures[1]), new TerrainTexture(textures[2]),
+					new TerrainTexture(textures[3]));
+			terrain = new Terrain(0, 0, modelLoader, tTP, new TerrainTexture(blendMap), 
+					"textures/terrain/tex_heightMap.png");
+		} catch (GLException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 		entities = new ArrayList<Entity>();
 		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
 		cylinder.setSpecularIntensity(10);
@@ -98,7 +130,10 @@ public class MainGameLoop extends Program
 		texCylinder.getTexture().setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
 		texCylinder.getTexture().setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
 		texCylinder.setHasTransparency(true);
-		player = new Player(texCylinder, new Vector3f(12, 0, 12), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
+		int playerX = 12, playerZ = 12;
+		player = new Player(texCylinder, 
+				new Vector3f(playerX, terrain.getTerrainModelHeightAt(playerX, playerZ), playerZ), 
+				new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		backend.addKeyListener(player);
 		
 		camera = new ThirdPersonCamera(player);
@@ -137,8 +172,8 @@ public class MainGameLoop extends Program
 		for(int i = 0; i < 30; i++)
 		{
 			float x = (float) (Math.random() * 100);
-			float y = 0;
 			float z = (float) (Math.random() * 100);
+			float y = terrain.getTerrainModelHeightAt(x, z);
 			float rot = (float) (Math.random() * 2 * Maths.PIf);
 			
 			TexturedModel chosenModel;
@@ -160,37 +195,16 @@ public class MainGameLoop extends Program
 					new Vector3f(0, rot, 0),
 					new Vector3f(scale, scale, scale)));
 		}
-		entity = new Entity(staticModel, new Vector3f(10, 1, 10), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
+		int entityX = 10, entityZ = 10;
+		//the box is centered at 0, therefore it needs to be elevated with half it's size
+		Vector3f entityScale = new Vector3f(1, 1, 1);
+		entity = new Entity(staticModel, 
+				new Vector3f(entityX, 
+						terrain.getTerrainModelHeightAt(entityX, entityZ)+0.5f*entityScale.y(), 
+						entityZ), 
+				new Vector3f(0, 0, 0), entityScale);
 		
-		Texture[] textures = new Texture[4];
-		Texture blendMap;
-		File[] files = new File[4];
-		files[0] = new File("textures/terrain/grass_green2y_d.jpg");
-		files[1] = new File("textures/terrain/grass_autumn_red_d.jpg");
-		files[2] = new File("textures/terrain/grass_rocky_d.jpg");
-		files[3] = new File("textures/terrain/ground_crackedo_d.jpg");
-		File fileBM = new File("textures/terrain/tex_blendMap.png");
-		try {
-			for(int i = 0; i < files.length; i++)
-			{
-				textures[i] = TextureIO.newTexture(files[i], false);
-				textures[i].enable(gl);
-				textures[i].setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
-				textures[i].setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
-			}
-			blendMap = TextureIO.newTexture(fileBM, false);
-			TerrainTexturePack tTP = new TerrainTexturePack(new TerrainTexture(textures[0]), 
-					new TerrainTexture(textures[1]), new TerrainTexture(textures[2]),
-					new TerrainTexture(textures[3]));
-			terrain = new Terrain(0, 0, modelLoader, tTP, new TerrainTexture(blendMap), 
-					"textures/terrain/tex_heightMap.png");
-		} catch (GLException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
+		
 		
 		renderer.setSkybox(shaderLoader, modelLoader);
 		

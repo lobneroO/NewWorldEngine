@@ -22,10 +22,10 @@ public class WaterRenderer
 	
 	RawModel quad;
 	
-	public WaterRenderer(ModelLoader modelLoader, WaterShader shader, Matrix4f projectionMatrix, float xPosition, float yPosition, float zPosition,
-			float rotationAroundYAxis, float scale)
+	public WaterRenderer(ModelLoader modelLoader, WaterShader shader, Matrix4f projectionMatrix, 
+			float xPosition, float yPosition, float zPosition, float rotationAroundYAxis, float scale)
 	{
-		quad = modelLoader.loadToVAO(StandardModels.getQuadTriangleStripVertices(scale), 3);
+		quad = modelLoader.loadToVAO(StandardModels.getQuadTriangleStripVerticesInXZPlane(scale), 3);
 		
 		this.shader = shader;
 		

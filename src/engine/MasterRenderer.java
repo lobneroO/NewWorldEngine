@@ -89,7 +89,7 @@ public class MasterRenderer
 		waterShader = new WaterShader();
 		shaderLoader.loadShader(waterShader);
 		waterRenderer = new WaterRenderer(modelLoader, waterShader, projectionMatrix,
-				10, 0, 10, 10, 10);
+				20, 0, 20, 0, 10);
 		
 		setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
 	}

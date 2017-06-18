@@ -86,18 +86,36 @@ public class StandardModels
 	}
 	
 	/**
-	 * Returns vertex positions for a quad centered at (0.0, 0.0, 0.0) that can be drawn
-	 * as GL_TRIANGLE_STRIP without extra indices
+	 * Returns vertex positions for a quad centered at (0.0, 0.0, 0.0) lying in the x-y plane
+	 * that can be drawn as GL_TRIANGLE_STRIP without extra indices
 	 * @param scale sets the size of the quad's edges
 	 * @return
 	 */
-	public static float[] getQuadTriangleStripVertices(float scale)
+	public static float[] getQuadTriangleStripVerticesInXYPlane(float scale)
 	{
 		float[] positions =  {
 				scale, -scale, 0.0f,
 				scale, scale, 0.0f,
 				-scale, -scale, 0.0f,
 				-scale, scale, 0.0f
+		};
+		
+		return positions;
+	}
+	
+	/**
+	 * Returns vertex positions for a quad centered at (0.0, 0.0, 0.0) lying in the x-y plane
+	 * that can be drawn as GL_TRIANGLE_STRIP without extra indices
+	 * @param scale sets the size of the quad's edges
+	 * @return
+	 */
+	public static float[] getQuadTriangleStripVerticesInXZPlane(float scale)
+	{
+		float[] positions =  {
+				scale, 0.0f, -scale,
+				scale, 0.0f, scale,
+				-scale, 0.0f, -scale,
+				-scale, 0.0f,scale
 		};
 		
 		return positions;

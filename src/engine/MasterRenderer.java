@@ -27,6 +27,8 @@ import skybox.SkyboxRenderer;
 import terrains.Terrain;
 import textures.GUITexture;
 import toolbox.StandardModels;
+import water.WaterRenderer;
+import water.WaterShader;
 
 /**
  * Manages all the individual renderers, their shaders and OpenGL set ups
@@ -41,6 +43,8 @@ public class MasterRenderer
 	private EntityRenderer entityRenderer;
 	private TerrainShader terrainShader;
 	private TerrainRenderer terrainRenderer;
+	private WaterShader waterShader;
+	private WaterRenderer waterRenderer;
 	private SkyboxRenderer skyboxRenderer;
 	private GUIRenderer guiRenderer;
 	boolean skyboxIsSet = false;
@@ -61,7 +65,8 @@ public class MasterRenderer
 	 * @param sun The light for the scene
 	 * @param shaderLoader The shader loader that takes care of cleaning up afterwards
 	 */
-	public void init(Matrix4f projectionMatrix, Light sun, ShaderLoader shaderLoader)
+	public void init(Matrix4f projectionMatrix, Light sun, ShaderLoader shaderLoader, 
+			ModelLoader modelLoader)
 	{
 		this.projectionMatrix = projectionMatrix;
 		
@@ -80,6 +85,11 @@ public class MasterRenderer
 		terrainRenderer = new TerrainRenderer(terrainShader);
 		terrainShader.stop();
 		terrainRenderer.setProjectionMatrix(projectionMatrix);
+		
+		waterShader = new WaterShader();
+		shaderLoader.loadShader(waterShader);
+		waterRenderer = new WaterRenderer(modelLoader, waterShader, projectionMatrix,
+				10, 0, 10, 10, 10);
 		
 		setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
 	}
@@ -107,6 +117,8 @@ public class MasterRenderer
 		
 		entities.clear();
 		terrains.clear();
+		
+		waterRenderer.render(camera);
 		
 		if(skyboxIsSet)
 		{

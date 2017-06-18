@@ -86,7 +86,7 @@ public class MainGameLoop extends Program
 		light = new Light(new Vector3f(-5f, 5, -5f), new Vector3f(1.0f, 1.0f, 1.0f));
 				
 		renderer = new MasterRenderer();
-		renderer.init(projectionMatrix, light, shaderLoader);
+		renderer.init(projectionMatrix, light, shaderLoader, modelLoader);
 		
 		
 		//------MDOELS, PLAYER and CAMERA

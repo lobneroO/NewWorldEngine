@@ -16,6 +16,8 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 	private float mouseXPos = 0;
 	private float mouseYPos = 0;
 	private float distanceFromPlayer = 10;
+	private float yOffset = 0;
+	private float yOffsetFactor = 1;
 	private float angleAroundPlayer = Maths.PIf;	//angles in radians
 	
 	private Player player;
@@ -27,6 +29,13 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 		this.player = player;
 		pitch = (float) Math.toRadians(45);
 		viewMatrix = Maths.createViewMatrix(position, pitch, yaw);
+		
+		if(player.getMirrorModelFacing())
+		{
+			angleAroundPlayer += Maths.PIf;
+		}
+		
+		updateYOffsetFactor();
 	}
 	
 	/**
@@ -52,11 +61,14 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 	private void calculateCameraPosition(float horizontalDistance, float verticalDistance)
 	{
 		float theta = player.getYRotation() + angleAroundPlayer;	//angle in radians
+		
 		float offsetX = (float) (horizontalDistance * Math.sin(theta));	//theta is in radians at this point
 		float offsetZ = (float) (horizontalDistance * Math.cos(theta));
 		position.x = player.getPosition().x - offsetX;
 		position.z = player.getPosition().z - offsetZ;
-		position.y = player.getPosition().y + verticalDistance;
+		float offset = yOffset * yOffsetFactor;
+		System.out.println("yOffset = " + yOffset + "; yOffsetFactor = " + yOffsetFactor + "; total offset = " + offset);
+		position.y = player.getPosition().y + verticalDistance + yOffset * yOffsetFactor;
 		yaw = Maths.PIf - theta;	//angle in radians
 	}
 
@@ -68,6 +80,8 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 		{
 			distanceFromPlayer = tmp;
 		}
+		
+		updateYOffsetFactor();
 	}
 	
 	private void calculatePitch(float dy)
@@ -91,6 +105,17 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 		{
 			angleAroundPlayer += dx;
 		}
+	}
+	
+	public void setYOffset(float yOffset)
+	{
+		this.yOffset = yOffset;
+		updateYOffsetFactor();
+	}
+	
+	private void updateYOffsetFactor()
+	{
+		yOffsetFactor = (float) (-Math.pow(1/-distanceFromPlayer, 3) + yOffset);
 	}
 
 	@Override

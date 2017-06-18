@@ -3,6 +3,7 @@ package entities;
 import org.joml.Vector3f;
 
 import terrains.Terrain;
+import toolbox.Maths;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
@@ -17,7 +18,7 @@ import com.jogamp.newt.event.KeyListener;
  */
 public class Player extends Entity implements KeyListener
 {
-	private static final float RUN_SPEED = 20;		//units per second
+	private static float RUN_SPEED = 20;		//units per second
 	private static final float TURN_SPEED = 90;	//degrees per second
 	private static final float GRAVITY = -50;
 	private static final float JUMP_POWER = 30;
@@ -28,6 +29,8 @@ public class Player extends Entity implements KeyListener
 	private float currentTurnSpeed = 0;
 	private float upwardsSpeed = 0;
 	private boolean isInAir = false;
+	
+	boolean mirrorModelFacing = false;
 	
 	boolean[] keys = new boolean[KeyEvent.EVENT_KEY_PRESSED];
 	
@@ -54,6 +57,7 @@ public class Player extends Entity implements KeyListener
 		checkInputs();	//checks, which keys are currently down 
 		
 		float thetaRad = (float) Math.toRadians(currentTurnSpeed * frameTime);
+		
 		//rotation in turn speed is stored in deg, thus conversion is needed
 		rotate(new Vector3f(0, thetaRad, 0));
 		
@@ -120,6 +124,21 @@ public class Player extends Entity implements KeyListener
 				jump();
 			}
 		}
+	}
+	
+	public void setMirrorModelFacing(boolean mirrorModelFacing)
+	{
+		if(mirrorModelFacing != this.mirrorModelFacing)
+		{
+			this.rotate(new Vector3f(0, Maths.PIf, 0));
+			RUN_SPEED *= -1;
+		}
+		this.mirrorModelFacing = mirrorModelFacing;
+	}
+	
+	public boolean getMirrorModelFacing()
+	{
+		return mirrorModelFacing;
 	}
 	
 	/* the key event doesn't trigger anything automatically 

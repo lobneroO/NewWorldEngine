@@ -123,20 +123,22 @@ public class MainGameLoop extends Program
 		}
 		
 		entities = new ArrayList<Entity>();
-		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
+		RawModel cylinder = OBJLoader.loadObjModel("player/model", modelLoader);
 		cylinder.setSpecularIntensity(10);
 		cylinder.setSpecularPower(10);
-		TexturedModel texCylinder = new TexturedModel(cylinder, "textures/tex_player.png", false);
+		TexturedModel texCylinder = new TexturedModel(cylinder, "textures/player/tex_player.png", false);
 		texCylinder.getTexture().setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
 		texCylinder.getTexture().setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
 		texCylinder.setHasTransparency(true);
 		int playerX = 12, playerZ = 12;
 		player = new Player(texCylinder, 
 				new Vector3f(playerX, terrain.getTerrainModelHeightAt(playerX, playerZ), playerZ), 
-				new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
+				new Vector3f(0, 0, 0), new Vector3f(0.03f, 0.03f, 0.03f));
+		player.setMirrorModelFacing(true);
 		backend.addKeyListener(player);
 		
 		camera = new ThirdPersonCamera(player);
+		camera.setYOffset(1.5f);
 		backend.addMouseListener(camera);
 		
 		model = OBJLoader.loadObjModel("cube/model", modelLoader);

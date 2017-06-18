@@ -83,6 +83,7 @@ public class Entity
 	{
 		return rotation.z;
 	}
+	
 	/**
 	 * Sets the rotation angles around the axes. The rotations are in radians.
 	 * @param rotation The rotations as a Vector3f, every angle in radians.
@@ -91,9 +92,11 @@ public class Entity
 	{
 		this.rotation = rotation;
 	}
+	
 	public Vector3f getScale() {
 		return scale;
 	}
+	
 	public void setScale(Vector3f scale) {
 		this.scale = scale;
 	}

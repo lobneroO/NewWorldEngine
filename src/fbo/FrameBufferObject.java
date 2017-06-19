@@ -8,18 +8,21 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLContext;
 
-public class FrameBufferObject 
+public class FramebufferObject 
 {
 	private int[] fbo;
 	
-	private int width;
-	private int height;
+	protected int width;
+	protected int height;
+	
+	protected int displayWidth = 0;
+	protected int displayHeight = 0;
 	
 	private List<int[]> textureAttachments;
 	private int[] depthTextureAttachment;
 	private int[] depthBufferAttachment;
 	
-	public FrameBufferObject(int width, int height)
+	public FramebufferObject(int width, int height)
 	{
 		createFrameBufferObject();
 		this.width = width;
@@ -28,9 +31,16 @@ public class FrameBufferObject
 		textureAttachments = new ArrayList<int[]>();
 	}
 	
-	private void createFrameBufferObject()
+	protected FramebufferObject()
+	{
+		
+	}
+	
+	protected int[] createFrameBufferObject()
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
+		
+		int[] fbo = new int[1];
 		
 		//generate the frame buffer object and store it
 		gl.glGenFramebuffers(1, fbo, 0);
@@ -38,6 +48,17 @@ public class FrameBufferObject
 		//bin the new fbo and attach a color attachment
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, fbo[0]);
 		gl.glDrawBuffer(GL.GL_COLOR_ATTACHMENT0);
+		
+		return fbo;
+	}
+	
+	public void bind(int[] fbo, int width, int height)
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		
+		gl.glBindTexture(GL.GL_TEXTURE_2D, 0);
+		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, fbo[0]);
+		gl.glViewport(0, 0, width, height);
 	}
 	
 	public void bind()
@@ -56,9 +77,13 @@ public class FrameBufferObject
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
+		if(displayWidth != 0 && displayHeight != 0)
+		{
+			gl.glViewport(0, 0, displayWidth, displayHeight);
+		}
 	}
 	
-	public void createTextureAttachment(int width, int height)
+	public int[] createTextureAttachment(int width, int height)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
@@ -72,12 +97,15 @@ public class FrameBufferObject
 		//TODO: probably needs to dynamically use the GL_COLOR_ATTACHMENT number
 		gl.glFramebufferTexture(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, textureID[0], 0);
 		
-		textureAttachments.add(textureID);
+//		textureAttachments.add(textureID);
+		return textureID;
 	}
 	
-	public void createDepthTextureAttachment(int width, int height)
+	public int[] createDepthTextureAttachment(int width, int height)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
+		
+		int[] depthTextureAttachment = new int[1];
 		
 		gl.glGenTextures(1, depthTextureAttachment, 0);
 		gl.glBindTexture(GL.GL_TEXTURE_2D, 0);
@@ -89,17 +117,23 @@ public class FrameBufferObject
 		
 		gl.glFramebufferTexture(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, 
 				depthTextureAttachment[0], 0);
+		
+		return depthTextureAttachment;
 	}
 	
-	public void createDepthBufferAttachment(int width, int height)
+	public int[] createDepthBufferAttachment(int width, int height)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
+		
+		int[] depthBufferAttachment = new int[1];
 		
 		gl.glGenRenderbuffers(1, depthBufferAttachment, 0);
 		gl.glBindRenderbuffer(GL3.GL_RENDERBUFFER, depthBufferAttachment[0]);
 		gl.glRenderbufferStorage(GL3.GL_RENDERBUFFER, GL3.GL_DEPTH_COMPONENT, width, height);
 		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL3.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER,
 				depthBufferAttachment[0]);
+		
+		return depthBufferAttachment;
 	}
 	
 	public int[] getTextureAttachmentID(int i)
@@ -107,10 +141,16 @@ public class FrameBufferObject
 		return textureAttachments.get(i);
 	}
 	
-	public void setViewPort(int width, int height)
+	public void setFramebufferViewPort(int width, int height)
 	{
 		this.width = width;
 		this.height = height;
+	}
+	
+	public void setDisplayViewport(int width, int height)
+	{
+		displayWidth = width;
+		displayHeight = height;
 	}
 	
 	public void cleanUp()

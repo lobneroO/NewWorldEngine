@@ -89,6 +89,7 @@ public class FramebufferObject
 		
 		int[] textureID = new int[1];
 		gl.glGenTextures(1,  textureID, 0);
+		gl.glBindTexture(GL.GL_TEXTURE_2D, textureID[0]);
 		
 		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGB, width, height, 0, GL.GL_RGB,
 				GL.GL_UNSIGNED_BYTE, (ByteBuffer)null);
@@ -108,7 +109,7 @@ public class FramebufferObject
 		int[] depthTextureAttachment = new int[1];
 		
 		gl.glGenTextures(1, depthTextureAttachment, 0);
-		gl.glBindTexture(GL.GL_TEXTURE_2D, 0);
+		gl.glBindTexture(GL.GL_TEXTURE_2D, depthTextureAttachment[0]);
 		
 		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT32, width, height, 0, 
 				GL3.GL_DEPTH_COMPONENT, GL.GL_FLOAT, (ByteBuffer)null);

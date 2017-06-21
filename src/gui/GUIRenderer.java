@@ -54,7 +54,9 @@ public class GUIRenderer
 			shader.loadModelMatrix(modelMatrix);
 			
 			gl.glActiveTexture(GL.GL_TEXTURE0);
+			
 			guiTex.bind(gl);
+			
 			gl.glDrawArrays(GL.GL_TRIANGLE_STRIP, 0, quad.getNumVertices());
 		}
 		

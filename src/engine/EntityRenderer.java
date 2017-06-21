@@ -54,7 +54,8 @@ public class EntityRenderer
 			{
 				prepareEntity(camera, entity);
 				
-				gl.glDrawElements(GL.GL_TRIANGLES, model.getRawModel().getNumVertices(), GL.GL_UNSIGNED_INT, 0);
+				gl.glDrawElements(GL.GL_TRIANGLES, model.getRawModel().getNumVertices(),
+						GL.GL_UNSIGNED_INT, 0);
 			}
 			unbindTexturedModel();
 		}

@@ -11,7 +11,7 @@ in vec2 vTexCoords;
 in vec3 vNormalWS;
 in vec3 vLightDirection;
 
-out vec4 fragColor;
+layout (location = 0) out vec4 fragColor;
 
 void main()
 {

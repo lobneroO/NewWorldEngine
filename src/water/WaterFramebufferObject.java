@@ -57,6 +57,11 @@ public class WaterFramebufferObject extends FramebufferObject
 	{
 		bind(refractionFBO, REFRACTION_WIDTH, REFRACTION_HEIGHT);
 	}
+	
+	public int[] getReflectionTexture()
+	{
+		return reflectionTexture;
+	}
 
 	public void cleanUp()
 	{

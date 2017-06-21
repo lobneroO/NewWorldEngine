@@ -49,7 +49,6 @@ public class GUIRenderer
 		{
 			Matrix4f modelMatrix = new Matrix4f();
 			modelMatrix.identity();
-			modelMatrix.translate(guiTex.getPosition().x, guiTex.getPosition().y, 0.0f);
 			modelMatrix.scale(guiTex.getScale().x, guiTex.getScale().y, 0.0f);
 			shader.loadModelMatrix(modelMatrix);
 			

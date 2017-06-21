@@ -218,7 +218,10 @@ public class MainGameLoop extends Program
 		try{
 			File fileTex = new File("textures/gui/menu.png");
 			Texture tex = TextureIO.newTexture(fileTex, false);
-			menu = new GUITexture(tex, new Vector2f(0, 0), new Vector2f(1, 1));
+			float ratio =  (float)tex.getHeight() /(float)tex.getWidth();
+			float width = 0.8f;
+			float height = width * ratio;
+			menu = new GUITexture(tex, new Vector2f(0, 0), new Vector2f(width, height));
 		} catch (IOException e)
 		{
 			System.err.println("Could not load textures/gui/menu.png");

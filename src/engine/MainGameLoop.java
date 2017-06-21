@@ -72,6 +72,8 @@ public class MainGameLoop extends Program
 	ArrayList<GUITexture> guiTextures;
 	boolean displayMenu = false;
 	GUITexture menu;
+	GUITexture startPopup;
+	long popupTime = 5000;
 	@Override
 	public boolean init(GLAutoDrawable drawable) 
 	{
@@ -219,7 +221,17 @@ public class MainGameLoop extends Program
 			menu = new GUITexture(tex, new Vector2f(0, 0), new Vector2f(1, 1));
 		} catch (IOException e)
 		{
-			System.err.println("Could not load textures/gui/gui_second.png");
+			System.err.println("Could not load textures/gui/menu.png");
+			System.err.println(e.getStackTrace());
+		}
+		
+		try{
+			File fileTex = new File("textures/gui/start_popup.png");
+			Texture tex = TextureIO.newTexture(fileTex, false);
+			startPopup = new GUITexture(tex, new Vector2f(0, 0), new Vector2f(1, 1));
+		} catch (IOException e)
+		{
+			System.err.println("Could not load textures/gui/start_popup.png");
 			System.err.println(e.getStackTrace());
 		}
 		
@@ -279,6 +291,13 @@ public class MainGameLoop extends Program
 		for(GUITexture tex : guiTextures)
 		{
 			renderer.processGUITextures(tex);
+			
+		}
+		if(popupTime > 0)
+		{
+			//make the start pop up disappear after some time
+			renderer.processGUITextures(startPopup);
+			popupTime -= backend.getFrameTime();
 		}
 		
 		if(displayMenu)

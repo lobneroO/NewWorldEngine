@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -28,9 +27,6 @@ import skybox.SkyboxRenderer;
 import terrains.Terrain;
 import textures.GUITexture;
 import toolbox.StandardModels;
-import water.WaterFramebufferObject;
-import water.WaterRenderer;
-import water.WaterShader;
 
 /**
  * Manages all the individual renderers, their shaders and OpenGL set ups
@@ -45,10 +41,6 @@ public class MasterRenderer
 	private EntityRenderer entityRenderer;
 	private TerrainShader terrainShader;
 	private TerrainRenderer terrainRenderer;
-	private WaterShader waterShader;
-	private WaterRenderer waterRenderer;
-	private WaterFramebufferObject waterFBO;
-	private GUITexture waterGUI;
 	private SkyboxRenderer skyboxRenderer;
 	private GUIRenderer guiRenderer;
 	boolean skyboxIsSet = false;
@@ -89,14 +81,6 @@ public class MasterRenderer
 		terrainRenderer = new TerrainRenderer(terrainShader);
 		terrainShader.stop();
 		terrainRenderer.setProjectionMatrix(projectionMatrix);
-		
-		waterShader = new WaterShader();
-		shaderLoader.loadShader(waterShader);
-		waterRenderer = new WaterRenderer(modelLoader, waterShader, projectionMatrix,
-				20, 0, 20, 0, 10);
-		waterFBO = new WaterFramebufferObject(1024, 768);
-		waterGUI = new GUITexture(waterFBO.getReflectionTexture(), 
-				new Vector2f(0.1f, 0.1f), new Vector2f(0.5f, 0.5f));
 		setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
 	}
 	
@@ -111,7 +95,6 @@ public class MasterRenderer
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
-		guiTextures.add(waterGUI);
 		prepare();
 		
 		basicLightShader.start();
@@ -124,24 +107,10 @@ public class MasterRenderer
 		terrainRenderer.render(camera, terrains);
 		terrainShader.stop();
 		
-		waterFBO.bindReflectionFBO();
-		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
-		terrainShader.start();
-		terrainShader.loadLightPosition(sun.getPosition());
-		terrainRenderer.render(camera, terrains);
-		terrainShader.stop();
-		if(skyboxIsSet)
-		{
-			skyboxRenderer.render(camera);
-		}
-		waterFBO.unbind();
-		
 		gl.glViewport(0, 0, 1024, 768);
 		
 		entities.clear();
 		terrains.clear();
-		
-		waterRenderer.render(camera);
 		
 		if(skyboxIsSet)
 		{
@@ -253,6 +222,5 @@ public class MasterRenderer
 	{
 		skyboxRenderer.cleanUp();
 		guiRenderer.cleanUp();
-		waterFBO.cleanUp();
 	}
 }

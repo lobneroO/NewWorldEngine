@@ -12,10 +12,15 @@ An overview over the changes in each version can be found at the bottom.
 Currently available features and techniques (i.e. all features that can be used in the master branch, may not necessarily be used in the release branches which are more of a demo thing and don't contain unused code for data size sake): 
 -loading and displaying of models from obj files with textures
 -basic 3rd person camera for a player entity, that you can move around.
+-extra support for mirroring the player model direction
 -basic player movement
--terrains with multi texturing
+-terrains with multi texturing and height maps
+-skyboxes
+-guis
 -rendering copied entities efficiently
+-flipping textures upon loading
 -basic lighting
+* Version 0.3 (released on June 22snd 2017)
 * Version 0.2 (released on May 21st 2017)
 * Version 0.1 (released on May 4th 2017)
 * Download of an executable jar file at https://bitbucket.org/tlobner/new-world-engine/downloads

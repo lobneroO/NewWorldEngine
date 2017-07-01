@@ -19,19 +19,25 @@ public class WaterRenderer
 {
 	WaterShader shader;
 	
+	private WaterFramebufferObject fbo;
+	
 //	Matrix4f modelMatrix;
 	Matrix4f projectionMatrix;
 	
 	RawModel quad;
 	
-	public WaterRenderer(ModelLoader modelLoader, WaterShader shader, Matrix4f projectionMatrix)
+	public WaterRenderer(ModelLoader modelLoader, WaterShader shader, Matrix4f projectionMatrix,
+			WaterFramebufferObject fbo)
 	{
 		quad = modelLoader.loadToVAO(StandardModels.getQuadTriangleStripVerticesInXZPlane(1), 3);
 		
 		this.shader = shader;
+		shader.start();
+		shader.setupTextureUnits();
+		shader.stop();
 		
+		this.fbo = fbo;		
 		this.projectionMatrix = projectionMatrix;
-//		modelMatrix = getModelMatrix(xPosition, yPosition, zPosition, rotationAroundYAxis);
 	}
 	
 	public void render(Camera camera, List<WaterTile> waterTiles)
@@ -43,6 +49,7 @@ public class WaterRenderer
 		
 		shader.start();
 		prepareModel(gl);
+		prepareTextures(gl);
 		for(WaterTile tile : waterTiles)
 		{
 			Matrix4f modelViewProjectionMatrix = setUpModelViewProjectionMatrix(camera, tile);
@@ -72,21 +79,19 @@ public class WaterRenderer
 		gl.glEnableVertexAttribArray(0);
 	}
 	
+	private void prepareTextures(GL3 gl)
+	{
+		gl.glActiveTexture(GL.GL_TEXTURE0);
+		gl.glBindTexture(GL.GL_TEXTURE_2D, fbo.getReflectionTexture()[0]);
+		gl.glActiveTexture(GL.GL_TEXTURE1);
+		gl.glBindTexture(GL.GL_TEXTURE_2D, fbo.getRefractionTexture()[0]);
+	}
+	
 	private void unbindModel(GL3 gl)
 	{
 		gl.glBindVertexArray(0);
 		gl.glDisableVertexAttribArray(0);
 	}
-	
-//	private Matrix4f getModelMatrix(float xPosition, float yPosition, float zPosition,
-//			float rotationAroundYAxis)
-//	{
-//		Matrix4f modelMatrix = new Matrix4f();
-//		modelMatrix.rotateY(rotationAroundYAxis);
-//		modelMatrix.translate(xPosition, yPosition, zPosition);
-//		
-//		return modelMatrix;
-//	}
 	
 	public void cleanUp()
 	{

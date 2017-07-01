@@ -49,8 +49,6 @@ public class MasterRenderer
 	private WaterShader waterShader;
 	private WaterRenderer waterRenderer;
 	private WaterFramebufferObject waterFBO;
-	private GUITexture waterReflectionGUI;
-	private GUITexture waterRefractionGUI;
 	private SkyboxRenderer skyboxRenderer;
 	private GUIRenderer guiRenderer;
 	boolean skyboxIsSet = false;
@@ -93,15 +91,11 @@ public class MasterRenderer
 		terrainShader.stop();
 		terrainRenderer.setProjectionMatrix(projectionMatrix);
 		
+		waterFBO = new WaterFramebufferObject(1024, 768);
 		waterShader = new WaterShader();
 		shaderLoader.loadShader(waterShader);
-		waterRenderer = new WaterRenderer(modelLoader, waterShader, projectionMatrix);
+		waterRenderer = new WaterRenderer(modelLoader, waterShader, projectionMatrix, waterFBO);
 		water.add(new WaterTile(20, 0, 20));
-		waterFBO = new WaterFramebufferObject(1024, 768);
-		waterReflectionGUI = new GUITexture(waterFBO.getReflectionTexture(), 
-				new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-		waterRefractionGUI = new GUITexture(waterFBO.getRefractionTexture(),
-				new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
 		setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
 	}
 	
@@ -114,8 +108,6 @@ public class MasterRenderer
 	 */
 	public void render(Light sun, Camera camera)
 	{
-		guiTextures.add(waterReflectionGUI);
-		guiTextures.add(waterRefractionGUI);
 		prepare();
 		
 		renderScene(camera, sun);
@@ -124,6 +116,7 @@ public class MasterRenderer
 		{
 			waterPass(camera, sun, waterTile);
 		}
+		waterRenderer.render(camera, water);
 		
 		entities.clear();
 		terrains.clear();
@@ -149,8 +142,6 @@ public class MasterRenderer
 		terrainShader.loadLightPosition(sun.getPosition());
 		terrainRenderer.render(camera, terrains);
 		terrainShader.stop();
-		
-		waterRenderer.render(camera, water);
 		
 		if(skyboxIsSet)
 		{

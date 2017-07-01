@@ -5,7 +5,6 @@ layout (location = 0) in vec3 position;
 uniform mat4 uModelViewProjectionMatrix;
 
 out vec4 vPosition_CS;
-out vec2 vTexCoords;
 
 void main()
 {

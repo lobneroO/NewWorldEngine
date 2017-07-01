@@ -67,6 +67,8 @@ public class WaterFramebufferObject extends FramebufferObject
 	{
 		super.cleanUp();
 		
+		unbind();
+		
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		gl.glDeleteFramebuffers(1, reflectionFBO, 0);
 		gl.glDeleteFramebuffers(1, refractionFBO, 0);

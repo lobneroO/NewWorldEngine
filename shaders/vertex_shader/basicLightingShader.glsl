@@ -7,6 +7,7 @@ layout (location = 2) in vec3 normal;
 uniform mat4 uModelMatrix;
 uniform mat4 uModelViewProjectionMatrix;
 uniform vec3 uLightPosition;
+uniform vec4 uClippingPlane;
 
 out vec3 vPosWS;	//vertex position in world space
 out vec2 vTexCoords;
@@ -25,4 +26,8 @@ void main()
 	vLightDirection = normalize(vLightDirection);
 		
 	vTexCoords = texCoords;
+	
+	//get the distance of the entity from the clipping plane, if below: cull
+	//if the clipping plane is not uploaded to the shader, this call is ignored
+	gl_ClipDistance[0] = dot(vec4(vPosWS, 1.0), uClippingPlane);
 }

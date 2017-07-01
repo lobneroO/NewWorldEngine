@@ -38,6 +38,8 @@ public class WaterRenderer
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
 		gl.glDisable(GL.GL_CULL_FACE);
+		
+		
 		shader.start();
 		prepareModel(gl);
 		Matrix4f modelViewProjectionMatrix = setUpModelViewProjectionMatrix(camera);
@@ -79,5 +81,10 @@ public class WaterRenderer
 		modelMatrix.translate(xPosition, yPosition, zPosition);
 		
 		return modelMatrix;
+	}
+	
+	public void cleanUp()
+	{
+		shader.cleanUp();
 	}
 }

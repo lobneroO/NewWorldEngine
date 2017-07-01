@@ -2,6 +2,7 @@ package shader;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import shader.ShaderProgram;
 
@@ -21,6 +22,7 @@ public class BasicLightShader extends ShaderProgram
 	private int location_materialSpecularIntensity;
 	private int location_materialSpecularPower;
 	private int location_cameraPosition;
+	private int location_clippingPlane;
 	
 	public BasicLightShader() 
 	{
@@ -51,6 +53,7 @@ public class BasicLightShader extends ShaderProgram
 		location_materialSpecularIntensity = getUniformLocation("uIntensity");
 		location_materialSpecularPower = getUniformLocation("uPower");
 		location_cameraPosition = getUniformLocation("uCamPos");
+		location_clippingPlane = getUniformLocation("uClippingPlane");
 	}
 	
 	public void loadModelMatrix(Matrix4f matrix)
@@ -86,6 +89,11 @@ public class BasicLightShader extends ShaderProgram
 	public void loadCameraPosition(Vector3f position)
 	{
 		loadVec3(location_cameraPosition, position);
+	}
+	
+	public void loadClippingPlane(Vector4f clippingPlane)
+	{
+		loadVec4(location_clippingPlane, clippingPlane);
 	}
 	
 }

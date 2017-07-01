@@ -109,10 +109,27 @@ public class MasterRenderer
 	 */
 	public void render(Light sun, Camera camera)
 	{
-		GL3 gl = GLContext.getCurrentGL().getGL3();
-		
 		guiTextures.add(waterGUI);
 		prepare();
+		
+		renderScene(camera, sun);
+		
+		waterPass(camera, sun);
+		
+		entities.clear();
+		terrains.clear();
+		
+		if(guiIsSet)
+		{
+			guiRenderer.render(guiTextures);
+		}
+		
+		guiTextures.clear();
+	}
+	
+	private void renderScene(Camera camera, Light sun)
+	{
+//		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
 		basicLightShader.start();
 		basicLightShader.loadLightPosition(sun.getPosition());
@@ -124,36 +141,44 @@ public class MasterRenderer
 		terrainRenderer.render(camera, terrains);
 		terrainShader.stop();
 		
+		if(skyboxIsSet)
+		{
+			skyboxRenderer.render(camera);
+		}
+	}
+	
+	
+	private void waterPass(Camera camera, Light sun)
+	{
+		prepareWaterPass(new Vector4f(0, -1, 0, 2));
+		renderScene(camera, sun);
+		waterRenderer.render(camera);
+		endWaterPass();
+	}
+	
+	private void prepareWaterPass(Vector4f waterPlane)
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		
 		waterFBO.bindReflectionFBO();
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
-		terrainShader.start();
-		terrainShader.loadLightPosition(sun.getPosition());
-		terrainRenderer.render(camera, terrains);
-		terrainShader.stop();
-		if(skyboxIsSet)
-		{
-			skyboxRenderer.render(camera);
-		}
+		
+		//cull: for reflection everything below the water can be culled
+		//for refraction: everything above the water can be culled
+		gl.glEnable(GL3.GL_CLIP_DISTANCE0);
+		basicLightShader.start();
+		basicLightShader.loadClippingPlane(waterPlane);
+		basicLightShader.stop();
+		
+	}
+	
+	private void endWaterPass()
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		
 		waterFBO.unbind();
-		
+		gl.glDisable(GL3.GL_CLIP_DISTANCE0);
 		gl.glViewport(0, 0, 1024, 768);
-		
-		entities.clear();
-		terrains.clear();
-		
-		waterRenderer.render(camera);
-		
-		if(skyboxIsSet)
-		{
-			skyboxRenderer.render(camera);
-		}
-		
-		if(guiIsSet)
-		{
-			guiRenderer.render(guiTextures);
-		}
-		
-		guiTextures.clear();
 	}
 	
 	/**
@@ -253,6 +278,7 @@ public class MasterRenderer
 	{
 		skyboxRenderer.cleanUp();
 		guiRenderer.cleanUp();
+		waterRenderer.cleanUp();
 		waterFBO.cleanUp();
 	}
 }

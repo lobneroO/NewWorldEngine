@@ -28,12 +28,20 @@ public class FramebufferObject
 		this.width = width;
 		this.height = height;
 		
-		textureAttachments = new ArrayList<int[]>();
+		init();
 	}
 	
 	protected FramebufferObject()
 	{
-		
+		init();
+	}
+	
+	/**
+	 * Function for initializations shared by all constructors
+	 */
+	private void init()
+	{
+		textureAttachments = new ArrayList<int[]>();
 	}
 	
 	protected int[] createFrameBufferObject()
@@ -158,7 +166,10 @@ public class FramebufferObject
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
-		gl.glDeleteFramebuffers(1, fbo, 0);
+		if(fbo != null)
+		{
+			gl.glDeleteFramebuffers(1, fbo, 0);
+		}
 		for(int[] id : textureAttachments)
 		{
 			gl.glDeleteTextures(1, id, 0);

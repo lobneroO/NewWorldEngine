@@ -66,7 +66,6 @@ public class ThirdPersonCamera extends Camera implements MouseListener
 		float offsetZ = (float) (horizontalDistance * Math.cos(theta));
 		position.x = player.getPosition().x - offsetX;
 		position.z = player.getPosition().z - offsetZ;
-		float offset = yOffset * yOffsetFactor;
 		position.y = player.getPosition().y + verticalDistance + yOffset * yOffsetFactor;
 		yaw = Maths.PIf - theta;	//angle in radians
 	}

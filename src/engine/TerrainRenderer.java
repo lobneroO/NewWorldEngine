@@ -8,6 +8,7 @@ import com.jogamp.opengl.GLContext;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import cameras.Camera;
 import entities.RawModel;
@@ -110,5 +111,12 @@ public class TerrainRenderer
 	public void setProjectionMatrix(Matrix4f projectionMatrix)
 	{
 		this.projectionMatrix = projectionMatrix;
+	}
+	
+	public void setClippingPlane(Vector4f clippingPlane)
+	{
+		shader.start();
+		shader.loadClippingPlane(clippingPlane);
+		shader.stop();
 	}
 }

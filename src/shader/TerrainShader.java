@@ -2,6 +2,7 @@ package shader;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class TerrainShader extends StaticShader 
 {
@@ -19,6 +20,8 @@ public class TerrainShader extends StaticShader
 		private int location_greenMap;
 		private int location_blueMap;
 		private int location_blendMap;
+		
+		private int location_clippingPlane;
 		
 		public TerrainShader() 
 		{
@@ -55,6 +58,8 @@ public class TerrainShader extends StaticShader
 			location_greenMap = getUniformLocation("greenMap");
 			location_blueMap = getUniformLocation("blueMap");
 			location_blendMap = getUniformLocation("blendMap");
+			
+			location_clippingPlane = getUniformLocation("uClippingPlane");
 		}
 		
 		public void loadModelMatrix(Matrix4f matrix)
@@ -90,6 +95,11 @@ public class TerrainShader extends StaticShader
 		public void loadCameraPosition(Vector3f position)
 		{
 			loadVec3(location_cameraPosition, position);
+		}
+		
+		public void loadClippingPlane(Vector4f clippingPlane)
+		{
+			loadVec4(location_clippingPlane, clippingPlane);
 		}
 		
 		public void loadTextures()

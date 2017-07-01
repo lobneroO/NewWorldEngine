@@ -33,12 +33,36 @@ public class Camera
 		viewMatrix = Maths.createViewMatrix(position, pitch, yaw);
 		return viewMatrix;
 	}
+	
+	public void setPosition(Vector3f position)
+	{
+		this.position = position;
+	}
 
 	public Vector3f getPosition() 
 	{
 		return position;
 	}
+	
+	public float getX()
+	{
+		return position.x();
+	}
+	
+	public float getY()
+	{
+		return position.y();
+	}
+	
+	public float getZ()
+	{
+		return position.z();
+	}
 
+	public void setPitch(float pitch)
+	{
+		this.pitch = pitch;
+	}
 	/**
 	 * Euler Angle pitch (similar to a persons looking up- or downwards)
 	 * @return The pitch angle in radians
@@ -47,7 +71,16 @@ public class Camera
 	{
 		return pitch;
 	}
+	
+	public void invertPitch()
+	{
+		pitch = -pitch;
+	}
 
+	public void setYaw(float yaw)
+	{
+		this.yaw = yaw;
+	}
 	/**
 	 * Euler Angle yaw (similar to a persons looing right or left)
 	 * @return The yaw angle in radians
@@ -57,6 +90,10 @@ public class Camera
 		return yaw;
 	}
 
+	public void setRoll(float roll)
+	{
+		this.roll = roll;
+	}
 	/**
 	 * Euler Anlge roll (similar to a person tilting his head to the side)
 	 * @return The roll angle in radians

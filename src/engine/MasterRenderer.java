@@ -31,6 +31,7 @@ import toolbox.StandardModels;
 import water.WaterFramebufferObject;
 import water.WaterRenderer;
 import water.WaterShader;
+import water.WaterTile;
 
 /**
  * Manages all the individual renderers, their shaders and OpenGL set ups
@@ -48,7 +49,8 @@ public class MasterRenderer
 	private WaterShader waterShader;
 	private WaterRenderer waterRenderer;
 	private WaterFramebufferObject waterFBO;
-	private GUITexture waterGUI;
+	private GUITexture waterReflectionGUI;
+	private GUITexture waterRefractionGUI;
 	private SkyboxRenderer skyboxRenderer;
 	private GUIRenderer guiRenderer;
 	boolean skyboxIsSet = false;
@@ -56,6 +58,7 @@ public class MasterRenderer
 	
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private List<Terrain> terrains = new ArrayList<Terrain>();
+	private List<WaterTile> water = new ArrayList<WaterTile>();
 	private List<GUITexture> guiTextures = new ArrayList<GUITexture>();
 	
 	public MasterRenderer()
@@ -92,11 +95,13 @@ public class MasterRenderer
 		
 		waterShader = new WaterShader();
 		shaderLoader.loadShader(waterShader);
-		waterRenderer = new WaterRenderer(modelLoader, waterShader, projectionMatrix,
-				20, 0, 20, 0, 10);
+		waterRenderer = new WaterRenderer(modelLoader, waterShader, projectionMatrix);
+		water.add(new WaterTile(20, 0, 20));
 		waterFBO = new WaterFramebufferObject(1024, 768);
-		waterGUI = new GUITexture(waterFBO.getReflectionTexture(), 
-				new Vector2f(0.1f, 0.1f), new Vector2f(0.5f, 0.5f));
+		waterReflectionGUI = new GUITexture(waterFBO.getReflectionTexture(), 
+				new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		waterRefractionGUI = new GUITexture(waterFBO.getRefractionTexture(),
+				new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
 		setClearColor(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
 	}
 	
@@ -109,12 +114,16 @@ public class MasterRenderer
 	 */
 	public void render(Light sun, Camera camera)
 	{
-		guiTextures.add(waterGUI);
+		guiTextures.add(waterReflectionGUI);
+		guiTextures.add(waterRefractionGUI);
 		prepare();
 		
 		renderScene(camera, sun);
 		
-		waterPass(camera, sun);
+		for(WaterTile waterTile : water)
+		{
+			waterPass(camera, sun, waterTile);
+		}
 		
 		entities.clear();
 		terrains.clear();
@@ -141,6 +150,8 @@ public class MasterRenderer
 		terrainRenderer.render(camera, terrains);
 		terrainShader.stop();
 		
+		waterRenderer.render(camera, water);
+		
 		if(skyboxIsSet)
 		{
 			skyboxRenderer.render(camera);
@@ -148,15 +159,27 @@ public class MasterRenderer
 	}
 	
 	
-	private void waterPass(Camera camera, Light sun)
+	private void waterPass(Camera camera, Light sun, WaterTile tile)
 	{
-		prepareWaterPass(new Vector4f(0, -1, 0, 2));
+		//reflection is done by rendering from below the water with inverted pitch
+		float distance = 2 * (camera.getY() - tile.getY());
+		Vector3f currentCameraPos = camera.getPosition();
+		camera.setPosition(new Vector3f(currentCameraPos.x(), currentCameraPos.y()-distance,
+				currentCameraPos.z()));
+		camera.invertPitch();
+		prepareReflectionPass(new Vector4f(0, 1, 0, tile.getY()));
 		renderScene(camera, sun);
-		waterRenderer.render(camera);
+		
+		//reset the position for the refraction
+		camera.setPosition(currentCameraPos);
+		camera.invertPitch();
+		prepareRefractionPass(new Vector4f(0, -1, 0, tile.getY()));
+		renderScene(camera, sun);
+		
 		endWaterPass();
 	}
 	
-	private void prepareWaterPass(Vector4f waterPlane)
+	private void prepareReflectionPass(Vector4f waterPlane)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
@@ -170,6 +193,24 @@ public class MasterRenderer
 		basicLightShader.loadClippingPlane(waterPlane);
 		basicLightShader.stop();
 		
+		terrainRenderer.setClippingPlane(waterPlane);
+	}
+	
+	private void prepareRefractionPass(Vector4f waterPlane)
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+		
+		waterFBO.bindRefractionFBO();
+		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+		
+		//cull: for reflection everything below the water can be culled
+		//for refraction: everything above the water can be culled
+		gl.glEnable(GL3.GL_CLIP_DISTANCE0);
+		basicLightShader.start();
+		basicLightShader.loadClippingPlane(waterPlane);
+		basicLightShader.stop();
+		
+		terrainRenderer.setClippingPlane(waterPlane);
 	}
 	
 	private void endWaterPass()

@@ -10,6 +10,7 @@ public class WaterShader extends ShaderProgram
 	
 	private int location_reflectionTexture;
 	private int location_refractionTexture;
+	private int location_dudvTexture;
 	
 	@Override
 	protected void setShaderPaths() 
@@ -24,6 +25,7 @@ public class WaterShader extends ShaderProgram
 		location_modelViewProjectionMatrix = getUniformLocation("uModelViewProjectionMatrix");
 		location_reflectionTexture = getUniformLocation("uReflectionTexture");
 		location_refractionTexture = getUniformLocation("uRefractionTexture");
+		location_dudvTexture = getUniformLocation("uDudvTexture");
 	}
 
 	@Override
@@ -41,5 +43,6 @@ public class WaterShader extends ShaderProgram
 	{
 		loadInt(location_reflectionTexture, 0);
 		loadInt(location_refractionTexture, 1);
+		loadInt(location_dudvTexture, 2);
 	}
 }

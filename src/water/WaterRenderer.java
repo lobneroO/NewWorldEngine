@@ -1,5 +1,7 @@
 package water;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import loader.ModelLoader;
@@ -11,12 +13,18 @@ import toolbox.StandardModels;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLContext;
+import com.jogamp.opengl.GLException;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 import cameras.Camera;
 import entities.RawModel;
 
 public class WaterRenderer 
 {
+	private String dudvTexturePath = "waterDUDV.png";
+	private Texture dudvTexture;
+	
 	WaterShader shader;
 	
 	private WaterFramebufferObject fbo;
@@ -29,6 +37,14 @@ public class WaterRenderer
 	public WaterRenderer(ModelLoader modelLoader, WaterShader shader, Matrix4f projectionMatrix,
 			WaterFramebufferObject fbo)
 	{
+		File textureFile = new File("textures/water/" + dudvTexturePath);
+		try{
+			dudvTexture = TextureIO.newTexture(textureFile, false);
+		} catch (GLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		quad = modelLoader.loadToVAO(StandardModels.getQuadTriangleStripVerticesInXZPlane(1), 3);
 		
 		this.shader = shader;
@@ -85,6 +101,9 @@ public class WaterRenderer
 		gl.glBindTexture(GL.GL_TEXTURE_2D, fbo.getReflectionTexture()[0]);
 		gl.glActiveTexture(GL.GL_TEXTURE1);
 		gl.glBindTexture(GL.GL_TEXTURE_2D, fbo.getRefractionTexture()[0]);
+		
+		gl.glActiveTexture(GL.GL_TEXTURE2);
+		dudvTexture.bind(gl);
 	}
 	
 	private void unbindModel(GL3 gl)

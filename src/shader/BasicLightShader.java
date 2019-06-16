@@ -31,6 +31,8 @@ public class BasicLightShader extends ShaderProgram
 	{
 		vertexShaderFilePath = "shaders/vertex_shader/basicLightingShader.glsl";
 		fragmentShaderFilePath = "shaders/fragment_shader/basicLightingShader.glsl";
+
+		fragmentShaderDefines = "#define TEXTURE\n";
 	}
 
 	@Override

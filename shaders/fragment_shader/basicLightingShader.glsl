@@ -1,6 +1,8 @@
-#version 330
+//#version 330
 
+#ifdef TEXTURE
 uniform sampler2D diffuseMap;
+#endif
 uniform vec3 uLightColor;
 uniform vec3 uCamPos;		//position of the camera
 uniform float uIntensity;	//for specular lighting
@@ -15,13 +17,16 @@ out vec4 fragColor;
 
 void main()
 {
-	vec4 textureColor = texture(diffuseMap, vTexCoords);
-	if(textureColor.a < 0.5)
+    vec4 diffuseColor = vec4(vec3(0.5), 1.0);
+    #ifdef TEXTURE
+	diffuseColor = texture(diffuseMap, vTexCoords);
+	if(diffuseColor.a < 0.5)
 	{	//quick and dirty support for transparency in model textures
 		//this only works for pixels that should bei either opaque (a = 1) 
 		//or fully transparent (a = 0)
 		discard;
 	}
+	#endif
 	float nDotl = dot(vNormalWS, vLightDirection);	//calculate the "angle" between the normal and the light direction
 				//this determines the brightness of the fragment
 	float brightness = max(nDotl, 0.0);
@@ -39,5 +44,5 @@ void main()
 	vec4 specularLight = clamp(vec4(uLightColor * uIntensity * specIntensity, 1.0),
 		vec4(0), vec4(1));	//for some reason specular lighting can take negative values otherwise
 
-	fragColor = (vec4(diffuse, 1.0) + ambientLight + specularLight) * textureColor;
+	fragColor = (vec4(diffuse, 1.0) + ambientLight + specularLight) * diffuseColor;
 }

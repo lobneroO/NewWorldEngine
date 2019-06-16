@@ -12,12 +12,12 @@ import org.joml.Matrix4f;
 import cameras.Camera;
 import shader.BasicLightShader;
 import toolbox.Maths;
-import entities.Entity;
+import entities.TexturedEntity;
 import entities.RawModel;
 import entities.TexturedModel;
 
 /**
- * The renderer for Entity objects
+ * The renderer for TexturedEntity objects
  * @author Lobner
  *
  */
@@ -42,17 +42,17 @@ public class EntityRenderer
 	 * @param camera The camera responsible for the view matrix
 	 * @param entities The list of entities that share the same RawModel object and Texture
 	 */
-	public void render(Camera camera, Map<TexturedModel, List<Entity>> entities)
+	public void render(Camera camera, Map<TexturedModel, List<TexturedEntity>> entities)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
 		for(TexturedModel model : entities.keySet())
 		{
 			prepareTexturedModel(model);
-			List<Entity> batch = entities.get(model);
-			for(Entity entity : batch)
+			List<TexturedEntity> batch = entities.get(model);
+			for(TexturedEntity texturedEntity : batch)
 			{
-				prepareEntity(camera, entity);
+				prepareEntity(camera, texturedEntity);
 				
 				gl.glDrawElements(GL.GL_TRIANGLES, model.getRawModel().getNumVertices(), GL.GL_UNSIGNED_INT, 0);
 			}
@@ -94,9 +94,9 @@ public class EntityRenderer
 		MasterRenderer.enableCulling();
 	}
 	
-	public void prepareEntity(Camera camera, Entity entity)
+	public void prepareEntity(Camera camera, TexturedEntity texturedEntity)
 	{
-		Matrix4f modelMatrix = Maths.createModelMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
+		Matrix4f modelMatrix = Maths.createModelMatrix(texturedEntity.getPosition(), texturedEntity.getRotation(), texturedEntity.getScale());
 		Matrix4f modelViewProjectionMatrix = new Matrix4f();
 		projectionMatrix.mul(camera.getViewMatrix(), modelViewProjectionMatrix);//MVP = P * V
 		modelViewProjectionMatrix.mul(modelMatrix);								//MVP = PV * M

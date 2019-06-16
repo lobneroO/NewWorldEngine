@@ -19,34 +19,28 @@ import entities.RawModel;
  * @author Lobner
  *
  */
-public class TexturedModel 
+public class TexturedModel extends Model
 {
-	RawModel model;
 	Texture texture;
-	
-	boolean hasTransparencey = false;
-	
+
 	public TexturedModel(RawModel model)
 	{
-		this.model = model;
+		super(model);
 	}
 	
 	public TexturedModel(RawModel model, String texture, boolean mipmap)
 	{
-		this.model = model;
+		super(model);
 		loadTexture(texture, mipmap);
 	}
 	
 	public TexturedModel(RawModel model, Texture texture)
 	{
-		this.model = model;
+		super(model);
 		this.texture = texture;
 	}
 	
-	public RawModel getRawModel()
-	{
-		return model;
-	}
+
 	
 	public void bindTexture()
 	{
@@ -64,17 +58,13 @@ public class TexturedModel
 	{
 		this.texture = texture;
 	}
-	
+
+	@Override
 	public void setHasTransparency(boolean hasTransparency)
 	{
-		this.hasTransparencey = hasTransparency;
+		this.hasTransparency = hasTransparency;
 	}
-	
-	public boolean getHasTransparency()
-	{
-		return hasTransparencey;
-	}
-	
+
 	public void loadTexture(String filePath, boolean mipmap)
 	{
 		File file = new File(filePath);

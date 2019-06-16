@@ -20,11 +20,16 @@ import toolbox.BufferConversion;
 public abstract class ShaderProgram 
 {
 	protected String vertexShaderFilePath;
-	protected  String fragmentShaderFilePath;
+	protected String fragmentShaderFilePath;
 	
 	private int programID;
 	private int vertexShaderID;
 	private int fragmentShaderID;
+
+	protected String vertexShaderDefines = "";
+	protected String fragmentShaderDefines = "";
+
+	protected static String VERSION = "#version 330\n";
 	
 	public ShaderProgram()
 	{
@@ -50,8 +55,8 @@ public abstract class ShaderProgram
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
-		vertexShaderID = loadShader(vertexShaderString, GL3.GL_VERTEX_SHADER);
-        fragmentShaderID = loadShader(fragmentShaderString, GL3.GL_FRAGMENT_SHADER);
+		vertexShaderID = loadShader(vertexShaderFilePath, vertexShaderString, GL3.GL_VERTEX_SHADER, vertexShaderDefines);
+        fragmentShaderID = loadShader(fragmentShaderFilePath, fragmentShaderString, GL3.GL_FRAGMENT_SHADER, fragmentShaderDefines);
         programID = gl.glCreateProgram();
         gl.glAttachShader(programID, vertexShaderID);
         gl.glAttachShader(programID, fragmentShaderID);
@@ -162,14 +167,26 @@ public abstract class ShaderProgram
 		int v = (value) ? 1 : 0;	//if value is true, assign 1, otherwise 0
 		gl.glUniform1i(location, v);
 	}
-	
+
 	/**
 	 * adds the shader specified in the shaderFilePath with the specified shaderType
-	 * @param shaderFilePath 	location of the shader file
+	 * @param shaderText 	The actual shader source code
 	 * @param shaderType		shader type
 	 * @return the shader object id
 	 */
-	private static int loadShader(String shaderText, int shaderType)
+	private static int loadShader(String shaderPath, String shaderText, int shaderType)
+	{
+		return loadShader(shaderPath, shaderText, shaderType, "");
+	}
+	
+	/**
+	 * adds the shader specified in the shaderFilePath with the specified shaderType
+	 * @param shaderText 	The actual shader source code
+	 * @param shaderType		shader type
+	 * @param shaderDefines	Preprocessor defines for the shader
+	 * @return the shader object id
+	 */
+	private static int loadShader(String shaderPath, String shaderText, int shaderType, String shaderDefines)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
@@ -178,14 +195,26 @@ public abstract class ShaderProgram
 		
 		if(shaderID[0] == 0)
 		{
-			System.err.println("Could not create shader: " + shaderType);
+			System.err.println("Could not create " + shaderType + "shader: " + shaderPath);
 			return -1;
 		}
 		
-		String[] shaderLines = new String[] {shaderText};
-		int[] lengths = new int[1];
-		lengths[0] = shaderLines[0].length();
-		gl.glShaderSource(shaderID[0], 1, shaderLines, lengths, 0);
+		String[] shaderLines;
+		if(shaderDefines != "")
+		{
+			shaderLines = new String[] {VERSION, shaderDefines, shaderText};
+		}
+		else
+		{
+			shaderLines = new String[] {VERSION, shaderText};
+		}
+		int[] lengths = new int[shaderLines.length];
+		for(int i = 0; i < shaderLines.length; i++)
+		{
+			lengths[i] = shaderLines[i].length();
+		}
+//		lengths[0] = shaderLines[0].length();
+		gl.glShaderSource(shaderID[0], shaderLines.length, shaderLines, lengths, 0);
 		gl.glCompileShader(shaderID[0]);
 		
 		int success[] = new int[1];
@@ -197,7 +226,8 @@ public abstract class ShaderProgram
 			
 			byte[] log = new byte[logLength[0]];
 			gl.glGetShaderInfoLog(shaderID[0], logLength[0], (int[])null, 0, log, 0);
-			
+
+			System.err.println(shaderPath);
 			System.err.println("Error compiling shader: " + new String(log));
 			return -1;
 		}

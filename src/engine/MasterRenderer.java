@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import entities.TexturedEntity;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -16,7 +17,6 @@ import com.jogamp.opengl.GLContext;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import cameras.Camera;
-import entities.Entity;
 import entities.Light;
 import entities.RawModel;
 import entities.TexturedModel;
@@ -46,7 +46,7 @@ public class MasterRenderer
 	boolean skyboxIsSet = false;
 	boolean guiIsSet = false;
 	
-	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
+	private Map<TexturedModel, List<TexturedEntity>> texturedEntities = new HashMap<TexturedModel, List<TexturedEntity>>();
 	private List<Terrain> terrains = new ArrayList<Terrain>();
 	private List<GUITexture> guiTextures = new ArrayList<GUITexture>();
 	
@@ -85,7 +85,7 @@ public class MasterRenderer
 	}
 	
 	/**
-	 * Render the entity batches, i.e. if two entities have the same RawModel and Texture,
+	 * Render the texturedEntity batches, i.e. if two entities have the same RawModel and Texture,
 	 * they don't need individual OpenGL set ups (other than the matrices), so they are rendered
 	 * as efficiently as possible
 	 * @param sun
@@ -97,15 +97,15 @@ public class MasterRenderer
 		
 		basicLightShader.start();
 		basicLightShader.loadLightPosition(sun.getPosition());
-		entityRenderer.render(camera, entities);
+		entityRenderer.render(camera, texturedEntities);
 		basicLightShader.stop();
 		
 		terrainShader.start();
 		terrainShader.loadLightPosition(sun.getPosition());
 		terrainRenderer.render(camera, terrains);
 		terrainShader.stop();
-		
-		entities.clear();
+
+		texturedEntities.clear();
 		terrains.clear();
 		
 		if(skyboxIsSet)
@@ -122,24 +122,24 @@ public class MasterRenderer
 	}
 	
 	/**
-	 * Puts the new entity into the batch of equal entities.
-	 * If there is no batch for this entity yet, a new one will be created.
-	 * @param entity
+	 * Puts the new texturedEntity into the batch of equal texturedEntities.
+	 * If there is no batch for this texturedEntity yet, a new one will be created.
+	 * @param texturedEntity
 	 */
-	public void processEntity(Entity entity)
+	public void processTexturedEntity(TexturedEntity texturedEntity)
 	{
-		TexturedModel entityModel = entity.getModel();
-		List<Entity> batch = entities.get(entityModel);
+		TexturedModel entityModel = texturedEntity.getModel();
+		List<TexturedEntity> batch = texturedEntities.get(entityModel);
 		
 		if(batch != null)
 		{
-			batch.add(entity);
+			batch.add(texturedEntity);
 		}
 		else
 		{
-			List<Entity> newBatch = new ArrayList<Entity>();
-			newBatch.add(entity);
-			entities.put(entityModel, newBatch);	//this entityModel parameter is just a lookup key, 
+			List<TexturedEntity> newBatch = new ArrayList<TexturedEntity>();
+			newBatch.add(texturedEntity);
+			texturedEntities.put(entityModel, newBatch);	//this entityModel parameter is just a lookup key,
 													//the rendered one (which is the same reference) is in the 
 													//list called newBatch which will be taken out of the hashmap
 		}

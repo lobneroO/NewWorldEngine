@@ -12,7 +12,7 @@ import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-import org.joml.Matrix4f;
+import entities.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -24,11 +24,7 @@ import cameras.ThirdPersonCamera;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 
-import entities.Entity;
-import entities.Light;
-import entities.Player;
-import entities.RawModel;
-import entities.TexturedModel;
+import entities.TexturedEntity;
 import terrains.Terrain;
 import textures.GUITexture;
 import textures.TerrainTexture;
@@ -44,23 +40,17 @@ import util.Program;
  */
 public class MainGameLoop extends Program 
 {
-	//preferences
-	int windowWidth = 1024;
-	int windowHeight = 768;
-	Matrix4f projectionMatrix;
-	
 	MasterRenderer renderer;
-	
-	//scene
-	ModelLoader modelLoader;
-	ShaderLoader shaderLoader;
+
+	//Other editors
+	MaterialEditor materialEditor;
 
 	ThirdPersonCamera camera;
 	TerrainRenderer terrainRenderer;
 	RawModel model;
 	TexturedModel staticModel;
-	Entity entity;
-	List<Entity> entities;
+	TexturedEntity texturedEntity;
+	List<TexturedEntity> texturedEntities;
 	List<Texture> textures;
 	Player player;
 	Terrain terrain;
@@ -72,6 +62,18 @@ public class MainGameLoop extends Program
 	ArrayList<GUITexture> guiTextures;
 	boolean displayMenu = false;
 	GUITexture menu;
+
+	public MainGameLoop()
+	{
+
+	}
+
+	public MainGameLoop(int windowWidth, int windowHeight)
+	{
+		this.windowWidth = windowWidth;
+		this.windowHeight = windowHeight;
+	}
+
 	@Override
 	public boolean init(GLAutoDrawable drawable) 
 	{
@@ -86,7 +88,7 @@ public class MainGameLoop extends Program
 		light = new Light(new Vector3f(-5f, 5, -5f), new Vector3f(1.0f, 1.0f, 1.0f));
 				
 		renderer = new MasterRenderer();
-		renderer.init(projectionMatrix, light, shaderLoader);
+		renderer.init(getProjectionMatrix(), light, shaderLoader);
 		
 		
 		//------MDOELS, PLAYER and CAMERA
@@ -121,8 +123,8 @@ public class MainGameLoop extends Program
 			e.printStackTrace();
 			return false;
 		}
-		
-		entities = new ArrayList<Entity>();
+
+		texturedEntities = new ArrayList<TexturedEntity>();
 		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
 		cylinder.setSpecularIntensity(10);
 		cylinder.setSpecularPower(10);
@@ -189,8 +191,8 @@ public class MainGameLoop extends Program
 				default: chosenModel = staticModel; y = 1; break;
 			}
 			//create some randomly placed entities. *100 because that's the size of the terrain
-			
-			entities.add(new Entity(chosenModel,
+
+			texturedEntities.add(new TexturedEntity(chosenModel,
 					new Vector3f(x, y, z),
 					new Vector3f(0, rot, 0),
 					new Vector3f(scale, scale, scale)));
@@ -198,7 +200,7 @@ public class MainGameLoop extends Program
 		int entityX = 10, entityZ = 10;
 		//the box is centered at 0, therefore it needs to be elevated with half it's size
 		Vector3f entityScale = new Vector3f(1, 1, 1);
-		entity = new Entity(staticModel, 
+		texturedEntity = new TexturedEntity(staticModel,
 				new Vector3f(entityX, 
 						terrain.getTerrainModelHeightAt(entityX, entityZ)+0.5f*entityScale.y(), 
 						entityZ), 
@@ -239,10 +241,10 @@ public class MainGameLoop extends Program
 		shaderLoader.cleanUp();
 		System.out.println("shader - done");
 		
-		for(int i = 0; i < entities.size(); i++)
+		for(int i = 0; i < texturedEntities.size(); i++)
 		{
-			entities.get(i).cleanUp();
-			System.out.println("cleaning up another entity");
+			texturedEntities.get(i).cleanUp();
+			System.out.println("cleaning up another textured entity");
 		}
 		
 		for(int i = 0; i < guiTextures.size(); i++)
@@ -254,7 +256,7 @@ public class MainGameLoop extends Program
 			menu.cleanUp();
 		}
 		
-		entity.cleanUp();
+		texturedEntity.cleanUp();
 		terrain.cleanUp();
 		player.cleanUp();
 				
@@ -267,12 +269,12 @@ public class MainGameLoop extends Program
 		player.move(backend.getFrameTime()/1000, terrain);
 		camera.move();
 		
-		for(Entity entity : entities)
+		for(TexturedEntity texturedEntity : texturedEntities)
 		{
-			renderer.processEntity(entity);
+			renderer.processTexturedEntity(texturedEntity);
 		}
-		renderer.processEntity(entity);
-		renderer.processEntity(player);
+		renderer.processTexturedEntity(texturedEntity);
+		renderer.processTexturedEntity(player);
 		renderer.processTerrains(terrain);
 		for(GUITexture tex : guiTextures)
 		{
@@ -285,20 +287,6 @@ public class MainGameLoop extends Program
 		}
 		
 		renderer.render(light, camera);
-	}
-	
-	/**
-	 * Creates the shared projection matrix. This function will be moved when the rendering is restructured
-	 */
-	private void createProjectionMatrix()
-	{
-		float FOV = 70;
-		float NEAR_PLANE = 0.01f;
-		float FAR_PLANE = 100;
-		
-		float aspect = (float)windowWidth / (float)windowHeight;
-		projectionMatrix = new Matrix4f();
-		projectionMatrix.setPerspective((float)Math.toRadians(FOV), aspect, NEAR_PLANE, FAR_PLANE);
 	}
 
 	@Override
@@ -320,6 +308,20 @@ public class MainGameLoop extends Program
 			else
 			{
 				displayMenu = true;
+			}
+		}
+		if(e.getKeyCode() == KeyEvent.VK_M)
+		{
+			if(materialEditor != null)
+			{
+				materialEditor = null;
+//				materialEditor.dispose();
+			}
+			else
+			{
+				materialEditor = new MaterialEditor();
+				backend.createSubWindow(800, 600, false,
+						"New World Engine BrdfMaterial Editor", materialEditor);
 			}
 		}
 	}
@@ -385,17 +387,5 @@ public class MainGameLoop extends Program
 		System.out.println("Click the left mouse button to move the camera around the player");
 		System.out.println("Use the mouse wheel to zoom the camera in or out");
 		System.out.println("Open the menu with Esc");
-	}
-
-	@Override
-	public int getWindowWidth() 
-	{
-		return windowWidth;
-	}
-
-	@Override
-	public int getWindowHeight() 
-	{
-		return windowHeight;
 	}
 }

@@ -1,5 +1,11 @@
 package util;
 
+import java.util.Hashtable;
+import java.util.Set;
+
+import com.jogamp.newt.Display;
+import com.jogamp.newt.NewtFactory;
+import com.jogamp.newt.Screen;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -12,6 +18,7 @@ import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.Animator;
 
+import engine.MainGameLoop;
 import util.Program;
 
 /**
@@ -25,6 +32,7 @@ import util.Program;
 public class Backend implements GLEventListener
 {
 	GLWindow glWindow;
+	Hashtable<Program, GLWindow> subWindows;
 	
 	Program m_program;
 	
@@ -34,7 +42,7 @@ public class Backend implements GLEventListener
 	
 	public Backend()
 	{
-		
+		subWindows = new Hashtable<Program, GLWindow>();
 	}
 	
 	/**
@@ -76,6 +84,33 @@ public class Backend implements GLEventListener
 		Animator animator = new Animator();
         animator.add(glWindow);
         animator.start();
+	}
+
+	public void createSubWindow(int windowWidth, int windowHeight, boolean isFullscreen, String windowTitle
+			, Program program)
+	{
+		Display display = NewtFactory.createDisplay("mystring");
+		display.addReference();
+
+		Screen screen = NewtFactory.createScreen(display, 0);
+		screen.addReference();
+
+		GLProfile profile = GLProfile.get(GLProfile.GL3);
+		GLCapabilities caps = new GLCapabilities(profile);
+		GLWindow window = GLWindow.create(screen, caps);
+
+//		window.setPosition(10, 10);
+		window.setSize(windowWidth, windowHeight);
+		window.setVisible(true);
+		window.setTitle(windowTitle);
+
+		System.out.println(windowTitle + " window is open!");
+	}
+
+	public void closeSubwindow(Program program)
+	{
+		GLWindow w = subWindows.get(program);
+//		program.dispose()
 	}
 
 	/**
@@ -139,6 +174,39 @@ public class Backend implements GLEventListener
 		m_program.display(drawable);
 		delta = currentFrameTime - lastFrameTime;
 		lastFrameTime = System.currentTimeMillis();
+
+		Set<Program> subwindowPrograms = subWindows.keySet();
+		for(Program program : subwindowPrograms)
+		{
+			program.display(drawable);
+		}
+	}
+
+	/**
+	 *	A program has exactly one window and one window has exactly one program. Therefore, if a program queries for whether it has focus, we can look for its window and see if that has focus.
+	 * @param program The program for which the focus is queried for.
+	 * @return True, if the window of the program has focus, false otherwise.
+	 */
+	public boolean hasProgramFocus(Program program)
+	{
+		if(program.getClass() == MainGameLoop.class)
+		{
+			//is the main game querying for focus
+			if(glWindow.hasFocus())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			//is a sub program querying for focus
+			GLWindow subWindow = subWindows.get(program);
+			return subWindow.hasFocus();
+		}
 	}
 	
 	/**

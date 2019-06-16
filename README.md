@@ -11,7 +11,7 @@ An overview over the changes in each version can be found at the bottom.
 * Basic Rendering and Game Engine by New World Laboratories (i.e. Tim Lobner). 
 Currently available features and techniques (i.e. all features that can be used in the master branch, may not necessarily be used in the release branches which are more of a demo thing and don't contain unused code for data size sake): 
 -loading and displaying of models from obj files with textures
--basic 3rd person camera for a player entity, that you can move around.
+-basic 3rd person camera for a player texturedEntity, that you can move around.
 -extra support for mirroring the player model direction
 -basic player movement
 -terrains with multi texturing and height maps
@@ -66,7 +66,7 @@ Choose the file that suits your OS, extract the archive and run the jar. If you 
 * Fixed the keyboard input
 * A MasterRenderer to manage all individual Renderers to come
 * Change the old Renderer to EntityRenderer and change the camera management and projection set up to the MasterRenderer
-* Rendering entities in batches of equal entities (i.e. a batch contains every instance of an entity with the same texture and raw model) rather than every entity individually
+* Rendering entities in batches of equal entities (i.e. a batch contains every instance of an texturedEntity with the same texture and raw model) rather than every texturedEntity individually
 * Enabled backface culling by default, can be turned off for TexturedModels by setting the hasTransparency flag
 * Support fully transparent texels (i.e. they get discarded if the alpha value is less than 0.5)
 * Addition of TerrainRenderer, TerrainShader and Terrain classes (instead of rendering the Terrain as an Entity)

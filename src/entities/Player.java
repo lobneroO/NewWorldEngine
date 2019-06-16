@@ -15,7 +15,7 @@ import com.jogamp.newt.event.KeyListener;
  * @author Lobner
  *
  */
-public class Player extends Entity implements KeyListener
+public class Player extends TexturedEntity implements KeyListener
 {
 	private static final float RUN_SPEED = 20;		//units per second
 	private static final float TURN_SPEED = 90;	//degrees per second

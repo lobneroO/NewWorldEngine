@@ -8,7 +8,10 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.opengl.util.texture.Texture;
-import com.sun.prism.ps.Shader;
+import loader.ModelLoader;
+import loader.ShaderLoader;
+import org.joml.Matrix4f;
+//import com.sun.prism.ps.Shader;
 
 /**
  * Provide common functionality for the render programs being used.
@@ -20,16 +23,25 @@ import com.sun.prism.ps.Shader;
  */
 public abstract class Program implements KeyListener, MouseListener
 {
+	//preferences
+	protected int windowWidth = 1024;
+	protected int windowHeight = 1024;
+	Matrix4f projectionMatrix;
 	//
 	protected Backend backend;
 	//constants for convenience
 	public static int SIZEOFFLOAT = 4;
 	public static int SIZEOFINT = 4;
+
+	//scene
+	protected ModelLoader modelLoader;
+	protected ShaderLoader shaderLoader;
+
 	//lists for better controls
 	protected List<Texture> textureList;
-	protected List<Shader> shaderList;
+	//protected List<Shader> shaderList;
 	//the variables that are always needed
-	Shader shadert;
+	//Shader shadert;
 	float m_scale = 0.05f;
 	
 	//The standard OpenGL functions, called by the Backend but with the same parameters
@@ -55,20 +67,50 @@ public abstract class Program implements KeyListener, MouseListener
 	
 	public abstract void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height);
+
+	public boolean hasFocus()
+	{
+		return backend.hasProgramFocus(this);
+	}
+
+	/**
+	 * Creates the shared projection matrix. This function will be moved when the rendering is restructured
+	 */
+	protected void createProjectionMatrix()
+	{
+		//create a default projection matrix
+		float FOV = 70;
+		float NEAR_PLANE = 0.01f;
+		float FAR_PLANE = 100;
+
+		float aspect = (float)windowWidth / (float)windowHeight;
+		projectionMatrix = new Matrix4f();
+		projectionMatrix.setPerspective((float)Math.toRadians(FOV), aspect, NEAR_PLANE, FAR_PLANE);
+	}
 	
 	public void initLists()
 	{
 		textureList = new ArrayList<Texture>();
-		shaderList = new ArrayList<Shader>();
+		//shaderList = new ArrayList<Shader>();
 	}
 	/**
 	 * describe how to control the program
 	 */
 	public abstract void printHelp();
 	
-	//maybe unncecessary
-	public abstract int getWindowWidth();
-	public abstract int getWindowHeight();
+	public Matrix4f getProjectionMatrix()
+	{
+		return projectionMatrix;
+	}
+
+	public int getWindowWidth()
+	{
+		return windowWidth;
+	}
+	public int getWindowHeight()
+	{
+		return windowHeight;
+	}
 	
 	public void setBackend(Backend backend)
 	{

@@ -1,4 +1,4 @@
-#version 330
+//#version 330
 
 uniform sampler2D blackMap;	//black color of the blend map
 uniform sampler2D redMap;	//red color of the blend map

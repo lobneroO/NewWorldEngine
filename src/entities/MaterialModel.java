@@ -6,7 +6,6 @@ import entities.materials.PhongMaterial;
 
 public class MaterialModel extends Model
 {
-    RawModel model;
     Material material;
 
     public MaterialModel(RawModel model)
@@ -30,6 +29,11 @@ public class MaterialModel extends Model
     public void setMaterial(Material material)
     {
         this.material = material;
+    }
+
+    public Material getMaterial()
+    {
+        return material;
     }
 
     @Override

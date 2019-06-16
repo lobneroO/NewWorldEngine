@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import entities.TexturedEntity;
+import entities.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -17,11 +17,10 @@ import com.jogamp.opengl.GLContext;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import cameras.Camera;
-import entities.Light;
-import entities.RawModel;
-import entities.TexturedModel;
 import gui.GUIRenderer;
 import shader.BasicLightShader;
+import shader.BasicMaterialLightShader;
+import shader.BasicTextureLightShader;
 import shader.TerrainShader;
 import skybox.SkyboxRenderer;
 import terrains.Terrain;
@@ -37,7 +36,8 @@ public class MasterRenderer
 {
 	private Matrix4f projectionMatrix;
 	
-	private BasicLightShader basicLightShader;
+	private BasicTextureLightShader basicTextureLightShader;
+	private BasicMaterialLightShader basicMaterialLightShader;
 	private EntityRenderer entityRenderer;
 	private TerrainShader terrainShader;
 	private TerrainRenderer terrainRenderer;
@@ -45,7 +45,8 @@ public class MasterRenderer
 	private GUIRenderer guiRenderer;
 	boolean skyboxIsSet = false;
 	boolean guiIsSet = false;
-	
+
+	private Map<MaterialModel, List<MaterialEntity>> materialEntities = new HashMap<MaterialModel, List<MaterialEntity>>();
 	private Map<TexturedModel, List<TexturedEntity>> texturedEntities = new HashMap<TexturedModel, List<TexturedEntity>>();
 	private List<Terrain> terrains = new ArrayList<Terrain>();
 	private List<GUITexture> guiTextures = new ArrayList<GUITexture>();
@@ -64,14 +65,21 @@ public class MasterRenderer
 	public void init(Matrix4f projectionMatrix, Light sun, ShaderLoader shaderLoader)
 	{
 		this.projectionMatrix = projectionMatrix;
-		
-		basicLightShader = new BasicLightShader();
-		shaderLoader.loadShader(basicLightShader);
-		entityRenderer = new EntityRenderer(basicLightShader);
+
+		basicTextureLightShader = new BasicTextureLightShader();
+		shaderLoader.loadShader(basicTextureLightShader);
+		entityRenderer = new EntityRenderer(basicTextureLightShader);
 		entityRenderer.setProjectionMatrix(projectionMatrix);
-		basicLightShader.start();
-		basicLightShader.loadLightColor(sun.getColor());
-		basicLightShader.stop();
+		basicTextureLightShader.start();
+		basicTextureLightShader.loadLightColor(sun.getColor());
+		basicTextureLightShader.stop();
+
+		basicMaterialLightShader = new BasicMaterialLightShader();
+		shaderLoader.loadShader(basicMaterialLightShader);
+		basicMaterialLightShader.start();
+		basicMaterialLightShader.loadLightColor(sun.getColor());
+		basicMaterialLightShader.stop();
+
 		
 		terrainShader = new TerrainShader();
 		shaderLoader.loadShader(terrainShader);
@@ -94,11 +102,18 @@ public class MasterRenderer
 	public void render(Light sun, Camera camera)
 	{
 		prepare();
-		
-		basicLightShader.start();
-		basicLightShader.loadLightPosition(sun.getPosition());
-		entityRenderer.render(camera, texturedEntities);
-		basicLightShader.stop();
+
+		entityRenderer.setShader(basicTextureLightShader);
+		basicTextureLightShader.start();
+		basicTextureLightShader.loadLightPosition(sun.getPosition());
+		entityRenderer.renderTexturedEntities(camera, texturedEntities);
+		basicTextureLightShader.stop();
+
+		entityRenderer.setShader(basicMaterialLightShader);
+		basicMaterialLightShader.start();
+		basicMaterialLightShader.loadLightPosition(sun.getPosition());
+		entityRenderer.renderMaterialEntities(camera, materialEntities);
+		basicMaterialLightShader.stop();
 		
 		terrainShader.start();
 		terrainShader.loadLightPosition(sun.getPosition());
@@ -120,7 +135,31 @@ public class MasterRenderer
 		
 		guiTextures.clear();
 	}
-	
+
+	/**
+	 * Puts the new materialEntity into the batch of equal materialEntities.
+	 * If there is no batch for this materialEntity yet, a new one will be created.
+	 * @param materialEntity
+	 */
+	public void processMaterialEntity(MaterialEntity materialEntity)
+	{
+		MaterialModel entityModel = materialEntity.getModel();
+		List<MaterialEntity> batch = materialEntities.get(entityModel);
+
+		if(batch != null)
+		{
+			batch.add(materialEntity);
+		}
+		else
+		{
+			List<MaterialEntity> newBatch = new ArrayList<MaterialEntity>();
+			newBatch.add(materialEntity);
+			materialEntities.put(entityModel, newBatch);	//this entityModel parameter is just a lookup key,
+			//the rendered one (which is the same reference) is in the
+			//list called newBatch which will be taken out of the hashmap
+		}
+	}
+
 	/**
 	 * Puts the new texturedEntity into the batch of equal texturedEntities.
 	 * If there is no batch for this texturedEntity yet, a new one will be created.

@@ -7,14 +7,14 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLContext;
 
+import entities.*;
+import entities.materials.Material;
 import org.joml.Matrix4f;
 
 import cameras.Camera;
 import shader.BasicLightShader;
+import shader.BasicMaterialLightShader;
 import toolbox.Maths;
-import entities.TexturedEntity;
-import entities.RawModel;
-import entities.TexturedModel;
 
 /**
  * The renderer for TexturedEntity objects
@@ -34,15 +34,45 @@ public class EntityRenderer
 	{
 		this.shader = shader;
 	}
-	
+
+	public void setShader(BasicLightShader shader)
+	{
+		this.shader = shader;
+	}
+
 	/**
-	 * Renders a list of entities in batches of equivalent RawModel and Texture combinations
+	 * Renders a list of textured model entities in batches of equivalent RawModel and Texture combinations
 	 * i.e. Entities that share the RawModel and Texture object are rendered in a series
 	 * to not set up everything anew
 	 * @param camera The camera responsible for the view matrix
-	 * @param entities The list of entities that share the same RawModel object and Texture
+	 * @param entities The list of textured model entities that share the same RawModel object and Texture
 	 */
-	public void render(Camera camera, Map<TexturedModel, List<TexturedEntity>> entities)
+	public void renderMaterialEntities(Camera camera, Map<MaterialModel, List<MaterialEntity>> entities)
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+
+		for(MaterialModel model : entities.keySet())
+		{
+			prepareMaterialModel(model);
+			List<MaterialEntity> batch = entities.get(model);
+			for(MaterialEntity materialEntity : batch)
+			{
+				prepareEntity(camera, materialEntity);
+
+				gl.glDrawElements(GL.GL_TRIANGLES, model.getRawModel().getNumVertices(), GL.GL_UNSIGNED_INT, 0);
+			}
+			unbindTexturedModel();
+		}
+	}
+	
+	/**
+	 * Renders a list of textured model entities in batches of equivalent RawModel and Texture combinations
+	 * i.e. Entities that share the RawModel and Texture object are rendered in a series
+	 * to not set up everything anew
+	 * @param camera The camera responsible for the view matrix
+	 * @param entities The list of textured model entities that share the same RawModel object and Texture
+	 */
+	public void renderTexturedEntities(Camera camera, Map<TexturedModel, List<TexturedEntity>> entities)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 		
@@ -59,26 +89,43 @@ public class EntityRenderer
 			unbindTexturedModel();
 		}
 	}
-	
+
+	public void prepareMaterialModel(MaterialModel model)
+	{
+		Material material = model.getMaterial();
+		BasicMaterialLightShader mShader = (BasicMaterialLightShader)shader;
+		mShader.loadDiffuseColor(material.diffuseColor);
+
+		prepareModel(model);
+	}
+
 	public void prepareTexturedModel(TexturedModel model)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
-		
+
+		prepareModel(model);
+
+		gl.glActiveTexture(GL.GL_TEXTURE0);
+		model.bindTexture();
+	}
+
+	public void prepareModel(Model model)
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+
 		RawModel rawModel = model.getRawModel();
 		shader.loadMaterialSpecularIntensity(rawModel.getSpecularIntensity());
 		shader.loadMaterialSpecularPower(rawModel.getSpecularPower());
-		
+
 		gl.glBindVertexArray(rawModel.getVAO()[0]);
 		gl.glEnableVertexAttribArray(0);	//vertices
 		gl.glEnableVertexAttribArray(1);	//texCoords
 		gl.glEnableVertexAttribArray(2);	//normals
-		
+
 		if(model.getHasTransparency())
 		{
 			MasterRenderer.disableCulling();
 		}
-		gl.glActiveTexture(GL.GL_TEXTURE0);
-		model.bindTexture();
 	}
 	
 	public void unbindTexturedModel()
@@ -94,9 +141,9 @@ public class EntityRenderer
 		MasterRenderer.enableCulling();
 	}
 	
-	public void prepareEntity(Camera camera, TexturedEntity texturedEntity)
+	public void prepareEntity(Camera camera, Entity entity)
 	{
-		Matrix4f modelMatrix = Maths.createModelMatrix(texturedEntity.getPosition(), texturedEntity.getRotation(), texturedEntity.getScale());
+		Matrix4f modelMatrix = Maths.createModelMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		Matrix4f modelViewProjectionMatrix = new Matrix4f();
 		projectionMatrix.mul(camera.getViewMatrix(), modelViewProjectionMatrix);//MVP = P * V
 		modelViewProjectionMatrix.mul(modelMatrix);								//MVP = PV * M

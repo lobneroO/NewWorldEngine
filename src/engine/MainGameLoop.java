@@ -13,6 +13,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
 import entities.*;
+import entities.materials.PhongMaterial;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -48,6 +49,9 @@ public class MainGameLoop extends Program
 	ThirdPersonCamera camera;
 	TerrainRenderer terrainRenderer;
 	RawModel model;
+	MaterialModel materialModel;
+	MaterialEntity materialEntity;
+	List<MaterialEntity> materialEntities;
 	TexturedModel staticModel;
 	TexturedEntity texturedEntity;
 	List<TexturedEntity> texturedEntities;
@@ -124,6 +128,7 @@ public class MainGameLoop extends Program
 			return false;
 		}
 
+		materialEntities = new ArrayList<MaterialEntity>();
 		texturedEntities = new ArrayList<TexturedEntity>();
 		RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
 		cylinder.setSpecularIntensity(10);
@@ -145,6 +150,36 @@ public class MainGameLoop extends Program
 		model.setSpecularIntensity(1);
 		model.setSpecularPower(32);
 		staticModel = new TexturedModel(model, "textures/tex_terrain_0.png", false);
+
+		//add material using models for testing
+		//a red, a green and a blue one
+		materialModel = new MaterialModel(model,
+			new PhongMaterial(new Vector3f(1, 0, 0), new Vector3f(1, 1, 0), 10));
+		materialEntity = new MaterialEntity(materialModel,
+				new Vector3f(5,
+						terrain.getTerrainModelHeightAt(5, 5),
+						5),
+				new Vector3f(0,0,0),
+				new Vector3f(1, 1, 1));
+		materialEntities.add(materialEntity);
+
+		materialModel = new MaterialModel(model, new PhongMaterial(new Vector3f(0, 1, 0)));
+		materialEntity = new MaterialEntity(materialModel,
+				new Vector3f(5,
+						terrain.getTerrainModelHeightAt(5, 7),
+						7),
+				new Vector3f(0,0,0),
+				new Vector3f(1, 1, 1));
+		materialEntities.add(materialEntity);
+
+		materialModel = new MaterialModel(model, new PhongMaterial(new Vector3f(0, 0, 1)));
+		materialEntity = new MaterialEntity(materialModel,
+				new Vector3f(5,
+						terrain.getTerrainModelHeightAt(5, 9),
+						9),
+				new Vector3f(0,0,0),
+				new Vector3f(1, 1, 1));
+		materialEntities.add(materialEntity);
 		
 		RawModel rawBamboo = OBJLoader.loadObjModel("plants/bamboo", modelLoader);
 		TexturedModel texturedBamboo = new TexturedModel(rawBamboo, 
@@ -205,8 +240,6 @@ public class MainGameLoop extends Program
 						terrain.getTerrainModelHeightAt(entityX, entityZ)+0.5f*entityScale.y(), 
 						entityZ), 
 				new Vector3f(0, 0, 0), entityScale);
-		
-		
 		
 		renderer.setSkybox(shaderLoader, modelLoader);
 		
@@ -275,6 +308,12 @@ public class MainGameLoop extends Program
 		}
 		renderer.processTexturedEntity(texturedEntity);
 		renderer.processTexturedEntity(player);
+
+		for(MaterialEntity materialEntity : materialEntities)
+		{
+			renderer.processMaterialEntity(materialEntity);
+		}
+
 		renderer.processTerrains(terrain);
 		for(GUITexture tex : guiTextures)
 		{

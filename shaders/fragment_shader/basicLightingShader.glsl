@@ -3,6 +3,9 @@
 #ifdef TEXTURE
 uniform sampler2D diffuseMap;
 #endif
+#ifdef MATERIAL
+uniform vec3 uDiffuseColor;
+#endif
 uniform vec3 uLightColor;
 uniform vec3 uCamPos;		//position of the camera
 uniform float uIntensity;	//for specular lighting
@@ -18,6 +21,11 @@ out vec4 fragColor;
 void main()
 {
     vec4 diffuseColor = vec4(vec3(0.5), 1.0);
+    #ifdef MATERIAL
+    //material and texture shouldn't be on at the same time. this may make sense at some point, but right now
+    //it does not. therefore treat this as "either material or texture"
+    diffuseColor.rgb = uDiffuseColor;
+    #endif
     #ifdef TEXTURE
 	diffuseColor = texture(diffuseMap, vTexCoords);
 	if(diffuseColor.a < 0.5)

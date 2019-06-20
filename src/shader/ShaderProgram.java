@@ -127,10 +127,6 @@ public abstract class ShaderProgram
 	protected void loadVec3(int location, Vector3f vec)
 	{
 		loadVec3(location, new float[]{ vec.x, vec.y, vec.z});
-
-//		GL3 gl = GLContext.getCurrentGL().getGL3();
-//		FloatBuffer fb = BufferConversion.getVector3AsFloatBuffer(vec);
-//		gl.glUniform3fv(location, 1, fb);
 	}
 	
 	/**

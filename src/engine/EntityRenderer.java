@@ -162,7 +162,6 @@ public class EntityRenderer
 	
 	public void prepareEntity(Camera camera, Entity entity)
 	{
-//		Matrix4f[] modelMatrix = { Maths.createModelMatrix(entity.getPosition(), entity.getRotation(), entity.getScale())};
 		Matrix4f modelMatrix = Maths.createModelMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		Matrix4f modelViewProjectionMatrix = new Matrix4f();
 		projectionMatrix.mul(camera.getViewMatrix(), modelViewProjectionMatrix);//MVP = P * V

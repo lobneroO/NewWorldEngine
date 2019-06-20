@@ -126,9 +126,11 @@ public abstract class ShaderProgram
 	
 	protected void loadVec3(int location, Vector3f vec)
 	{
-		GL3 gl = GLContext.getCurrentGL().getGL3();
-		FloatBuffer fb = BufferConversion.getVector3AsFloatBuffer(vec);
-		gl.glUniform3fv(location, 1, fb);
+		loadVec3(location, new float[]{ vec.x, vec.y, vec.z});
+
+//		GL3 gl = GLContext.getCurrentGL().getGL3();
+//		FloatBuffer fb = BufferConversion.getVector3AsFloatBuffer(vec);
+//		gl.glUniform3fv(location, 1, fb);
 	}
 	
 	/**
@@ -150,10 +152,9 @@ public abstract class ShaderProgram
 	protected void loadMat4(int location, Matrix4f matrix, boolean transpose)
 	{
 		GL3 gl = GLContext.getCurrentGL().getGL3();
-		FloatBuffer fb = BufferConversion.getMatrix4AsFloatBuffer(matrix);
-		gl.glUniformMatrix4fv(location, 1, transpose, fb);
+		gl.glUniformMatrix4fv(location, 1, transpose, matrixAsFloatArray(matrix), 0);
 	}
-	
+
 	/**
 	 * Loads an integer value to the shader, as glsl doesn't support booleans.
 	 * It can be accessed only via a boolean in the engine though, to assure 
@@ -233,6 +234,15 @@ public abstract class ShaderProgram
 		}
 		
 		return shaderID[0];
+	}
+
+	private static float[] matrixAsFloatArray(Matrix4f matrix)
+	{
+		float[] m = new float[16];
+
+		matrix.get(m);
+
+		return m;
 	}
 	
 	/**

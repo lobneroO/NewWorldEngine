@@ -12,6 +12,7 @@ import entities.materials.Material;
 import org.joml.Matrix4f;
 
 import cameras.Camera;
+import org.joml.Vector3f;
 import shader.BasicLightShader;
 import shader.BasicMaterialLightShader;
 import toolbox.Maths;
@@ -49,6 +50,12 @@ public class EntityRenderer
 	 */
 	public void renderMaterialEntities(Camera camera, Map<MaterialModel, List<MaterialEntity>> entities)
 	{
+//		if (true)
+//			return;
+
+		//TODO: there is a memory leak somewhere. it seems to disappear with prepareEntity being commented out
+		//TODO: this holds true for material model. textured model is not a problem
+
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 
 		for(MaterialModel model : entities.keySet())
@@ -57,11 +64,11 @@ public class EntityRenderer
 			List<MaterialEntity> batch = entities.get(model);
 			for(MaterialEntity materialEntity : batch)
 			{
-				prepareEntity(camera, materialEntity);
+				prepareEntity(camera, materialEntity);//materialEntity.getPosition(), materialEntity.getRotation(), materialEntity.getScale());
 
 				gl.glDrawElements(GL.GL_TRIANGLES, model.getRawModel().getNumVertices(), GL.GL_UNSIGNED_INT, 0);
 			}
-			unbindTexturedModel();
+			unbindMaterialModel();
 		}
 	}
 	
@@ -140,14 +147,39 @@ public class EntityRenderer
 		//instead of checking whether back face culling was disabled just enable by default
 		MasterRenderer.enableCulling();
 	}
+
+	public void unbindMaterialModel()
+	{
+		GL3 gl = GLContext.getCurrentGL().getGL3();
+
+		gl.glDisableVertexAttribArray(0);
+		gl.glDisableVertexAttribArray(1);
+		gl.glDisableVertexAttribArray(2);
+		gl.glBindVertexArray(0);
+
+		MasterRenderer.enableCulling();
+	}
 	
 	public void prepareEntity(Camera camera, Entity entity)
 	{
+//		Matrix4f[] modelMatrix = { Maths.createModelMatrix(entity.getPosition(), entity.getRotation(), entity.getScale())};
 		Matrix4f modelMatrix = Maths.createModelMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		Matrix4f modelViewProjectionMatrix = new Matrix4f();
 		projectionMatrix.mul(camera.getViewMatrix(), modelViewProjectionMatrix);//MVP = P * V
 		modelViewProjectionMatrix.mul(modelMatrix);								//MVP = PV * M
-		
+
+		shader.loadModelMatrix(modelMatrix);
+		shader.loadModelViewProjectionMatrix(modelViewProjectionMatrix);
+	}
+
+	public void prepareEntity(Camera camera, Vector3f position, Vector3f rotation, Vector3f scale)
+	{
+//		Matrix4f[] modelMatrix = { Maths.createModelMatrix(entity.getPosition(), entity.getRotation(), entity.getScale())};
+		Matrix4f modelMatrix = Maths.createModelMatrix(position, rotation, scale);
+		Matrix4f modelViewProjectionMatrix = new Matrix4f();
+		projectionMatrix.mul(camera.getViewMatrix(), modelViewProjectionMatrix);//MVP = P * V
+		modelViewProjectionMatrix.mul(modelMatrix);								//MVP = PV * M
+//
 		shader.loadModelMatrix(modelMatrix);
 		shader.loadModelViewProjectionMatrix(modelViewProjectionMatrix);
 	}

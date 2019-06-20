@@ -57,6 +57,11 @@ public class BasicLightShader extends ShaderProgram
 	{
 		loadMat4(location_modelMatrix, matrix);
 	}
+
+	public void loadModelMatrix(Matrix4f[] matrix)
+	{
+		loadMat4(location_modelMatrix, matrix[0]);
+	}
 	
 	public void loadModelViewProjectionMatrix(Matrix4f matrix)
 	{

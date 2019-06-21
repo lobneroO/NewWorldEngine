@@ -68,8 +68,6 @@ public class MasterRenderer
 
 		basicTextureLightShader = new BasicTextureLightShader();
 		shaderLoader.loadShader(basicTextureLightShader);
-		entityRenderer = new EntityRenderer(basicTextureLightShader);
-		entityRenderer.setProjectionMatrix(projectionMatrix);
 		basicTextureLightShader.start();
 		basicTextureLightShader.loadLightColor(sun.getColor());
 		basicTextureLightShader.stop();
@@ -80,6 +78,8 @@ public class MasterRenderer
 		basicMaterialLightShader.loadLightColor(sun.getColor());
 		basicMaterialLightShader.stop();
 
+		entityRenderer = new EntityRenderer(basicTextureLightShader, basicMaterialLightShader);
+		entityRenderer.setProjectionMatrix(projectionMatrix);
 		
 		terrainShader = new TerrainShader();
 		shaderLoader.loadShader(terrainShader);
@@ -103,13 +103,11 @@ public class MasterRenderer
 	{
 		prepare();
 
-		entityRenderer.setShader(basicTextureLightShader);
 		basicTextureLightShader.start();
 		basicTextureLightShader.loadLightPosition(sun.getPosition());
 		entityRenderer.renderTexturedEntities(camera, texturedEntities);
 		basicTextureLightShader.stop();
 
-		entityRenderer.setShader(basicMaterialLightShader);
 		basicMaterialLightShader.start();
 		basicMaterialLightShader.loadLightPosition(sun.getPosition());
 		entityRenderer.renderMaterialEntities(camera, materialEntities);

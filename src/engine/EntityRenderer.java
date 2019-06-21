@@ -15,6 +15,7 @@ import cameras.Camera;
 import org.joml.Vector3f;
 import shader.BasicLightShader;
 import shader.BasicMaterialLightShader;
+import shader.BasicTextureLightShader;
 import toolbox.Maths;
 
 /**
@@ -24,21 +25,28 @@ import toolbox.Maths;
  */
 public class EntityRenderer 
 {
-	BasicLightShader shader;
+	BasicTextureLightShader textureShader;
+	BasicMaterialLightShader materialShader;
 	//tmp
 	boolean printed = false;
 	//preferences
 	//
 	private Matrix4f projectionMatrix;
 	
-	public EntityRenderer(BasicLightShader shader)
+	public EntityRenderer(BasicTextureLightShader textureShader, BasicMaterialLightShader materialShader)
 	{
-		this.shader = shader;
+		this.textureShader = textureShader;
+		this.materialShader = materialShader;
 	}
 
-	public void setShader(BasicLightShader shader)
+	public void setTextureShader(BasicTextureLightShader shader)
 	{
-		this.shader = shader;
+		this.textureShader = shader;
+	}
+
+	public void setMaterialShader(BasicMaterialLightShader shader)
+	{
+		this.materialShader = shader;
 	}
 
 	/**
@@ -50,12 +58,6 @@ public class EntityRenderer
 	 */
 	public void renderMaterialEntities(Camera camera, Map<MaterialModel, List<MaterialEntity>> entities)
 	{
-//		if (true)
-//			return;
-
-		//TODO: there is a memory leak somewhere. it seems to disappear with prepareEntity being commented out
-		//TODO: this holds true for material model. textured model is not a problem
-
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 
 		for(MaterialModel model : entities.keySet())
@@ -64,7 +66,7 @@ public class EntityRenderer
 			List<MaterialEntity> batch = entities.get(model);
 			for(MaterialEntity materialEntity : batch)
 			{
-				prepareEntity(camera, materialEntity);//materialEntity.getPosition(), materialEntity.getRotation(), materialEntity.getScale());
+				prepareMaterialEntity(camera, materialEntity);
 
 				gl.glDrawElements(GL.GL_TRIANGLES, model.getRawModel().getNumVertices(), GL.GL_UNSIGNED_INT, 0);
 			}
@@ -89,7 +91,7 @@ public class EntityRenderer
 			List<TexturedEntity> batch = entities.get(model);
 			for(TexturedEntity texturedEntity : batch)
 			{
-				prepareEntity(camera, texturedEntity);
+				prepareTexturedEntity(camera, texturedEntity);
 				
 				gl.glDrawElements(GL.GL_TRIANGLES, model.getRawModel().getNumVertices(), GL.GL_UNSIGNED_INT, 0);
 			}
@@ -100,8 +102,12 @@ public class EntityRenderer
 	public void prepareMaterialModel(MaterialModel model)
 	{
 		Material material = model.getMaterial();
-		BasicMaterialLightShader mShader = (BasicMaterialLightShader)shader;
-		mShader.loadDiffuseColor(material.diffuseColor);
+//		BasicMaterialLightShader mShader = (BasicMaterialLightShader)shader;
+		materialShader.loadDiffuseColor(material.diffuseColor);
+
+		RawModel rawModel = model.getRawModel();
+		textureShader.loadMaterialSpecularIntensity(rawModel.getSpecularIntensity());
+		textureShader.loadMaterialSpecularPower(rawModel.getSpecularPower());
 
 		prepareModel(model);
 	}
@@ -111,6 +117,9 @@ public class EntityRenderer
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 
 		prepareModel(model);
+		RawModel rawModel = model.getRawModel();
+		textureShader.loadMaterialSpecularIntensity(rawModel.getSpecularIntensity());
+		textureShader.loadMaterialSpecularPower(rawModel.getSpecularPower());
 
 		gl.glActiveTexture(GL.GL_TEXTURE0);
 		model.bindTexture();
@@ -121,8 +130,8 @@ public class EntityRenderer
 		GL3 gl = GLContext.getCurrentGL().getGL3();
 
 		RawModel rawModel = model.getRawModel();
-		shader.loadMaterialSpecularIntensity(rawModel.getSpecularIntensity());
-		shader.loadMaterialSpecularPower(rawModel.getSpecularPower());
+//		shader.loadMaterialSpecularIntensity(rawModel.getSpecularIntensity());
+//		shader.loadMaterialSpecularPower(rawModel.getSpecularPower());
 
 		gl.glBindVertexArray(rawModel.getVAO()[0]);
 		gl.glEnableVertexAttribArray(0);	//vertices
@@ -159,32 +168,48 @@ public class EntityRenderer
 
 		MasterRenderer.enableCulling();
 	}
-	
-	public void prepareEntity(Camera camera, Entity entity)
+
+	public MatrixContainer prepareMatrices(Camera camera, Entity entity)
 	{
 		Matrix4f modelMatrix = Maths.createModelMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		Matrix4f modelViewProjectionMatrix = new Matrix4f();
 		projectionMatrix.mul(camera.getViewMatrix(), modelViewProjectionMatrix);//MVP = P * V
 		modelViewProjectionMatrix.mul(modelMatrix);								//MVP = PV * M
 
-		shader.loadModelMatrix(modelMatrix);
-		shader.loadModelViewProjectionMatrix(modelViewProjectionMatrix);
+		return new MatrixContainer(modelMatrix, modelViewProjectionMatrix);
 	}
 
-	public void prepareEntity(Camera camera, Vector3f position, Vector3f rotation, Vector3f scale)
+	public void prepareTexturedEntity(Camera camera, TexturedEntity entity)
 	{
-//		Matrix4f[] modelMatrix = { Maths.createModelMatrix(entity.getPosition(), entity.getRotation(), entity.getScale())};
-		Matrix4f modelMatrix = Maths.createModelMatrix(position, rotation, scale);
-		Matrix4f modelViewProjectionMatrix = new Matrix4f();
-		projectionMatrix.mul(camera.getViewMatrix(), modelViewProjectionMatrix);//MVP = P * V
-		modelViewProjectionMatrix.mul(modelMatrix);								//MVP = PV * M
-//
-		shader.loadModelMatrix(modelMatrix);
-		shader.loadModelViewProjectionMatrix(modelViewProjectionMatrix);
+		MatrixContainer mc = prepareMatrices(camera, entity);
+
+		textureShader.loadModelMatrix(mc.modelMatrix);
+		textureShader.loadModelViewProjectionMatrix(mc.modelViewProjectionMatrix);
+	}
+
+	public void prepareMaterialEntity(Camera camera, MaterialEntity entity)
+	{
+		MatrixContainer mc = prepareMatrices(camera, entity);
+
+		materialShader.loadModelMatrix(mc.modelMatrix);
+		materialShader.loadModelViewProjectionMatrix(mc.modelViewProjectionMatrix);
 	}
 	
 	public void setProjectionMatrix(Matrix4f projectionMatrix)
 	{
 		this.projectionMatrix = projectionMatrix;
+	}
+}
+
+//convenience "struct" to return two values from a single method
+class MatrixContainer
+{
+	public Matrix4f modelMatrix;
+	public Matrix4f modelViewProjectionMatrix;
+
+	public MatrixContainer(Matrix4f modelMatrix, Matrix4f modelViewProjectionMatrix)
+	{
+		this.modelMatrix = modelMatrix;
+		this.modelViewProjectionMatrix = modelViewProjectionMatrix;
 	}
 }

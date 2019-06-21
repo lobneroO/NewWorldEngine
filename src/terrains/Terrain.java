@@ -105,7 +105,7 @@ public class Terrain
 		int gridZ = (int) Math.floor(terrainZ / gridSquareSize);
 		
 		//check if the coordinate is on the grid at all
-		if(gridX >= height[0].length -1 || gridZ >= height.length
+		if(gridX >= height[0].length -1 || gridZ >= height.length -1
 				|| gridX < 0 || gridZ < 0)
 		{
 			return 0;

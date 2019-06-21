@@ -107,30 +107,30 @@ public class MasterRenderer
 		basicTextureLightShader.loadLightPosition(sun.getPosition());
 		entityRenderer.renderTexturedEntities(camera, texturedEntities);
 		basicTextureLightShader.stop();
+		texturedEntities.clear();
 
 		basicMaterialLightShader.start();
 		basicMaterialLightShader.loadLightPosition(sun.getPosition());
 		entityRenderer.renderMaterialEntities(camera, materialEntities);
 		basicMaterialLightShader.stop();
-		
+		materialEntities.clear();
+
 		terrainShader.start();
 		terrainShader.loadLightPosition(sun.getPosition());
 		terrainRenderer.render(camera, terrains);
 		terrainShader.stop();
-
-		texturedEntities.clear();
 		terrains.clear();
-		
+
 		if(skyboxIsSet)
 		{
 			skyboxRenderer.render(camera);
 		}
-		
+
 		if(guiIsSet)
 		{
 			guiRenderer.render(guiTextures);
 		}
-		
+
 		guiTextures.clear();
 	}
 

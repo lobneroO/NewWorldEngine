@@ -165,7 +165,8 @@ public class MasterRenderer
 	 */
 	public void processTexturedEntity(TexturedEntity texturedEntity)
 	{
-		TexturedModel entityModel = texturedEntity.getModel();
+		//TODO make this safe
+		TexturedModel entityModel = (TexturedModel)texturedEntity.getModel();
 		List<TexturedEntity> batch = texturedEntities.get(entityModel);
 		
 		if(batch != null)

@@ -11,7 +11,7 @@ import org.joml.Vector3f;
  */
 public class TexturedEntity extends Entity
 {
-	private TexturedModel model;
+//	private TexturedModel model;
 	
 	public TexturedEntity(TexturedModel model, Vector3f position, Vector3f rotation, Vector3f scale)
 	{
@@ -22,9 +22,9 @@ public class TexturedEntity extends Entity
 		this.scale = scale;
 	}
 
-	public TexturedModel getModel() {
-		return model;
-	}
+//	public TexturedModel getModel() {
+//		return model;
+//	}
 
 	public void setModel(TexturedModel model) {
 		this.model = model;

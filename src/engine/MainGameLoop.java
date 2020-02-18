@@ -362,11 +362,6 @@ public class MainGameLoop extends Program
 				SubWindow materialEditorWindow = new SubWindow();
 				materialEditorWindow.createSubWindow(materialEditor.getWindowWidth(), materialEditor.getWindowHeight(),
 					false, "New World Material Editor", materialEditor);
-//				GL3 gl = GLContext.getCurrentGL().getGL3();
-//				if(!materialEditor.init(gl))
-//				{
-//					System.err.println("");
-//				}
 			}
 		}
 	}
@@ -374,13 +369,13 @@ public class MainGameLoop extends Program
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

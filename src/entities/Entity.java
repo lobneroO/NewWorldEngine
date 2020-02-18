@@ -13,9 +13,20 @@ import org.joml.Vector3f;
  */
 public abstract class Entity
 {
+    protected Model model;
     protected Vector3f position;
     protected Vector3f rotation;	//around the axes, in radians
     protected Vector3f scale;
+
+    public void setModel(Model model)
+    {
+        this.model = model;
+    }
+
+    public Model getModel()
+    {
+        return model;
+    }
 
     public void translate(Vector3f vec)
     {
@@ -98,5 +109,8 @@ public abstract class Entity
         this.scale = scale;
     }
 
-    public abstract void cleanUp();
+    public void cleanUp()
+    {
+        model.cleanUp();
+    }
 }

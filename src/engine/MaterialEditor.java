@@ -1,5 +1,6 @@
 package engine;
 
+import cameras.FreeMovingCamera;
 import cameras.ThirdPersonCamera;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
@@ -14,9 +15,11 @@ import util.Program;
 public class MaterialEditor extends  Program
 {
     MasterRenderer renderer;
-    ThirdPersonCamera camera;
+    FreeMovingCamera camera;
+    ThirdPersonCamera tpCamera;
     Light light;
     MaterialEntity previewModel;
+    Player player;
 
     /**
      * initialize all the techniques, objects, lists and so forth
@@ -39,6 +42,11 @@ public class MaterialEditor extends  Program
         RawModel cylinder = OBJLoader.loadObjModel("cylinder/model", modelLoader);
         cylinder.setSpecularIntensity(10);
         cylinder.setSpecularPower(10);
+        TexturedModel playerModel = new TexturedModel(cylinder, "textures/tex_player.png", false);
+        playerModel.getTexture().setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+        playerModel.getTexture().setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
+        playerModel.setHasTransparency(true);
+
         MaterialModel matModel = new MaterialModel(cylinder);
         previewModel = new MaterialEntity(matModel,
                 new Vector3f(0,
@@ -49,6 +57,17 @@ public class MaterialEditor extends  Program
 
         renderer = new MasterRenderer();
         renderer.init(getProjectionMatrix(), light, shaderLoader);
+
+//        materialEntities.add(previewModel);
+
+        player = new Player(playerModel,
+                new Vector3f(0, 0, 0),
+                new Vector3f(0, 0, 0),
+                new Vector3f(1, 1, 1));
+
+        camera = new FreeMovingCamera();
+        tpCamera = new ThirdPersonCamera(player);
+
         return true;
     }
 
@@ -67,7 +86,17 @@ public class MaterialEditor extends  Program
      */
     public void display(GLAutoDrawable drawable)
     {
-        renderer.render(light, camera);
+        tpCamera.move();
+
+//        for(TexturedEntity texturedEntity : texturedEntities)
+//        {
+//            renderer.processTexturedEntity(texturedEntity);
+//        }
+        renderer.processTexturedEntity(player);
+
+        renderer.processMaterialEntity(previewModel);
+
+        renderer.render(light, tpCamera);
 
     }
 

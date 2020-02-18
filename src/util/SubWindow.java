@@ -75,8 +75,10 @@ public class SubWindow implements GLEventListener
     public void display(GLAutoDrawable glAutoDrawable)
     {
         GL3 gl = glAutoDrawable.getGL().getGL3();
-        gl.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+//        gl.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+//        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+
+        m_program.display(glAutoDrawable);
     }
 
     @Override

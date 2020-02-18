@@ -15,6 +15,8 @@ import com.jogamp.newt.event.KeyListener;
  * @author Lobner
  *
  */
+
+//TODO: player needs to be able to be a MaterialEntity (or any arbitrary entity!)
 public class Player extends TexturedEntity implements KeyListener
 {
 	private static final float RUN_SPEED = 20;		//units per second
@@ -32,11 +34,12 @@ public class Player extends TexturedEntity implements KeyListener
 	boolean[] keys = new boolean[KeyEvent.EVENT_KEY_PRESSED];
 	
 	public Player(TexturedModel model, Vector3f position, Vector3f rotation,
-			Vector3f scale) {
+			Vector3f scale)
+	{
 		super(model, position, rotation, scale);
 		initKeyArrays();
 	}
-	
+
 	private void initKeyArrays()
 	{
 		for(int i = 0; i < keys.length; i++)

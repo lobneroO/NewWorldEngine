@@ -55,12 +55,12 @@ public class Player extends TexturedEntity implements KeyListener
 	 */
 	public void move(float frameTime, Terrain terrain)
 	{
-		checkInputs();	//checks, which keys are currently down 
+		checkInputs();	//checks, which keys are currently down
 		
 		float thetaRad = (float) Math.toRadians(currentTurnSpeed * frameTime);
 		//rotation in turn speed is stored in deg, thus conversion is needed
 		rotate(new Vector3f(0, thetaRad, 0));
-		
+
 		/* distance calculation can be understood with a top-down look onto the scene
 		 * it is basically just trigonometry
 		 * it is divided into turn (above), forwards/sidewards movement and later on the jumping
@@ -90,6 +90,7 @@ public class Player extends TexturedEntity implements KeyListener
 	 */
 	public void move(float frameTime)
 	{
+		checkInputs();
 		move(frameTime, 0);
 	}
 
@@ -177,6 +178,7 @@ public class Player extends TexturedEntity implements KeyListener
 		 * are triggered, thus stopping the input action of the user. 
 		 * this is an autoRepeatEvent, and can be queried as thus -
 		 * just omit the event if it is*/
+
 		if(!e.isAutoRepeat())
 		{
 			keys[e.getKeyCode()] = true;

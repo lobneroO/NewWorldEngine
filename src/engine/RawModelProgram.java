@@ -34,9 +34,9 @@ public class RawModelProgram extends Program
 	ModelLoader loader;
 	StaticTextureShader shader;
 	@Override
-	public boolean init(GLAutoDrawable drawable) 
+	public boolean init(GL3 gl)
 	{
-		GL3 gl = drawable.getGL().getGL3();
+//		GL3 gl = drawable.getGL().getGL3();
 		gl.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 		loader = new ModelLoader();
 		float[] vertices = {-0.5f, 0.5f, 0f,

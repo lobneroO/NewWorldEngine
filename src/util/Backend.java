@@ -6,12 +6,7 @@ import java.util.Set;
 import com.jogamp.newt.Display;
 import com.jogamp.newt.NewtFactory;
 import com.jogamp.newt.Screen;
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL3;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.*;
 
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseListener;
@@ -89,6 +84,7 @@ public class Backend implements GLEventListener
 	public void createSubWindow(int windowWidth, int windowHeight, boolean isFullscreen, String windowTitle
 			, Program program)
 	{
+
 		Display display = NewtFactory.createDisplay("mystring");
 		display.addReference();
 
@@ -98,8 +94,9 @@ public class Backend implements GLEventListener
 		GLProfile profile = GLProfile.get(GLProfile.GL3);
 		GLCapabilities caps = new GLCapabilities(profile);
 		GLWindow window = GLWindow.create(screen, caps);
+		//the following line does not work, context is null
+		GLContext context = window.createContext(GLContext.getCurrent());
 
-//		window.setPosition(10, 10);
 		window.setSize(windowWidth, windowHeight);
 		window.setVisible(true);
 		window.setTitle(windowTitle);
@@ -141,7 +138,7 @@ public class Backend implements GLEventListener
         	System.exit(1);
         }
         
-		if(!m_program.init(drawable))
+		if(!m_program.init(gl))
 		{
 			System.err.println("Could not initialize program!");
 			System.exit(1);

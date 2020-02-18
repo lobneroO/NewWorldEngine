@@ -3,6 +3,7 @@ package util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLAutoDrawable;
 
 import com.jogamp.newt.event.KeyListener;
@@ -51,7 +52,7 @@ public abstract class Program implements KeyListener, MouseListener
 	 * @param drawable
 	 * @return
 	 */
-	public abstract boolean init(GLAutoDrawable drawable);
+	public abstract boolean init(GL3 gl);
 
 	/**
 	 * clean up everything in openGL and further allocated memory.

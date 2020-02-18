@@ -20,12 +20,12 @@ public class MaterialEditor extends  Program
 
     /**
      * initialize all the techniques, objects, lists and so forth
-     * @param drawable
+     * @param gl
      * @return
      */
-    public boolean init(GLAutoDrawable drawable)
+    public boolean init(GL3 gl)
     {
-        GL3 gl = drawable.getGL().getGL3();
+//        GL3 gl = drawable.getGL().getGL3();
         createProjectionMatrix();
 
         //------LOADERS
@@ -49,7 +49,7 @@ public class MaterialEditor extends  Program
 
         renderer = new MasterRenderer();
         renderer.init(getProjectionMatrix(), light, shaderLoader);
-        return false;
+        return true;
     }
 
     /**
@@ -68,6 +68,7 @@ public class MaterialEditor extends  Program
     public void display(GLAutoDrawable drawable)
     {
         renderer.render(light, camera);
+
     }
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width,

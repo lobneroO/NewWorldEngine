@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL3;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLException;
+import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
@@ -32,6 +29,7 @@ import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import toolbox.Maths;
 import util.Program;
+import util.SubWindow;
 
 /**
  * Manages the game with its game loop, thus this concerns gaming functions 
@@ -79,9 +77,9 @@ public class MainGameLoop extends Program
 	}
 
 	@Override
-	public boolean init(GLAutoDrawable drawable) 
+	public boolean init(GL3 gl)
 	{
-		GL3 gl = drawable.getGL().getGL3();
+//		GL3 gl = drawable.getGL().getGL3();
 		createProjectionMatrix();
 		
 		//------LOADERS
@@ -359,8 +357,16 @@ public class MainGameLoop extends Program
 			else
 			{
 				materialEditor = new MaterialEditor();
-				backend.createSubWindow(800, 600, false,
-						"New World Engine BrdfMaterial Editor", materialEditor);
+//				backend.createSubWindow(800, 600, false,
+//						"New World Engine BrdfMaterial Editor", materialEditor);
+				SubWindow materialEditorWindow = new SubWindow();
+				materialEditorWindow.createSubWindow(materialEditor.getWindowWidth(), materialEditor.getWindowHeight(),
+					false, "New World Material Editor", materialEditor);
+//				GL3 gl = GLContext.getCurrentGL().getGL3();
+//				if(!materialEditor.init(gl))
+//				{
+//					System.err.println("");
+//				}
 			}
 		}
 	}

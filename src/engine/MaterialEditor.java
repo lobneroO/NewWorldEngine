@@ -86,6 +86,7 @@ public class MaterialEditor extends  Program
      */
     public void display(GLAutoDrawable drawable)
     {
+        player.move(frameTime);
         tpCamera.move();
 
 //        for(TexturedEntity texturedEntity : texturedEntities)
@@ -97,6 +98,7 @@ public class MaterialEditor extends  Program
         renderer.processMaterialEntity(previewModel);
 
         renderer.render(light, tpCamera);
+//        renderer.render(light, camera);
 
     }
 

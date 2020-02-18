@@ -34,6 +34,9 @@ public abstract class Program implements KeyListener, MouseListener
 	public static int SIZEOFFLOAT = 4;
 	public static int SIZEOFINT = 4;
 
+	//info
+	protected float frameTime = 0.0f;
+
 	//scene
 	protected ModelLoader modelLoader;
 	protected ShaderLoader shaderLoader;
@@ -68,6 +71,11 @@ public abstract class Program implements KeyListener, MouseListener
 	
 	public abstract void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height);
+
+	public void setFrameTime(float time)
+	{
+		frameTime = time;
+	}
 
 	public boolean hasFocus()
 	{

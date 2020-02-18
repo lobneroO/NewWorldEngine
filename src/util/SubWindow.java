@@ -12,6 +12,9 @@ public class SubWindow implements GLEventListener
     GLWindow glWindow;
     Program m_program;
 
+    private float deltaFrameTime = 0.0f;
+    private long lastFrameTime = 0;
+
     public void createSubWindow(int windowWidth, int windowHeight, boolean isFullscreen, String windowTitle
             , Program program)
     {
@@ -63,6 +66,8 @@ public class SubWindow implements GLEventListener
             System.err.println("Could not initialize program!");
             System.exit(1);
         }
+
+        lastFrameTime = System.currentTimeMillis();
     }
 
     @Override
@@ -78,12 +83,23 @@ public class SubWindow implements GLEventListener
 //        gl.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 //        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 
+        long currentFrameTime = System.currentTimeMillis();
+
         m_program.display(glAutoDrawable);
+
+        deltaFrameTime = currentFrameTime - lastFrameTime;
+        lastFrameTime = currentFrameTime;
+        m_program.setFrameTime(deltaFrameTime);
     }
 
     @Override
     public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3)
     {
 
+    }
+
+    public float getFrameTime()
+    {
+        return deltaFrameTime;
     }
 }

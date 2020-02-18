@@ -49,8 +49,9 @@ public class Player extends TexturedEntity implements KeyListener
 	}
 	
 	/**
-	 * moves the player entity according to the frame time that has passed
+	 * moves the player entity according to the frame time that has passed and to the height at the current terrain position
 	 * @param frameTime frame time in seconds
+	 * @param terrain The terrain on which to move (will look up the height at the new position)
 	 */
 	public void move(float frameTime, Terrain terrain)
 	{
@@ -82,7 +83,49 @@ public class Player extends TexturedEntity implements KeyListener
 			setPosition(getPosition().x, terrainHeight, getPosition().z);
 		}
 	}
-	
+
+	/**
+	 * moves the player entity according to the frame time that has passed and to a height of 0
+	 * @param frameTime frame time in seconds
+	 */
+	public void move(float frameTime)
+	{
+		move(frameTime, 0);
+	}
+
+	/**
+	 * moves the player entity according to the frame time that has passed and uses the given height
+	 * @param frameTime frame time in seconds
+	 * @param height The height to use
+	 */
+	private void move(float frameTime, float height)
+	{
+		float thetaRad = (float) Math.toRadians(currentTurnSpeed * frameTime);
+		//rotation in turn speed is stored in deg, thus conversion is needed
+		rotate(new Vector3f(0, thetaRad, 0));
+
+		/* distance calculation can be understood with a top-down look onto the scene
+		 * it is basically just trigonometry
+		 * it is divided into turn (above), forwards/sidewards movement and later on the jumping
+		 */
+		float distance = currentSpeed * frameTime;
+		float dx = (float) (distance * Math.sin(getYRotation()));	//getYRotation returns the angle in radians
+		float dz = (float) (distance * Math.cos(getYRotation()));
+//		translate(new Vector3f(-dx, 0, -dz));
+		//following is for jumping, with the set gravity and speed variables
+		upwardsSpeed += GRAVITY * frameTime;
+		translate(new Vector3f(-dx, upwardsSpeed*frameTime, -dz));
+		/* For the time being, the player constantly moves downwards according to gravity
+		 * this must of course be checked to not go below the terrain
+		 */
+		if(getPosition().y < height)
+		{
+			upwardsSpeed = 0;
+			isInAir = false;
+			setPosition(getPosition().x, height, getPosition().z);
+		}
+	}
+
 	private void jump()
 	{
 		upwardsSpeed = JUMP_POWER;

@@ -1,5 +1,6 @@
 package util;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,10 @@ public abstract class Program implements KeyListener, MouseListener
 	protected ModelLoader modelLoader;
 	protected ShaderLoader shaderLoader;
 
+	//control input lists such that this program doesn't need to know it's GLEventListener directly but can be queried
+	protected List<KeyListener> keyListenerList;
+	protected List<MouseListener> mouseListenerList;
+
 	//lists for better controls
 	protected List<Texture> textureList;
 	//protected List<Shader> shaderList;
@@ -52,7 +57,6 @@ public abstract class Program implements KeyListener, MouseListener
 	
 	/**
 	 * initialize all the techniques, objects, lists and so forth
-	 * @param drawable
 	 * @return
 	 */
 	public abstract boolean init(GL3 gl);
@@ -80,6 +84,16 @@ public abstract class Program implements KeyListener, MouseListener
 	public boolean hasFocus()
 	{
 		return backend.hasProgramFocus(this);
+	}
+
+	public List<KeyListener> getKeyListenerList()
+	{
+		return keyListenerList;
+	}
+
+	public List<MouseListener> getMouseListenerList()
+	{
+		return mouseListenerList;
 	}
 
 	/**

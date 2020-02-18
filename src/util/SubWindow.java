@@ -3,9 +3,13 @@ package util;
 import com.jogamp.newt.Display;
 import com.jogamp.newt.NewtFactory;
 import com.jogamp.newt.Screen;
+import com.jogamp.newt.event.KeyListener;
+import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.Animator;
+
+import java.util.List;
 
 public class SubWindow implements GLEventListener
 {
@@ -67,6 +71,17 @@ public class SubWindow implements GLEventListener
             System.exit(1);
         }
 
+        List<KeyListener> keyListenerList = m_program.getKeyListenerList();
+        for(KeyListener kl : keyListenerList)
+        {
+            addKeyListener(kl);
+        }
+        List<MouseListener> mouseListenerList = m_program.getMouseListenerList();
+        for(MouseListener ml : mouseListenerList)
+        {
+            addMouseListener(ml);
+        }
+
         lastFrameTime = System.currentTimeMillis();
     }
 
@@ -101,5 +116,23 @@ public class SubWindow implements GLEventListener
     public float getFrameTime()
     {
         return deltaFrameTime;
+    }
+
+    /**
+     * Manages the KeyListeners by adding them to the window.
+     * @param listener The KeyListener to be added.
+     */
+    public void addKeyListener(KeyListener listener)
+    {
+        glWindow.addKeyListener(listener);
+    }
+
+    /**
+     * Manages the MouseListeners by adding them to the window.
+     * @param listener The MouseListener to be added.
+     */
+    public void addMouseListener(MouseListener listener)
+    {
+        glWindow.addMouseListener(listener);
     }
 }

@@ -3,7 +3,9 @@ package engine;
 import cameras.FreeMovingCamera;
 import cameras.ThirdPersonCamera;
 import com.jogamp.newt.event.KeyEvent;
+import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseEvent;
+import com.jogamp.newt.event.MouseListener;
 import com.jogamp.opengl.*;
 import entities.*;
 import loader.ModelLoader;
@@ -11,6 +13,8 @@ import loader.OBJLoader;
 import loader.ShaderLoader;
 import org.joml.Vector3f;
 import util.Program;
+
+import java.util.ArrayList;
 
 public class MaterialEditor extends  Program
 {
@@ -49,9 +53,9 @@ public class MaterialEditor extends  Program
 
         MaterialModel matModel = new MaterialModel(cylinder);
         previewModel = new MaterialEntity(matModel,
-                new Vector3f(0,
+                new Vector3f(1,
                         0,
-                        0),
+                        -1),
                 new Vector3f(0, 0, 0),
                 new Vector3f(1, 1, 1));
 
@@ -67,6 +71,13 @@ public class MaterialEditor extends  Program
 
         camera = new FreeMovingCamera();
         tpCamera = new ThirdPersonCamera(player);
+
+        //-------CONTROLS
+        keyListenerList = new ArrayList<KeyListener>();
+        mouseListenerList = new ArrayList<MouseListener>();
+        keyListenerList.add(player);
+        mouseListenerList.add(tpCamera);
+        mouseListenerList.add(camera);
 
         return true;
     }
@@ -140,7 +151,7 @@ public class MaterialEditor extends  Program
     @Override
     public void mouseClicked(MouseEvent e) {
         // TODO Auto-generated method stub
-
+        System.out.println("Clicked the mouse!");
     }
 
     @Override

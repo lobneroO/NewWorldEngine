@@ -97,7 +97,7 @@ public class MaterialEditor extends  Program
      */
     public void display(GLAutoDrawable drawable)
     {
-        player.move(frameTime);
+        player.move(frameTime / 1000);
         tpCamera.move();
 
 //        for(TexturedEntity texturedEntity : texturedEntities)

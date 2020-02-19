@@ -62,7 +62,7 @@ public class MaterialEditor extends  Program
         renderer = new MasterRenderer();
         renderer.init(getProjectionMatrix(), light, shaderLoader);
 
-//        materialEntities.add(previewModel);
+        materialEntities.add(previewModel);
 
         player = new Player(playerModel,
                 new Vector3f(0, 0, 0),

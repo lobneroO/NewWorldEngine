@@ -88,7 +88,7 @@ public class SubWindow implements GLEventListener
     @Override
     public void dispose(GLAutoDrawable glAutoDrawable)
     {
-
+        glWindow.destroy();
     }
 
     @Override

@@ -10,6 +10,8 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.opengl.util.texture.Texture;
+import entities.MaterialEntity;
+import entities.TexturedEntity;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import org.joml.Matrix4f;
@@ -49,6 +51,8 @@ public abstract class Program implements KeyListener, MouseListener
 	//lists for better controls
 	protected List<Texture> textureList;
 	//protected List<Shader> shaderList;
+	protected List<MaterialEntity> materialEntities;
+	protected List<TexturedEntity> texturedEntities;
 	//the variables that are always needed
 	//Shader shadert;
 	float m_scale = 0.05f;
@@ -66,7 +70,20 @@ public abstract class Program implements KeyListener, MouseListener
 	 * That includes cleaning up with the texture and shader lists!
 	 * @param drawable
 	 */
-	public abstract void dispose(GLAutoDrawable drawable);
+	public void dispose(GLAutoDrawable drawable)
+	{
+		for(int i = 0; i < texturedEntities.size(); i++)
+		{
+			texturedEntities.get(i).cleanUp();
+			System.out.println("cleaning up another textured entity");
+		}
+		for(int i = 0; i < materialEntities.size(); i++)
+		{
+			materialEntities.get(i).cleanUp();
+			System.out.println("cleaning up another textured entity");
+		}
+	}
+
 	/**
 	 * standard display mode, contains the program as it is intended to run
 	 * @param drawable

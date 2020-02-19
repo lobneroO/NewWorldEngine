@@ -87,9 +87,11 @@ public class MaterialEditor extends  Program
      * That includes cleaning up with the texture and shader lists!
      * @param drawable
      */
+    @Override
     public void dispose(GLAutoDrawable drawable)
     {
-
+        super.dispose(drawable);
+        player.cleanUp();
     }
     /**
      * standard display mode, contains the program as it is intended to run

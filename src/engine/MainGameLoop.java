@@ -49,10 +49,10 @@ public class MainGameLoop extends Program
 	RawModel model;
 	MaterialModel materialModel;
 	MaterialEntity materialEntity;
-	List<MaterialEntity> materialEntities;
+//	List<MaterialEntity> materialEntities;
 	TexturedModel staticModel;
 	TexturedEntity texturedEntity;
-	List<TexturedEntity> texturedEntities;
+//	List<TexturedEntity> texturedEntities;
 	List<Texture> textures;
 	Player player;
 	Terrain terrain;
@@ -272,11 +272,7 @@ public class MainGameLoop extends Program
 		shaderLoader.cleanUp();
 		System.out.println("shader - done");
 		
-		for(int i = 0; i < texturedEntities.size(); i++)
-		{
-			texturedEntities.get(i).cleanUp();
-			System.out.println("cleaning up another textured entity");
-		}
+		super.dispose(drawable);
 		
 		for(int i = 0; i < guiTextures.size(); i++)
 		{

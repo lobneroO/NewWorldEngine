@@ -102,12 +102,7 @@ public class MaterialEditor extends  Program
         player.move(frameTime / 1000);
         tpCamera.move();
 
-//        for(TexturedEntity texturedEntity : texturedEntities)
-//        {
-//            renderer.processTexturedEntity(texturedEntity);
-//        }
         renderer.processTexturedEntity(player);
-
         renderer.processMaterialEntity(previewModel);
 
         renderer.render(light, tpCamera);

@@ -35,6 +35,11 @@ public class MetaFileLoader
     private static Map<String, String> metaInfo;
     private static Map<Integer, CharMetaInfo> charInfo;
 
+    /**
+     * Reads a Font MetaFile and returns a MetaFile object which can be used for rendering text
+     * @param filePath The path of the Font MetaFile
+     * @return A MetaFile object that can be used for rendering text.
+     */
     public static MetaFile readFontMetaFile(String filePath)
     {
         try
@@ -212,6 +217,11 @@ public class MetaFileLoader
         }
     }
 
+    /**
+     * Reads an array of values from the metaInfo map
+     * @param variableName The name of the variable
+     * @return The array associated with the variableName
+     */
     private static int[] getValues(String variableName)
     {
         //individual values are comma separated
@@ -225,6 +235,11 @@ public class MetaFileLoader
         return values;
     }
 
+    /**
+     * Reads a value from the metaInfo map
+     * @param variableName The name of the variable
+     * @return The value associated with the variableName
+     */
     private static int getValue(String variableName)
     {
         String strValue = metaInfo.get(variableName);
